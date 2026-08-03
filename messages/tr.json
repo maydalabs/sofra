@@ -1,0 +1,244 @@
+{
+  "Common": {
+    "brand": "Sofra",
+    "promise": "Bir Türk evine misafir olun, sofraya katılın.",
+    "browseTables": "Sofraları keşfet",
+    "howItWorks": "Nasıl çalışır?",
+    "becomeHost": "Ev sahibi olun",
+    "signIn": "Giriş yap",
+    "account": "Hesap",
+    "hostPortal": "Ev sahibi paneli",
+    "admin": "Operasyon",
+    "partner": "Partner",
+    "demo": "Demo profilleri",
+    "shared": "Paylaşımlı sofra",
+    "private": "Özel sofra",
+    "perPerson": "misafir başına",
+    "seatsLeft": "{count} kişilik yer kaldı",
+    "guaranteed": "Kesin olarak gerçekleşecek",
+    "verifiedHost": "Doğrulanmış ev sahibi",
+    "approximateArea": "Yalnızca yaklaşık bölge",
+    "allInclusive": "Her şey dahil",
+    "viewTable": "Sofrayı incele",
+    "learnMore": "Daha fazla bilgi",
+    "backToTables": "Tüm sofralara dön",
+    "demoMode": "Kurgusal demo verileri · uzaktaki servislere bağlı değil",
+    "paymentsDisabled": "Ödemeler henüz etkin değil",
+    "language": "Dil"
+  },
+  "Navigation": {
+    "tables": "Sofra bul",
+    "how": "Sofra nasıl çalışır?",
+    "host": "Sofra'da ev sahibi olun",
+    "menu": "Menü"
+  },
+  "Home": {
+    "eyebrow": "İstanbul'da gerçek bir sofrada yeriniz var",
+    "title": "Akşam yemeğine gelin. Ev halkını tanıyarak ayrılın.",
+    "intro": "Doğrulanmış bir Türk evinde planlanmış bir akşam yemeğine yer ayırtın. Menüyü ev halkı seçer, sizinle sofraya oturur; çay ve sohbet için zaman ayırır.",
+    "primaryCta": "Sofranızı bulun",
+    "secondaryCta": "Akşamın akışını görün",
+    "trustOne": "Doğrulanmış evler",
+    "trustOneText": "Her ev ve misafir kapasitesi yayınlanmadan önce Sofra tarafından incelenir.",
+    "trustTwo": "Tek, eksiksiz menü",
+    "trustTwoText": "Ev halkı seçtiği yemeği paylaşır. Beslenme ihtiyaçları uyumluluk için özel olarak değerlendirilir.",
+    "trustThree": "Sofraya katılan ev sahipleri",
+    "trustThreeText": "Doğrulanmış bir ev sahibi akşam yemeğine veya çay ve sohbet bölümüne mutlaka katılır.",
+    "nextTitle": "İstanbul'daki yaklaşan sofralar",
+    "nextIntro": "Belirli evler, belirli akşamlar ve sofrada kimlerin olacağına dair net bir fikir.",
+    "storyEyebrow": "Bizim evde akşam yemeği böyle yenir.",
+    "storyTitle": "Gösteri değil. Restoran değil. Sizi ağırlayan bir ev.",
+    "storyBody": "Her evin kendine özgü ritmi, hikâyeleri ve sofra anlayışı vardır. Sofra güvenlik, gizlilik ve ev sahipliği için net standartlar koyarken bu farklılığı korur.",
+    "rhythmTitle": "Akşamın aceleye gelmeyen bir akışı var",
+    "rhythm": [
+      "Karşılama",
+      "Tanışma",
+      "Birlikte akşam yemeği",
+      "Evin tatlı veya meyve geleneği",
+      "Türk çayı veya kahvesi",
+      "Uzun sohbet",
+      "Sıcak ve net bir veda"
+    ]
+  },
+  "How": {
+    "eyebrow": "Davet anından vedaya kadar yönetilen bir pazar yeri",
+    "title": "Bir Sofra sofrasına katılmak ne demek?",
+    "intro": "Akşamı ev halkı oluşturur. Sofra evi doğrular, planlanan sofrayı onaylar, özel bilgileri korur ve her iki tarafı da destekler.",
+    "steps": [
+      {
+        "title": "Planlanmış bir sofra seçin",
+        "body": "Belirli bir evi, tarihi, eksiksiz menüyü, sofra türünü, kapasiteyi, dilleri ve atmosferi inceleyin."
+      },
+      {
+        "title": "İhtiyaçlarınızı özel olarak paylaşın",
+        "body": "Alerji, kısıtlama veya tercihlerinizi Sofra'ya bildirin. Amaç mevcut menünün uyumlu olup olmadığını anlamaktır."
+      },
+      {
+        "title": "Deneyimin tamamı için yer ayırın",
+        "body": "Ödeme öncesinde her şey dahil tek fiyatı görün. Paylaşımlı sofralarda yer, özel sofralarda yalnızca grubunuz için masa ayırırsınız."
+      },
+      {
+        "title": "Varış bilgilerini güvenle alın",
+        "body": "Herkese açık sayfalarda yalnızca yaklaşık mahalle görünür. Tam varış bilgileri uygun onay aşamasında paylaşılır."
+      },
+      {
+        "title": "Yemeğe katılın, çaya kalın",
+        "body": "Doğrulanmış ev sahibi akşama anlamlı biçimde katılır; yemekten sonra çay, kahve ve gerçek sohbet için yer vardır."
+      }
+    ],
+    "standardsTitle": "Sofra neleri korur?",
+    "standards": [
+      "Doğrulanmış ev ve onaylı kapasite",
+      "Ev sahibinin oluşturduğu, platformun onayladığı sofralar",
+      "Gizliliği koruyan misafir bilgisi",
+      "Ayrı kamusal yorum, özel geri bildirim ve güvenlik raporu",
+      "Son adımda sürpriz ücret yok",
+      "Görünüşe veya hassas özelliklere göre misafir seçimi yok"
+    ]
+  },
+  "Discovery": {
+    "eyebrow": "Planlanmış ev sofraları",
+    "title": "Size iyi gelen akşamı bulun",
+    "intro": "Her ilan belirli bir akşam yemeğidir; genel bir ev sahibi profili değildir. Seçmeden önce menüyü, evi, türü, zamanı ve atmosferi inceleyin.",
+    "date": "Tarih",
+    "format": "Sofra türü",
+    "neighborhood": "Mahalle",
+    "allDates": "Yaklaşan tüm tarihler",
+    "allFormats": "Paylaşımlı ve özel",
+    "allAreas": "Tüm demo bölgeleri",
+    "results": "Yaklaşan {count} sofra",
+    "minimumPending": "Minimum katılımcı sayısını bekliyor",
+    "joining": "Katılanlar: {summary}"
+  },
+  "Table": {
+    "hostedBy": "Ev sahibi: {name}",
+    "household": "Ev halkı",
+    "menu": "Ev halkının eksiksiz menüsü",
+    "menuNote": "Eksiksiz menüyü ev halkı seçer. Özel bildirimler menü uyumluluğunu anlamaya yarar; kişiye özel sipariş oluşturmaz.",
+    "evening": "Akşamın atmosferi",
+    "participants": "Ev halkından kimler katılacak?",
+    "practical": "Bilmenizde fayda var",
+    "accessibility": "Erişilebilirlik",
+    "where": "Gideceğiniz yer",
+    "whereNote": "İşaret yaklaşık mahalleyi gösterir. Evin tam adresi hiçbir zaman herkese açık değildir.",
+    "joiningTitle": "Gizliliği koruyan misafir bilgisi",
+    "noneJoining": "Henüz başka bir grup yer ayırtmadı.",
+    "reserve": "Rezervasyonu başlat",
+    "priceIncludes": "Her şey dahil tek fiyat. Sonradan hizmet bedeli eklenmez.",
+    "minimumNote": "Bu paylaşımlı sofranın kesinleşmesi için en az {count} misafir gerekir.",
+    "exactAddress": "Tam varış bilgileri yalnızca rezervasyonun uygun onay aşamasında paylaşılır."
+  },
+  "HostRecruit": {
+    "eyebrow": "Ev sahibi oluşturur, platform onaylar",
+    "title": "Zaten evinize ait olan akşam yemeğini paylaşın.",
+    "intro": "Menüyü, hikâyeyi, tarihleri ve istediğiniz net kazancı siz seçersiniz. Sofra evi doğrular, kapasiteyi belgelendirir, her sofrayı onaylar ve güvenli ev sahipliğini destekler.",
+    "cta": "Ev sahibi başvurusunu başlat",
+    "controlTitle": "Sizin şekillendirdikleriniz",
+    "control": [
+      "Ev halkınızın hikâyesi",
+      "Eksiksiz menü",
+      "Önerilen tarihler ve kapasite",
+      "Atmosfer ve diller",
+      "Ev halkından katılacak kişiler",
+      "Misafir başına istediğiniz net kazanç"
+    ],
+    "sofraTitle": "Sofra'nın yönettikleri",
+    "sofra": [
+      "Doğrulama ve belgelendirme",
+      "Onaylı misafir kapasitesi",
+      "Güvenlik ve gizlilik standartları",
+      "Yayınlama ve ödemeler",
+      "İptaller ve yorumlar",
+      "Operasyon desteği ve müdahale"
+    ],
+    "participationTitle": "Ev sahipliği sofraya katılmak demektir",
+    "participationBody": "Doğrulanmış en az bir yetişkin ev sahibi, akşam yemeğinde veya çay ve sohbet bölümünde misafirlerle oturur. Ev sahipliği yalnızca pişirmek ve servis yapmak değildir."
+  },
+  "Auth": {
+    "title": "Sofra'ya giriş yapın",
+    "intro": "E-postanıza güvenli bir giriş bağlantısı göndereceğiz. Parola gerekmez.",
+    "email": "E-posta adresi",
+    "submit": "Giriş bağlantısını gönder",
+    "demoNote": "Demo modunda uzaktaki kimlik doğrulama bağlı değildir. Korumalı temelleri incelemek için demo profillerini kullanın.",
+    "verifyTitle": "E-postanızı kontrol edin",
+    "verifyBody": "Girişi tamamlamak için gönderdiğimiz bağlantıyı açın. Bağlantı açıldığında bu sayfayı kapatabilirsiniz."
+  },
+  "Account": {
+    "title": "Sofra hesabınız",
+    "upcoming": "Yaklaşan rezervasyonlar",
+    "past": "Geçmiş akşamlar",
+    "profile": "Misafir profili",
+    "dietary": "Özel beslenme bildirimleri",
+    "bookingDetails": "Rezervasyon ayrıntıları",
+    "cancel": "İptal alanı",
+    "review": "Kamusal yorum paylaş",
+    "privateFeedback": "Özel geri bildirim gönder"
+  },
+  "HostPortal": {
+    "title": "Ev sahibi paneli",
+    "dashboard": "Kontrol paneli",
+    "tables": "Ev sofraları",
+    "household": "Ev halkı profili",
+    "members": "Ev halkı üyeleri",
+    "address": "Özel adres",
+    "payouts": "Kazanç özeti",
+    "newTable": "Sofra oluştur",
+    "editDraft": "Taslak sofrayı düzenle",
+    "application": "Ev sahibi başvurusu",
+    "approval": "Onay durumu",
+    "guests": "Onaylı misafir sayısı",
+    "submit": "Sofra onayına gönder"
+  },
+  "Admin": {
+    "title": "Sofra operasyon",
+    "overview": "Genel bakış",
+    "applications": "Ev sahibi başvuruları",
+    "assessments": "Değerlendirme ayrıntısı",
+    "certify": "Belgelendirme işlemi",
+    "tables": "Sofra onay kuyruğu",
+    "bookings": "Rezervasyon görünümü",
+    "incidents": "Olay kuyruğu",
+    "audit": "Denetim kaydı",
+    "pricing": "Fiyatlandırma politikası",
+    "approve": "Sofrayı onayla",
+    "requestChanges": "Değişiklik iste"
+  },
+  "Partner": {
+    "title": "Partner özeti",
+    "upcoming": "Yaklaşan onaylı sofralar",
+    "referrals": "Yönlendirme atfı",
+    "completed": "Tamamlanan yönlendirmeler"
+  },
+  "Booking": {
+    "eyebrow": "Rezervasyon temeli",
+    "title": "{menuTitle} için talep",
+    "partySize": "Grup büyüklüğü",
+    "partyType": "Grup türü",
+    "primaryName": "Ana misafirin adı",
+    "additionalGuests": "Diğer misafirlerin adları",
+    "dietary": "Özel beslenme bildirimi",
+    "dietaryHelp": "Yalnızca ev halkının mevcut menüsüyle uyumluluğu değerlendirmek için kullanılır. Kamusal olarak veya analitikte paylaşılmaz.",
+    "compatibility": "Sofra'nın ve ev halkının menü uyumluluğunu onaylaması gerektiğini anlıyorum.",
+    "policy": "Menüyü ev halkının seçtiğini, tam adresin özel olduğunu ve paylaşımlı sofranın minimum misafir sayısına ihtiyaç duyabileceğini anlıyorum.",
+    "summary": "Fiyat özeti",
+    "continue": "Ödeme kullanılabilirliğine devam et",
+    "disabledBody": "Rezervasyon bilgilerinizi inceleyebilirsiniz; ancak Sofra bu ortamda ödeme kabul edemez. Hiçbir rezervasyon ödenmiş sayılmadı ve kart bilgisi istenmedi.",
+    "mockBody": "Yerel simülasyon etkin. Kart bilgisi toplanmayacak."
+  },
+  "Demo": {
+    "title": "Yerel demo profili seçin",
+    "intro": "Bu profiller yalnızca yerel geliştirmede kullanılabilir. HTTP-only demo oturumu oluşturur ve üretim erişimi sağlamaz.",
+    "traveler": "Misafir olarak devam et",
+    "host": "Belgeli ev sahibi olarak devam et",
+    "partner": "Partner kullanıcısı olarak devam et",
+    "operator": "Operatör olarak devam et"
+  },
+  "States": {
+    "unauthorizedTitle": "Bu alan farklı bir hesap rolü gerektiriyor",
+    "unauthorizedBody": "Yerelde uygun demo profilini seçin veya Supabase bağlandığında yetkili Sofra hesabıyla giriş yapın.",
+    "notFoundTitle": "Bu sofra artık uygun değil",
+    "notFoundBody": "Dolmuş, rezervasyon süresi geçmiş veya yeniden incelemeye alınmış olabilir.",
+    "errorTitle": "Şu anda sofrayı hazırlayamadık",
+    "errorBody": "Hiçbir ödeme alınmadı. Uygun sofralara dönüp yeniden deneyin."
+  }
+}

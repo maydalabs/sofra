@@ -11,4 +11,3 @@
 9. Commit local milestones. Do not push or deploy.
 
 Phase 1 intentionally excludes real payments/payouts, production identity or phone verification, live chat, automated approvals, dynamic AI recommendations, and deployment.
-

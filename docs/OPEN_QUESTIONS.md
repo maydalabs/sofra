@@ -18,4 +18,3 @@ These are unresolved product or production decisions. Development defaults must 
 - Production legal, tax, insurance, food-safety, privacy, and consumer-compliance decisions
 - Exact point and channel for disclosing arrival instructions
 - Content moderation and translation-review operations
-

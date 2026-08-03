@@ -35,4 +35,3 @@ In demo mode, public reads use fictional in-repository fixtures. Demo mutations 
 ## Service-role operations
 
 Certification, role assignment, approval, audit inspection, incident handling, payout controls, and selected cross-user operational reads may use a server-only service-role connection. The key is read only in server-only modules and never uses a `NEXT_PUBLIC_` name.
-

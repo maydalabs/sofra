@@ -11,4 +11,3 @@ Sofra is a Türkiye-first managed marketplace for scheduled dinners inside verif
 - Preserve both shared and private tables, host-selected menus, meaningful host participation, and tea/conversation as central product principles. Do not add alcohol product features or guest appearance-selection features.
 - Run formatting checks, lint, type checking, tests, and the production build for completed changes. Add focused tests for changed business rules.
 - Never deploy, create remote resources, configure a remote, or expose credentials without explicit user instruction.
-

@@ -46,4 +46,3 @@ Defaults are hypotheses—not permanent decisions—and live in typed configurat
 - Currency: TRY
 - New-host active-table limit: 2
 - New-host weekly frequency limit: 2
-

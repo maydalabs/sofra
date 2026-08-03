@@ -1,0 +1,244 @@
+{
+  "Common": {
+    "brand": "Sofra",
+    "promise": "Be welcomed into a Turkish household and join the table.",
+    "browseTables": "Browse tables",
+    "howItWorks": "How it works",
+    "becomeHost": "Become a host",
+    "signIn": "Sign in",
+    "account": "Account",
+    "hostPortal": "Host portal",
+    "admin": "Admin",
+    "partner": "Partner",
+    "demo": "Demo personas",
+    "shared": "Shared table",
+    "private": "Private table",
+    "perPerson": "per traveler",
+    "seatsLeft": "{count, plural, one {# seat left} other {# seats left}}",
+    "guaranteed": "Guaranteed to go ahead",
+    "verifiedHost": "Verified household host",
+    "approximateArea": "Approximate area only",
+    "allInclusive": "All-inclusive",
+    "viewTable": "View this table",
+    "learnMore": "Learn more",
+    "backToTables": "Back to all tables",
+    "demoMode": "Fictional demo data · no remote services connected",
+    "paymentsDisabled": "Payments are not yet enabled",
+    "language": "Language"
+  },
+  "Navigation": {
+    "tables": "Find a table",
+    "how": "How Sofra works",
+    "host": "Host with Sofra",
+    "menu": "Menu"
+  },
+  "Home": {
+    "eyebrow": "A place at a real table in Istanbul",
+    "title": "Come for dinner. Leave knowing the household.",
+    "intro": "Reserve a seat at a scheduled dinner inside a verified Turkish home. The household chooses the menu, sits with you, and makes time for tea and conversation.",
+    "primaryCta": "Find your table",
+    "secondaryCta": "See how the evening unfolds",
+    "trustOne": "Verified homes",
+    "trustOneText": "Every household and traveler capacity is reviewed by Sofra before publication.",
+    "trustTwo": "One complete menu",
+    "trustTwoText": "The household shares the dinner it has chosen. Dietary needs are checked privately for compatibility.",
+    "trustThree": "Hosts at the table",
+    "trustThreeText": "A verified host joins the dinner or the tea-and-conversation period—always.",
+    "nextTitle": "Tables coming up in Istanbul",
+    "nextIntro": "Specific homes, specific evenings, and a clear sense of who will be at the table.",
+    "storyEyebrow": "This is how dinner happens in our home.",
+    "storyTitle": "Not a performance. Not a restaurant. A household welcoming you in.",
+    "storyBody": "Each home has its own rhythm, stories, and idea of a generous table. Sofra protects that difference while setting clear standards for safety, privacy, and hosting.",
+    "rhythmTitle": "The evening has room to breathe",
+    "rhythm": [
+      "Arrival and welcome",
+      "Introductions",
+      "Shared dinner",
+      "A household dessert or fruit tradition",
+      "Turkish tea or coffee",
+      "Extended conversation",
+      "A warm, clear ending"
+    ]
+  },
+  "How": {
+    "eyebrow": "A managed marketplace, from invitation to goodbye",
+    "title": "What it means to join a Sofra table",
+    "intro": "The household creates the evening. Sofra verifies the home, approves the scheduled table, protects private information, and supports both sides.",
+    "steps": [
+      {
+        "title": "Choose a scheduled table",
+        "body": "Browse a particular household, date, complete menu, table format, capacity, languages, and atmosphere."
+      },
+      {
+        "title": "Share needs privately",
+        "body": "Tell Sofra about allergies, restrictions, or preferences. The question is whether the existing menu is compatible—not how to customize it."
+      },
+      {
+        "title": "Reserve the whole experience",
+        "body": "See one all-inclusive price before checkout. Shared tables sell seats; private tables are kept for your party."
+      },
+      {
+        "title": "Receive arrival details safely",
+        "body": "Public pages show only an approximate neighborhood. Exact arrival information appears only at the appropriate confirmed stage."
+      },
+      {
+        "title": "Join dinner and stay for tea",
+        "body": "A verified host participates meaningfully, with space after dinner for Turkish tea or coffee and real conversation."
+      }
+    ],
+    "standardsTitle": "What Sofra protects",
+    "standards": [
+      "Verified household and approved capacity",
+      "Host-created, platform-approved tables",
+      "Privacy-conscious guest context",
+      "Separate public reviews, private feedback, and safety reports",
+      "No surprise checkout fee",
+      "No guest selection by appearance or sensitive traits"
+    ]
+  },
+  "Discovery": {
+    "eyebrow": "Scheduled household tables",
+    "title": "Find the evening that feels right",
+    "intro": "Every listing is a particular dinner—not a generic host profile. Explore the menu, household, format, timing, and atmosphere before you choose.",
+    "date": "Date",
+    "format": "Table format",
+    "neighborhood": "Neighborhood",
+    "allDates": "All upcoming dates",
+    "allFormats": "Shared and private",
+    "allAreas": "All demo areas",
+    "results": "{count} upcoming tables",
+    "minimumPending": "Still gathering its minimum",
+    "joining": "Already joining: {summary}"
+  },
+  "Table": {
+    "hostedBy": "Hosted by {name}",
+    "household": "The household",
+    "menu": "The household’s complete menu",
+    "menuNote": "The household chooses the complete menu. Private disclosures help determine compatibility; they do not create a custom order.",
+    "evening": "How the evening will feel",
+    "participants": "Who from the household will join",
+    "practical": "Good to know",
+    "accessibility": "Accessibility",
+    "where": "Where you’ll go",
+    "whereNote": "The pin represents the approximate neighborhood. The exact home address is never public.",
+    "joiningTitle": "Privacy-conscious guest context",
+    "noneJoining": "No other parties have booked yet.",
+    "reserve": "Start your reservation",
+    "priceIncludes": "One all-inclusive price. No service fee appears later.",
+    "minimumNote": "This shared table needs at least {count} travelers before it is confirmed.",
+    "exactAddress": "Exact arrival details are shared only at the appropriate confirmed-booking stage."
+  },
+  "HostRecruit": {
+    "eyebrow": "Host-created, platform-approved",
+    "title": "Share the dinner that already belongs to your home.",
+    "intro": "You choose the menu, the story, the dates, and the desired net payout. Sofra verifies the household, certifies capacity, approves every table, and supports safe hosting.",
+    "cta": "Start a host application",
+    "controlTitle": "What you shape",
+    "control": [
+      "Your household story",
+      "The complete menu",
+      "Proposed dates and capacity",
+      "Atmosphere and languages",
+      "Who joins from the household",
+      "Desired net payout per traveler"
+    ],
+    "sofraTitle": "What Sofra manages",
+    "sofra": [
+      "Verification and certification",
+      "Approved traveler capacity",
+      "Safety and privacy standards",
+      "Publication and payments",
+      "Cancellations and reviews",
+      "Operational support and intervention"
+    ],
+    "participationTitle": "Hospitality means joining the table",
+    "participationBody": "At least one verified adult host sits with travelers for dinner or the tea-and-conversation period. Hosting is not only cooking and serving."
+  },
+  "Auth": {
+    "title": "Sign in to Sofra",
+    "intro": "We’ll send a secure magic link to your email. No password is required.",
+    "email": "Email address",
+    "submit": "Email me a sign-in link",
+    "demoNote": "Remote authentication is not connected in demo mode. Use the demo personas to explore protected foundations.",
+    "verifyTitle": "Check your email",
+    "verifyBody": "Open the link we sent to finish signing in. You can close this page after the link opens."
+  },
+  "Account": {
+    "title": "Your Sofra account",
+    "upcoming": "Upcoming bookings",
+    "past": "Past dinners",
+    "profile": "Traveler profile",
+    "dietary": "Private dietary disclosures",
+    "bookingDetails": "Booking details",
+    "cancel": "Cancellation placeholder",
+    "review": "Share public review",
+    "privateFeedback": "Send private feedback"
+  },
+  "HostPortal": {
+    "title": "Host portal",
+    "dashboard": "Dashboard",
+    "tables": "Hosted tables",
+    "household": "Household profile",
+    "members": "Household members",
+    "address": "Private address",
+    "payouts": "Payout summary",
+    "newTable": "Create a table",
+    "editDraft": "Edit draft table",
+    "application": "Host application",
+    "approval": "Approval status",
+    "guests": "Confirmed guest count",
+    "submit": "Submit for Sofra approval"
+  },
+  "Admin": {
+    "title": "Sofra operations",
+    "overview": "Overview",
+    "applications": "Host applications",
+    "assessments": "Assessment detail",
+    "certify": "Certification action",
+    "tables": "Table approval queue",
+    "bookings": "Booking overview",
+    "incidents": "Incident queue",
+    "audit": "Audit log",
+    "pricing": "Pricing policy",
+    "approve": "Approve table",
+    "requestChanges": "Request changes"
+  },
+  "Partner": {
+    "title": "Partner overview",
+    "upcoming": "Upcoming approved tables",
+    "referrals": "Referral attribution",
+    "completed": "Completed referrals"
+  },
+  "Booking": {
+    "eyebrow": "Reservation foundation",
+    "title": "Request {menuTitle}",
+    "partySize": "Party size",
+    "partyType": "Party type",
+    "primaryName": "Primary traveler name",
+    "additionalGuests": "Additional guest names",
+    "dietary": "Private dietary disclosure",
+    "dietaryHelp": "Used only to assess this household’s existing menu. Never shared publicly or sent to analytics.",
+    "compatibility": "I understand Sofra and the household must confirm menu compatibility.",
+    "policy": "I understand the household chooses the menu, the exact address is private, and a shared table may need a minimum number of travelers.",
+    "summary": "Price summary",
+    "continue": "Continue to payment availability",
+    "disabledBody": "Your reservation details can be reviewed, but Sofra cannot accept payment in this environment. No booking has been marked paid and no card details were requested.",
+    "mockBody": "Local simulation is enabled. No card information will be collected."
+  },
+  "Demo": {
+    "title": "Choose a local demo persona",
+    "intro": "These personas are available only in local development. They set an HTTP-only demo session and never grant production access.",
+    "traveler": "Continue as traveler",
+    "host": "Continue as certified host",
+    "partner": "Continue as partner user",
+    "operator": "Continue as operator"
+  },
+  "States": {
+    "unauthorizedTitle": "This area needs a different account role",
+    "unauthorizedBody": "Choose an appropriate demo persona locally, or sign in with an authorized Sofra account when Supabase is connected.",
+    "notFoundTitle": "That table is no longer available",
+    "notFoundBody": "It may have filled, passed its booking cutoff, or returned to review.",
+    "errorTitle": "We couldn’t set the table just now",
+    "errorBody": "Nothing was charged. Please return to the available tables and try again."
+  }
+}

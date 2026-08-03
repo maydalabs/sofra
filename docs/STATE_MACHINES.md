@@ -37,4 +37,3 @@ payment_authorized/confirmed/completed → disputed
 ## Payout
 
 A payout can move from pending to held or eligible, and from eligible to released. An open safety incident forces or preserves `held`; release is illegal until the hold reason is cleared by an authorized operator.
-

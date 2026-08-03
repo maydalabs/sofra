@@ -19,4 +19,3 @@ Sofra's inventory is a scheduled table: a household, verified participating host
 ## Trust boundary
 
 A host-created table is never publicly bookable until Sofra approves it. Exact home details remain private until the appropriate confirmed-booking stage. Public discovery is based on the table and its experience—not the appearance, gender, exact age, or sensitive traits of other travelers.
-

@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sofra — Phase 1 product foundation
 
-## Getting Started
+Sofra is a Türkiye-first managed marketplace where travelers reserve seats at scheduled dinners inside verified Turkish households.
 
-First, run the development server:
+> Be welcomed into a Turkish household and join the table.
+
+This repository is the local Phase 1 modular monolith. It includes localized public discovery, demo-safe traveler/host/operator/partner workspaces, a normalized Supabase schema with RLS, server-side domain rules, provider adapters, fictional development data, and automated coverage. It does not contain real payments or a production deployment.
+
+## Project
+
+- Absolute path: `/Users/mehmeteminmayda/Projects/sofra`
+- Runtime: current stable Next.js App Router and React, strict TypeScript
+- Package manager: pnpm (lockfile committed)
+- Styling: Tailwind CSS and owned shadcn/ui component source
+- Data/auth/storage target: local or hosted Supabase PostgreSQL/Auth/Storage
+- Localization: `next-intl` at `/en` and `/tr`
+
+Product decisions are documented in `docs/PRODUCT_CONSTITUTION.md` and `docs/DECISIONS.md`. Read `AGENTS.md` before making product changes.
+
+## Prerequisites
+
+- Node.js 20 or newer (the current development machine uses Node 25)
+- pnpm 11 or newer
+- Optional for the local database: Docker Desktop and Supabase CLI
+- Optional for browser tests: Playwright Chromium (`pnpm exec playwright install chromium`)
+
+Docker and Supabase CLI were not installed on the initial development machine, so the checked-in read-only demo repository is the default.
+
+## Install and run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+cd /Users/mehmeteminmayda/Projects/sofra
+pnpm install
+cp .env.example .env.local
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000/en`. With `SOFRA_DEMO_MODE=true`, `/en/demo` sets a local-only HTTP-only persona cookie for traveler, certified-host, partner, or operator walkthroughs. The persona mechanism is rejected in production.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` and supply only the services you are using:
 
-## Learn More
+- `NEXT_PUBLIC_APP_URL`
+- `SOFRA_DEMO_MODE`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (server only)
+- `SOFRA_ENABLE_MOCK_PAYMENTS` (local/test only; rejected in production)
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`
+- `RESEND_API_KEY` and `RESEND_FROM_EMAIL`
+- `NEXT_PUBLIC_POSTHOG_KEY` and `NEXT_PUBLIC_POSTHOG_HOST`
+- `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN`
 
-To learn more about Next.js, take a look at the following resources:
+Never commit `.env.local`. The service-role key is never imported from a client module.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Local Supabase
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+When Docker and Supabase CLI are available:
 
-## Deploy on Vercel
+```bash
+pnpm db:start
+pnpm db:reset
+pnpm db:types
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Migration: `supabase/migrations/202608030001_initial_foundation.sql`
+- Fictional seed: `supabase/seed.sql`
+- Generated-shape fallback types: `src/server/database/database.types.ts`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`db:types` regenerates types from the local database. The SQL seed contains no real people or real private addresses. The TypeScript demo fixture materializes the same product states relative to the current date so public and portal pages remain useful without Supabase.
+
+## Quality commands
+
+```bash
+pnpm format
+pnpm format:check
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm test:e2e
+pnpm build
+```
+
+Playwright starts or reuses the local app and covers anonymous discovery, table detail, honest payment-disabled checkout, host draft rules/submission, operator approval, public address privacy, and unauthorized admin access.
+
+## Architecture
+
+- `src/app/[locale]`: localized public and role-specific routes
+- `src/features`: pricing, policy, scheduled tables, bookings, dietary privacy, and payout rules
+- `src/server`: auth, authorization, Supabase clients, services, payments, maps, notifications, analytics, monitoring, and audit
+- `messages`: English and Turkish interface messages
+- `supabase`: local configuration, SQL migration, RLS, public-safe view, and fictional seed
+- `docs`: product constitution, decisions, open questions, architecture, domain, states, privacy, and plan
+
+Status changes run through typed services and illegal transitions return domain errors. Public listings use an explicit allowlist projection and `published_hosted_tables`; exact address, precise coordinates, arrival instructions, dietary details, private guest names, assessment notes, and incident content are excluded.
+
+## Adapters and local fallbacks
+
+- Maps: approximate-neighborhood fallback unless a public key is configured; exact addresses are not accepted by the public model.
+- Notifications: Resend when configured, development console adapter otherwise.
+- Analytics: typed non-sensitive events and no-op behavior without PostHog.
+- Monitoring: disabled cleanly without Sentry DSN.
+- Payments: server-only provider interface. The mock is opt-in, deterministic, auditable, card-free, and impossible to construct in production. Without a real provider, checkout says payments are not enabled and never marks a booking paid.
+
+## Intentional Phase 1 limits
+
+- No real payment provider, payouts, tax logic, phone verification, production identity verification, or production deployment
+- No live chat, native apps, automated host/safety decisions, or AI recommendation system
+- Demo mutations demonstrate validation, authorization, lifecycle, and audit boundaries; durable remote writes require local/hosted Supabase wiring
+- Google Maps, Resend, PostHog, and Sentry are adapter-ready but optional
+- Final brand, launch neighborhoods, commercial policy, cancellation policy, verification rubric, partner economics, and legal/compliance decisions remain open in `docs/OPEN_QUESTIONS.md`

@@ -25,4 +25,3 @@ Public reviews, private constructive feedback, and confidential safety incidents
 ## Money
 
 All stored amounts are integer kuruş. The price snapshot preserves host payout, Sofra gross fee, partner commission, currency, take rate, and guest total as booked.
-

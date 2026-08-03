@@ -24,4 +24,3 @@ Public page HTML, JSON, metadata, analytics, map inputs, storage metadata, and S
 ## Secrets and telemetry
 
 Only publishable Supabase, public map, and public analytics identifiers may use `NEXT_PUBLIC_`. Service-role, Resend, Sentry, and payment credentials remain server-only. Typed analytics events contain identifiers and non-sensitive product state only; dietary text, address data, guest names, incident content, and secrets are excluded by contract.
-
