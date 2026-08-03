@@ -11,6 +11,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(rootDirectory, 'src'),
+      'server-only': path.resolve(rootDirectory, 'test/server-only.ts'),
     },
   },
   test: {
@@ -22,4 +23,3 @@ export default defineConfig({
     },
   },
 })
-
