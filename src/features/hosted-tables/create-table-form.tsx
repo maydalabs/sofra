@@ -27,12 +27,21 @@ function minimumDateTime() {
   return date.toISOString().slice(0, 16)
 }
 
+function maximumDateTime() {
+  const date = new Date()
+  date.setDate(date.getDate() + developmentPolicy.maximumPublishingHorizonDays)
+  date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+  return date.toISOString().slice(0, 16)
+}
+
 export function CreateTableForm({
-  certifiedCapacity = 6,
+  certifiedCapacity,
   minimumStartsAt = minimumDateTime(),
+  maximumStartsAt = maximumDateTime(),
 }: {
-  certifiedCapacity?: number
+  certifiedCapacity: number
   minimumStartsAt?: string
+  maximumStartsAt?: string
 }) {
   const [result, setResult] = useState<string | null>(null)
   const form = useForm<CreateHostedTableInput>({
@@ -61,14 +70,27 @@ export function CreateTableForm({
       })
       return
     }
+    const latest = new Date(maximumStartsAt)
+    if (proposedDate > latest) {
+      form.setError('startsAt', {
+        message: `Choose a time within ${developmentPolicy.maximumPublishingHorizonDays} days`,
+      })
+      return
+    }
     if (values.proposedCapacity > certifiedCapacity) {
       form.setError('proposedCapacity', {
         message: `Certified maximum is ${certifiedCapacity}`,
       })
       return
     }
+    if (values.minimumGuestCount > values.proposedCapacity) {
+      form.setError('minimumGuestCount', {
+        message: 'Minimum guest count cannot exceed proposed capacity',
+      })
+      return
+    }
     setResult(
-      'Draft validated locally. It remains private until submitted and approved by Sofra.',
+      'Draft reviewed locally. No durable table was saved; publication still requires Sofra approval.',
     )
   })
 
@@ -97,6 +119,7 @@ export function CreateTableForm({
             aria-label="Date and start time"
             type="datetime-local"
             min={minimumStartsAt}
+            max={maximumStartsAt}
             {...form.register('startsAt')}
           />
         </FormField>
@@ -194,7 +217,7 @@ export function CreateTableForm({
           {...form.register('practicalInformation')}
         />
       </FormField>
-      <Button type="submit">Validate and save draft</Button>
+      <Button type="submit">Review private draft</Button>
       {result ? (
         <p role="status" className="text-primary text-sm font-medium">
           {result}

@@ -2,10 +2,17 @@
 
 import { redirect } from 'next/navigation'
 
+import { isHostCertificationActive } from '@/features/hosts/certification'
 import { createAuditEntry } from '@/server/audit/audit'
 import { getCurrentActor } from '@/server/auth/current-actor'
+import { isDemoMode } from '@/server/auth/demo-session'
 import { assertHasAnyRole } from '@/server/authorization/roles'
+import {
+  findHostCertification,
+  findHostTableById,
+} from '@/server/repositories/queries'
 import { submitHostedTable } from '@/server/services/hosted-tables'
+import { getServerTimeMilliseconds } from '@/server/time/clock'
 
 export async function submitHostedTableAction(formData: FormData) {
   const actor = await getCurrentActor()
@@ -13,19 +20,35 @@ export async function submitHostedTableAction(formData: FormData) {
   assertHasAnyRole(actor, ['certified_host'])
   const tableId = String(formData.get('tableId'))
   const locale = formData.get('locale') === 'tr' ? 'tr' : 'en'
+  const [table, certification] = await Promise.all([
+    findHostTableById(actor.id, tableId),
+    findHostCertification(actor.id),
+  ])
+  if (!table) throw new Error('Hosted table not found')
+  if (table.status !== 'draft' && table.status !== 'changes_requested') {
+    throw new Error('Only an editable host-owned table may be submitted')
+  }
+  const certificationActive = isHostCertificationActive(
+    certification,
+    new Date(getServerTimeMilliseconds()),
+  )
   const status = submitHostedTable({
-    currentStatus: 'draft',
-    actorSuspended: false,
+    currentStatus: table.status,
+    actorSuspended: certification?.status === 'suspended',
+    certificationActive,
   })
+  if (!isDemoMode()) {
+    redirect(`/${locale}/host/tables/${table.id}/edit?submission=unavailable`)
+  }
   const audit = createAuditEntry({
     actorId: actor.id,
-    action: 'hosted_table.submitted',
+    action: 'hosted_table.submission_reviewed',
     entityType: 'hosted_table',
     entityId: tableId,
-    reason: 'Host submitted complete development draft',
-    previousState: { status: 'draft' },
+    reason: 'Local host submission transition review',
+    previousState: { status: table.status },
     newState: { status },
   })
   console.info('[Sofra demo audit]', audit)
-  redirect(`/${locale}/host/tables/${tableId}/edit?submitted=1`)
+  redirect(`/${locale}/host/tables/${table.id}/edit?submission=reviewed`)
 }

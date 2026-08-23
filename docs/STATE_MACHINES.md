@@ -18,6 +18,7 @@ draft/submitted/changes_requested/approved/published/minimum_reached/confirmed/r
 - A suspended host cannot submit or publish a table.
 - Capacity cannot exceed active certification.
 - Completed and cancelled tables cannot return to a bookable state.
+- The local submission review validates an owned draft or change-requested table and the host’s active certification without changing durable state. Production submission remains unavailable until a protected write repository exists.
 
 ## Booking
 

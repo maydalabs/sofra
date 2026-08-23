@@ -74,9 +74,13 @@ export function createHostedTableDraft(
 export function submitHostedTable(input: {
   currentStatus: 'draft' | 'changes_requested'
   actorSuspended: boolean
+  certificationActive: boolean
 }) {
   if (input.actorSuspended)
     throw new Error('A suspended host cannot submit tables')
+  if (!input.certificationActive) {
+    throw new Error('An active host certification is required to submit tables')
+  }
   return transitionHostedTable(input.currentStatus, 'submitted')
 }
 

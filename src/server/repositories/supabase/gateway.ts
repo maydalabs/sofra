@@ -12,6 +12,17 @@ export type TravelerBookingRow =
 export type HouseholdRow = Database['public']['Tables']['households']['Row']
 export type HostedTableRow =
   Database['public']['Tables']['hosted_tables']['Row']
+export type HostCertificationRow = Pick<
+  Database['public']['Tables']['host_certifications']['Row'],
+  | 'id'
+  | 'household_id'
+  | 'status'
+  | 'certified_traveler_capacity'
+  | 'valid_from'
+  | 'valid_until'
+>
+export type HostRosterRow =
+  Database['public']['Functions']['get_my_host_roster']['Returns'][number]
 
 export interface SofraReadGateway {
   readPublishedTables(): Promise<PublishedTableRow[]>
@@ -19,6 +30,10 @@ export interface SofraReadGateway {
   readTravelerBookings(): Promise<TravelerBookingRow[]>
   readOwnedHouseholds(ownerProfileId: string): Promise<HouseholdRow[]>
   readHostedTables(householdIds: readonly string[]): Promise<HostedTableRow[]>
+  readHostCertifications(
+    householdIds: readonly string[],
+  ): Promise<HostCertificationRow[]>
+  readHostRoster(tableId: string): Promise<HostRosterRow[]>
 }
 
 export class SupabaseReadGateway implements SofraReadGateway {
@@ -72,6 +87,29 @@ export class SupabaseReadGateway implements SofraReadGateway {
       .order('starts_at', { ascending: true })
     if (error)
       throw new RepositoryQueryError('list hosted tables', error.message)
+    return data
+  }
+
+  async readHostCertifications(householdIds: readonly string[]) {
+    if (!householdIds.length) return []
+    const { data, error } = await this.client
+      .from('host_certifications')
+      .select(
+        'id, household_id, status, certified_traveler_capacity, valid_from, valid_until',
+      )
+      .in('household_id', [...householdIds])
+      .order('created_at', { ascending: false })
+    if (error) {
+      throw new RepositoryQueryError('find host certification', error.message)
+    }
+    return data
+  }
+
+  async readHostRoster(tableId: string) {
+    const { data, error } = await this.client.rpc('get_my_host_roster', {
+      requested_table_id: tableId,
+    })
+    if (error) throw new RepositoryQueryError('list host roster', error.message)
     return data
   }
 }

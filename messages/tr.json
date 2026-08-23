@@ -190,7 +190,59 @@
     "approval": "Onay durumu",
     "guests": "Onaylı misafir sayısı",
     "roster": "Misafir listesini görüntüle",
-    "submit": "Sofra onayına gönder"
+    "submit": "Sofra onayına gönder",
+    "upcomingTables": "Yaklaşan sofralar",
+    "certifiedCapacity": "Belgeli kapasite",
+    "confirmedTravelers": "Onaylı misafirler",
+    "seatsAvailable": "{count} boş yer",
+    "unavailable": "Kullanılamıyor",
+    "certificationUnavailableTitle": "Etkin belgelendirme gerekiyor",
+    "certificationUnavailableBody": "Sofra etkin bir belgelendirme ve kapasite kaydedene kadar bu ev halkı yeni sofra öneremez.",
+    "submissionReviewed": "Yerel demo bu sofranın Sofra incelemesine geçişini doğruladı. Kalıcı durum değişmedi ve sofra özel kalmaya devam ediyor.",
+    "submissionUnavailable": "Hiçbir durum değişmedi. Korumalı sofra yazma deposu bağlanana kadar üretimde gönderim devre dışıdır.",
+    "statuses": {
+      "draft": "Taslak",
+      "submitted": "Gönderildi",
+      "changes_requested": "Değişiklik istendi",
+      "approved": "Onaylandı",
+      "published": "Yayınlandı",
+      "minimum_reached": "Minimuma ulaştı",
+      "confirmed": "Kesinleşti",
+      "roster_locked": "Liste kilitlendi",
+      "completed": "Tamamlandı",
+      "cancelled": "İptal edildi",
+      "archived": "Arşivlendi"
+    }
+  },
+  "HostJourney": {
+    "eyebrow": "Sofra yolculuğu",
+    "title": "Özel taslaktan ev sofrasına",
+    "steps": {
+      "draft": "Ev halkı taslağı",
+      "review": "Sofra incelemesi",
+      "publication": "Yayın",
+      "bookings": "Rezervasyonlar",
+      "dinner": "Akşam yemeği"
+    },
+    "states": {
+      "complete": "Tamamlandı",
+      "current": "Güncel",
+      "upcoming": "Yaklaşan",
+      "attention": "İşlem gerekiyor"
+    },
+    "summaries": {
+      "draft": "Bu özel taslak düzenlenip gönderilebilir; misafirler tarafından görülemez.",
+      "submitted": "Bu sofra onaylanmadan veya yayınlanmadan önce Sofra incelemesi gerekir.",
+      "changes_requested": "Sofra değişiklik istedi. Yeniden göndermeden önce ev halkının önerisini düzenleyin.",
+      "approved": "Sofra onaylandı; ancak yayın ayrı ve Sofra tarafından yönetilen bir adımdır.",
+      "published": "Sofra minimumuna ilerlerken misafirler boş yerler için talep oluşturabilir.",
+      "minimum_reached": "Minimuma ulaşıldı. Yalnızca onaylı gruplar teslimat için güvenli listede görünür.",
+      "confirmed": "Akşam kesinleşti. Onaylı menüyü, karşılamayı ve ev sahibi katılımını hazırlayın.",
+      "roster_locked": "Teslimat listesi son hazırlık için kilitlendi.",
+      "completed": "Akşam tamamlandı; geri bildirim ve ödeme kontrolleri ayrı kayıtlar olarak kalır.",
+      "cancelled": "Bu sofranın normal yolculuğu durdu. İptal işlemleri operasyon kararı olarak kalır.",
+      "archived": "Tamamlanan veya iptal edilen bu sofra arşiv kaydı olarak tutulur."
+    }
   },
   "Admin": {
     "title": "Sofra operasyon",
@@ -463,10 +515,30 @@
     "privacyTitle": "Misafir seçimi değil, operasyonel bağlam",
     "privacyBody": "Bu liste grup büyüklüğünü ve uyumluluk kararlarını gösterir. Beslenme bildirimi metni, görünüş ve hassas misafir özellikleri bilinçli olarak gösterilmez.",
     "parties": "Katılan gruplar",
+    "confirmedParty": "Onaylı grup",
+    "empty": "Bu sofra için henüz onaylı grup bilgisi yok.",
     "partySize": "{count} misafir",
+    "bookingStatuses": {
+      "confirmed": "Onaylandı",
+      "completed": "Tamamlandı"
+    },
+    "tableStatuses": {
+      "draft": "Taslak",
+      "submitted": "Gönderildi",
+      "changes_requested": "Değişiklik istendi",
+      "approved": "Onaylandı",
+      "published": "Yayınlandı",
+      "minimum_reached": "Minimuma ulaştı",
+      "confirmed": "Kesinleşti",
+      "roster_locked": "Liste kilitlendi",
+      "completed": "Tamamlandı",
+      "cancelled": "İptal edildi",
+      "archived": "Arşivlendi"
+    },
     "compatibility": {
       "accepted": "Uyumluluk kabul edildi",
-      "review_required": "İnceleme gerekli",
+      "pending": "İnceleme gerekli",
+      "declined": "Uyumlu değil",
       "not_required": "İnceleme gerekmiyor"
     },
     "checklistTitle": "Akşam günü hazırlığı",

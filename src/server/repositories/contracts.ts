@@ -1,5 +1,6 @@
 import type {
   BookingStatus,
+  CertificationStatus,
   CompatibilityStatus,
   PaymentStatus,
 } from '@/server/database/database.types'
@@ -35,6 +36,23 @@ export type HostTableRecord = Omit<
   | 'joiningPartySummaries'
 >
 
+export interface HostCertificationRecord {
+  id: string
+  householdId: string
+  status: CertificationStatus
+  certifiedTravelerCapacity: number
+  validFrom: string | null
+  validUntil: string | null
+}
+
+export interface HostRosterPartyRecord {
+  bookingId: string
+  tableId: string
+  partySize: number
+  bookingStatus: Extract<BookingStatus, 'confirmed' | 'completed'>
+  compatibilityStatus: CompatibilityStatus
+}
+
 export interface SofraReadRepository {
   listPublicTables(): Promise<PublicHostedTable[]>
   findPublicTableBySlug(slug: string): Promise<PublicHostedTable | undefined>
@@ -44,4 +62,6 @@ export interface SofraReadRepository {
   ): Promise<TravelerBookingRecord | undefined>
   listHostTables(): Promise<HostTableRecord[]>
   findHostTableById(id: string): Promise<HostTableRecord | undefined>
+  findHostCertification(): Promise<HostCertificationRecord | undefined>
+  listHostRoster(tableId: string): Promise<HostRosterPartyRecord[]>
 }

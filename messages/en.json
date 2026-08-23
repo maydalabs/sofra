@@ -190,7 +190,59 @@
     "approval": "Approval status",
     "guests": "Confirmed guest count",
     "roster": "View guest roster",
-    "submit": "Submit for Sofra approval"
+    "submit": "Submit for Sofra approval",
+    "upcomingTables": "Upcoming tables",
+    "certifiedCapacity": "Certified capacity",
+    "confirmedTravelers": "Confirmed travelers",
+    "seatsAvailable": "{count, plural, one {# seat available} other {# seats available}}",
+    "unavailable": "Unavailable",
+    "certificationUnavailableTitle": "An active certification is required",
+    "certificationUnavailableBody": "This household cannot propose another table until Sofra records an active certification and capacity.",
+    "submissionReviewed": "The local demo validated this table’s move to Sofra review. No durable status changed, and the table remains private.",
+    "submissionUnavailable": "No status changed. Production submission remains disabled until the protected table-write repository is connected.",
+    "statuses": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "changes_requested": "Changes requested",
+      "approved": "Approved",
+      "published": "Published",
+      "minimum_reached": "Minimum reached",
+      "confirmed": "Confirmed",
+      "roster_locked": "Roster locked",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "archived": "Archived"
+    }
+  },
+  "HostJourney": {
+    "eyebrow": "Table journey",
+    "title": "From private draft to hosted dinner",
+    "steps": {
+      "draft": "Household draft",
+      "review": "Sofra review",
+      "publication": "Publication",
+      "bookings": "Bookings",
+      "dinner": "Dinner"
+    },
+    "states": {
+      "complete": "Complete",
+      "current": "Current",
+      "upcoming": "Upcoming",
+      "attention": "Action needed"
+    },
+    "summaries": {
+      "draft": "This private draft can be revised and submitted; it is not visible to travelers.",
+      "submitted": "Sofra review is required before this table can be approved or published.",
+      "changes_requested": "Sofra requested changes. Revise the household’s proposal before resubmitting.",
+      "approved": "The table is approved, but publication remains a separate Sofra-controlled step.",
+      "published": "Travelers can request available seats while the table works toward its minimum.",
+      "minimum_reached": "The minimum has been reached. Confirmed parties appear only in the delivery-safe roster.",
+      "confirmed": "The dinner is confirmed. Prepare the approved menu, welcome, and host participation.",
+      "roster_locked": "The delivery roster is locked for final preparation.",
+      "completed": "The dinner is complete; feedback and payout controls remain separate records.",
+      "cancelled": "This table’s normal journey has stopped. Cancellation handling remains an operations decision.",
+      "archived": "This completed or cancelled table is retained as an archived record."
+    }
   },
   "Admin": {
     "title": "Sofra operations",
@@ -463,10 +515,30 @@
     "privacyTitle": "Operational context, not guest selection",
     "privacyBody": "This roster shows party size and compatibility decisions. Dietary disclosure text, appearance, and sensitive traveler traits are intentionally absent.",
     "parties": "Joining parties",
+    "confirmedParty": "Confirmed party",
+    "empty": "No confirmed party information is available for this table yet.",
     "partySize": "{count, plural, one {# traveler} other {# travelers}}",
+    "bookingStatuses": {
+      "confirmed": "Confirmed",
+      "completed": "Completed"
+    },
+    "tableStatuses": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "changes_requested": "Changes requested",
+      "approved": "Approved",
+      "published": "Published",
+      "minimum_reached": "Minimum reached",
+      "confirmed": "Confirmed",
+      "roster_locked": "Roster locked",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "archived": "Archived"
+    },
     "compatibility": {
       "accepted": "Compatibility accepted",
-      "review_required": "Review required",
+      "pending": "Review required",
+      "declined": "Not compatible",
       "not_required": "No review required"
     },
     "checklistTitle": "Dinner-day preparation",

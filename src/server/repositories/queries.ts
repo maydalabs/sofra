@@ -40,3 +40,15 @@ export const findHostTableById = cache(
     return repository.findHostTableById(tableId)
   },
 )
+
+export const findHostCertification = cache(async (actorId: string) => {
+  const repository = await getAuthenticatedSofraReadRepository(actorId)
+  return repository.findHostCertification()
+})
+
+export const listHostRoster = cache(
+  async (actorId: string, tableId: string) => {
+    const repository = await getAuthenticatedSofraReadRepository(actorId)
+    return repository.listHostRoster(tableId)
+  },
+)

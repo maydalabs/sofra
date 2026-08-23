@@ -6,6 +6,7 @@ import {
   getPublicDemoTables,
 } from '@/features/hosted-tables/demo-tables'
 import type { PrivateHostedTableRecord } from '@/features/hosted-tables/types'
+import { getDemoRoster } from '@/server/demo/rosters'
 
 import { RepositoryUnavailableError } from './errors'
 import type {
@@ -86,6 +87,32 @@ export class DemoSofraReadRepository implements SofraReadRepository {
   async findHostTableById(id: string) {
     const tables = await this.listHostTables()
     return tables.find((table) => table.id === id)
+  }
+
+  async findHostCertification() {
+    if (this.actorId !== 'demo-host') {
+      throw new RepositoryUnavailableError(
+        'The demo certification repository requires the certified-host persona',
+      )
+    }
+    return {
+      id: 'certification-ayse-levent',
+      householdId: 'household-ayse-levent',
+      status: 'active' as const,
+      certifiedTravelerCapacity: 6,
+      validFrom: '2026-01-01T00:00:00.000Z',
+      validUntil: null,
+    }
+  }
+
+  async listHostRoster(tableId: string) {
+    const table = await this.findHostTableById(tableId)
+    if (!table) {
+      throw new RepositoryUnavailableError(
+        'The requested table is outside the demo host household scope',
+      )
+    }
+    return getDemoRoster(tableId)
   }
 
   private assertAuthenticatedDemoActor() {

@@ -487,14 +487,6 @@ create policy bookings_traveler_read on public.bookings for select to authentica
   using (primary_traveler_id = (select auth.uid()));
 create policy bookings_traveler_insert on public.bookings for insert to authenticated
   with check (primary_traveler_id = (select auth.uid()));
-create policy bookings_serving_host_read on public.bookings for select to authenticated
-  using (
-    status in ('confirmed', 'roster_locked', 'completed') and exists (
-      select 1 from public.hosted_tables ht
-      join public.households h on h.id = ht.household_id
-      where ht.id = hosted_table_id and h.owner_profile_id = (select auth.uid())
-    )
-  );
 create policy booking_guests_booking_owner on public.booking_guests for all to authenticated
   using (exists (select 1 from public.bookings b where b.id = booking_id and b.primary_traveler_id = (select auth.uid())))
   with check (exists (select 1 from public.bookings b where b.id = booking_id and b.primary_traveler_id = (select auth.uid())));
@@ -517,4 +509,3 @@ comment on table public.household_private_addresses is
   'Server-controlled sensitive data. Never join into public views, metadata, maps, analytics, or client bundles.';
 comment on table public.dietary_disclosures is
   'Sensitive compatibility data. Never include disclosure content in analytics events.';
-

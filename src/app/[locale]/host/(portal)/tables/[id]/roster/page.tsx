@@ -14,8 +14,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
 import { getCurrentActor } from '@/server/auth/current-actor'
-import { getDemoRoster } from '@/server/demo/rosters'
-import { findHostTableById } from '@/server/repositories/queries'
+import {
+  findHostTableById,
+  listHostRoster,
+} from '@/server/repositories/queries'
 
 export default async function HostRosterPage({
   params,
@@ -29,7 +31,7 @@ export default async function HostRosterPage({
   if (!actor) notFound()
   const table = await findHostTableById(actor.id, id)
   if (!table) notFound()
-  const roster = getDemoRoster(table.id)
+  const roster = await listHostRoster(actor.id, table.id)
   const travelerCount = roster.reduce(
     (total, party) => total + party.partySize,
     0,
@@ -47,7 +49,7 @@ export default async function HostRosterPage({
                 {formatTableDate(table.startsAt, locale)}
               </p>
             </div>
-            <Badge>{table.status.replace('_', ' ')}</Badge>
+            <Badge>{t(`tableStatuses.${table.status}`)}</Badge>
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -81,32 +83,38 @@ export default async function HostRosterPage({
           <h2 className="font-heading text-3xl font-medium">{t('parties')}</h2>
         </CardHeader>
         <CardContent className="space-y-3">
-          {roster.map((party) => (
-            <div
-              key={party.bookingId}
-              className="grid gap-4 rounded-2xl border p-5 md:grid-cols-[1fr_auto] md:items-center"
-            >
-              <div>
-                <p className="font-heading text-xl font-semibold">
-                  {party.publicContext}
-                </p>
-                <p className="text-muted-foreground mt-1 font-mono text-xs">
-                  {party.bookingId}
-                </p>
+          {roster.length ? (
+            roster.map((party) => (
+              <div
+                key={party.bookingId}
+                className="grid gap-4 rounded-2xl border p-5 md:grid-cols-[1fr_auto] md:items-center"
+              >
+                <div>
+                  <p className="font-heading text-xl font-semibold">
+                    {t('confirmedParty')}
+                  </p>
+                  <p className="text-muted-foreground mt-1 font-mono text-xs">
+                    {party.bookingId}
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2 md:justify-end">
+                  <Badge variant="outline">
+                    {t('partySize', { count: party.partySize })}
+                  </Badge>
+                  <Badge variant="outline">
+                    {t(`bookingStatuses.${party.bookingStatus}`)}
+                  </Badge>
+                  <Badge variant="secondary">
+                    {t(`compatibility.${party.compatibilityStatus}`)}
+                  </Badge>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-2 md:justify-end">
-                <Badge variant="outline">
-                  {t('partySize', { count: party.partySize })}
-                </Badge>
-                <Badge variant="outline">
-                  {party.bookingStatus.replace('_', ' ')}
-                </Badge>
-                <Badge variant="secondary">
-                  {t(`compatibility.${party.compatibilityStatus}`)}
-                </Badge>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-muted-foreground rounded-2xl border p-5 text-sm">
+              {t('empty')}
+            </p>
+          )}
         </CardContent>
       </Card>
 

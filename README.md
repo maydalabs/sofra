@@ -66,6 +66,7 @@ pnpm db:types
 
 - Foundation migration: `supabase/migrations/202608030001_initial_foundation.sql`
 - Authenticated read-model migration: `supabase/migrations/202608240001_repository_read_models.sql`
+- Host operations read-model migration: `supabase/migrations/202608240002_host_operations_read_models.sql`
 - Fictional seed: `supabase/seed.sql`
 - Generated-shape fallback types: `src/server/database/database.types.ts`
 
@@ -98,6 +99,8 @@ Playwright starts or reuses the local app and covers anonymous discovery, table 
 Status changes run through typed services and illegal transitions return domain errors. Public listings use an explicit allowlist projection and `published_hosted_tables`; exact address, precise coordinates, arrival instructions, dietary details, private guest names, assessment notes, and incident content are excluded.
 
 The traveler booking service validates availability, cutoff, configurable shared-party limits, exact additional-guest counts, compatibility requirements, and integer totals. A separate safe review omits guest names and dietary text. Booking details visualize compatibility, payment, table confirmation, and dinner as distinct states. Local cancellation review validates the lifecycle transition without changing durable data or deciding the still-open refund policy.
+
+The host workspace derives certified capacity from the actor-owned certification record, visualizes the table journey from private draft through dinner, and calculates confirmed-party and projected host-net summaries from the delivery roster. Local submission review reloads the host-owned table and active certification before validating the transition, but does not claim a durable write. Host rosters use a narrow authenticated SQL function and never expose guest names, dietary text, exact location, payment detail, or appearance-selection data.
 
 Public, traveler, host, and operator page components covered by the current contracts read through repository queries rather than importing database clients or fictional fixtures. Anonymous discovery uses the public-safe view when Supabase is configured and retains the fictional public fallback otherwise. Protected repositories use local personas only in demo mode and fail closed when production credentials or an authorized actor are absent. Cross-user operator reads use a dedicated server-only repository that checks the actor role before creating a service-role client and exposes purpose-specific records for applications, table reviews, booking operations, incidents, payouts, and audit events.
 

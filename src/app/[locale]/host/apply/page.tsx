@@ -13,7 +13,7 @@ export default async function HostApplicationPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>
-  searchParams: Promise<{ submitted?: string }>
+  searchParams: Promise<{ application?: string }>
 }) {
   const { locale } = await params
   const query = await searchParams
@@ -34,11 +34,20 @@ export default async function HostApplicationPage({
           </p>
         </CardHeader>
         <CardContent>
-          {query.submitted === '1' ? (
+          {query.application === 'reviewed' ? (
             <Alert className="mb-6">
               <AlertDescription>
-                Application submitted for human review. No certification or
-                publication happened automatically.
+                The local demo validated this application for human review. No
+                durable application, certification, or publication was created.
+              </AlertDescription>
+            </Alert>
+          ) : null}
+          {query.application === 'unavailable' ? (
+            <Alert className="mb-6">
+              <AlertDescription>
+                No application was submitted. Production applications remain
+                disabled until the protected application-write repository is
+                connected.
               </AlertDescription>
             </Alert>
           ) : null}

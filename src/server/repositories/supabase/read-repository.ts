@@ -7,7 +7,13 @@ import type {
   TravelerBookingRecord,
 } from '../contracts'
 import type { SofraReadGateway } from './gateway'
-import { mapHostTable, mapPublishedTable, mapTravelerBooking } from './mappers'
+import {
+  mapHostCertification,
+  mapHostRosterParty,
+  mapHostTable,
+  mapPublishedTable,
+  mapTravelerBooking,
+} from './mappers'
 
 export class SupabaseSofraReadRepository implements SofraReadRepository {
   constructor(
@@ -57,6 +63,38 @@ export class SupabaseSofraReadRepository implements SofraReadRepository {
   async findHostTableById(id: string) {
     const tables = await this.listHostTables()
     return tables.find((table) => table.id === id)
+  }
+
+  async findHostCertification() {
+    const actorId = this.assertActor()
+    const households = await this.gateway.readOwnedHouseholds(actorId)
+    const rows = await this.gateway.readHostCertifications(
+      households.map((household) => household.id),
+    )
+    const certifications = rows.map(mapHostCertification)
+    return (
+      certifications.find(
+        (certification) => certification.status === 'active',
+      ) ?? certifications[0]
+    )
+  }
+
+  async listHostRoster(tableId: string) {
+    const table = await this.findHostTableById(tableId)
+    if (!table) {
+      throw new RepositoryUnavailableError(
+        'The requested table is outside the actor household scope',
+      )
+    }
+    const rows = await this.gateway.readHostRoster(tableId)
+    return rows.map((row) => {
+      if (row.table_id !== table.id) {
+        throw new RepositoryUnavailableError(
+          'A roster party was returned outside the requested table scope',
+        )
+      }
+      return mapHostRosterParty(row)
+    })
   }
 
   private assertActor() {

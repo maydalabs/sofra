@@ -5,6 +5,7 @@ import { z } from 'zod'
 
 import { createAuditEntry } from '@/server/audit/audit'
 import { getCurrentActor } from '@/server/auth/current-actor'
+import { isDemoMode } from '@/server/auth/demo-session'
 import {
   assertHasAnyRole,
   assertVerifiedEmail,
@@ -32,17 +33,20 @@ export async function submitHostApplicationAction(formData: FormData) {
     participation: formData.get('participation'),
   })
   const applicationId = 'demo-host-application'
+  if (!isDemoMode()) {
+    redirect(`/${locale}/host/apply?application=unavailable`)
+  }
   console.info(
     '[Sofra demo audit]',
     createAuditEntry({
       actorId: actor.id,
-      action: 'host_application.submitted',
+      action: 'host_application.submission_reviewed',
       entityType: 'host_application',
       entityId: applicationId,
-      reason: 'Verified-email host application',
+      reason: 'Local verified-email host application review',
       previousState: { status: 'draft' },
       newState: { status: 'submitted', householdName: input.householdName },
     }),
   )
-  redirect(`/${locale}/host/apply?submitted=1`)
+  redirect(`/${locale}/host/apply?application=reviewed`)
 }

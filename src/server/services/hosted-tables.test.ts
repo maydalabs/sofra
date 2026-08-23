@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { approveHostedTable, createHostedTableDraft } from './hosted-tables'
+import {
+  approveHostedTable,
+  createHostedTableDraft,
+  submitHostedTable,
+} from './hosted-tables'
 
 const validInput = {
   menuTitle: 'A complete Sunday menu',
@@ -59,5 +63,29 @@ describe('hosted-table service integration', () => {
         actorRoles: ['operator'],
       }),
     ).toBe('approved')
+  })
+
+  it('allows editable host states to enter review and stops suspended hosts', () => {
+    expect(
+      submitHostedTable({
+        currentStatus: 'changes_requested',
+        actorSuspended: false,
+        certificationActive: true,
+      }),
+    ).toBe('submitted')
+    expect(() =>
+      submitHostedTable({
+        currentStatus: 'draft',
+        actorSuspended: true,
+        certificationActive: true,
+      }),
+    ).toThrow(/suspended host/i)
+    expect(() =>
+      submitHostedTable({
+        currentStatus: 'draft',
+        actorSuspended: false,
+        certificationActive: false,
+      }),
+    ).toThrow(/active host certification/i)
   })
 })

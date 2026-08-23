@@ -9,8 +9,12 @@ describe('host table-creation validation', () => {
     const dateInput = screen.getByLabelText(/date and start time/i)
     const capacityInput = screen.getByLabelText(/proposed traveler capacity/i)
     const minimum = new Date(dateInput.getAttribute('min') ?? '')
+    const maximum = new Date(dateInput.getAttribute('max') ?? '')
     const daysAway = (minimum.getTime() - Date.now()) / (24 * 60 * 60 * 1_000)
+    const maximumDaysAway =
+      (maximum.getTime() - Date.now()) / (24 * 60 * 60 * 1_000)
     expect(daysAway).toBeGreaterThan(6.9)
+    expect(maximumDaysAway).toBeLessThanOrEqual(35.1)
     expect(capacityInput).toHaveAttribute('max', '6')
   })
 })

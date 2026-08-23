@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -23,7 +24,13 @@ export default async function HouseholdPage({
           protected record.
         </p>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-5">
+        <Alert>
+          <AlertDescription>
+            This is a fictional profile preview. Protected household writes are
+            not connected, so editing these fields will not change durable data.
+          </AlertDescription>
+        </Alert>
         <form className="space-y-5">
           <div className="space-y-2">
             <Label htmlFor="household-name">Public household name</Label>
@@ -44,7 +51,9 @@ export default async function HouseholdPage({
               defaultValue="Sunday dinner stretches into tea in this home. This is how dinner happens in our home."
             />
           </div>
-          <Button type="submit">Save household profile</Button>
+          <Button type="button" disabled>
+            Durable profile editing not connected
+          </Button>
         </form>
       </CardContent>
     </Card>

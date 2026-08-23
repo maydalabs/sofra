@@ -8,6 +8,8 @@ Public page HTML, JSON, metadata, analytics, map inputs, storage metadata, and S
 
 `get_my_booking_summaries()` is the authenticated traveler read boundary. It filters on `auth.uid()` and returns only booking status, party context, public table information, compatibility status, payment status, and total price. It cannot return address, arrival, guest-name, dietary-text, assessment, incident, or audit fields.
 
+`get_my_host_roster(table_id)` is the serving-host read boundary. It verifies that the authenticated actor owns the table’s household and returns only confirmed/completed booking identifiers, party size, booking status, and compatibility outcome. Hosts do not receive direct access to the broader booking row, guest names, dietary text, payment detail, or traveler-selection attributes.
+
 Booking preparation separates the server-only intent from the traveler-facing review. The intent may hold additional-guest names and a private dietary disclosure for future dedicated persistence; the review allowlist contains only party size, total price, compatibility status, and pre-payment booking status. Sensitive form content is never echoed into the page result.
 
 ## Data separation
@@ -21,7 +23,7 @@ Booking preparation separates the server-only intent from the traveler-facing re
 
 - Anonymous users read only published public views.
 - Travelers read their own bookings, guests, and disclosures.
-- Hosts read their household and tables, plus the minimum delivery information for confirmed/locked bookings.
+- Hosts read their household and tables, plus the minimum delivery information for confirmed/completed bookings through the narrow roster function.
 - Operator and administrator operations execute server-side with explicit role checks and audit entries.
 - Role assignment is server controlled and cannot derive from client-editable auth metadata.
 

@@ -57,6 +57,13 @@ export type ApplicationStatus =
   | 'declined'
   | 'withdrawn'
 
+export type CertificationStatus =
+  | 'pending'
+  | 'active'
+  | 'suspended'
+  | 'expired'
+  | 'revoked'
+
 export type PayoutStatus = 'pending' | 'eligible' | 'held' | 'released'
 
 export type IncidentStatus =
@@ -152,6 +159,24 @@ export interface Database {
           hosting_plan: string
           submitted_at: string | null
           decided_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Record<string, never>
+        Update: Record<string, never>
+        Relationships: []
+      }
+      host_certifications: {
+        Row: {
+          id: string
+          household_id: string
+          lead_host_profile_id: string
+          status: CertificationStatus
+          certified_traveler_capacity: number
+          valid_from: string | null
+          valid_until: string | null
+          certified_by: string | null
+          suspension_reason: string | null
           created_at: string
           updated_at: string
         }
@@ -336,6 +361,16 @@ export interface Database {
           guest_total_kurus: number
         }[]
       }
+      get_my_host_roster: {
+        Args: { requested_table_id: string }
+        Returns: {
+          id: string
+          table_id: string
+          party_size: number
+          status: BookingStatus
+          compatibility_status: CompatibilityStatus
+        }[]
+      }
       has_role: {
         Args: {
           required_role: Database['public']['Enums']['application_role']
@@ -352,6 +387,7 @@ export interface Database {
         | 'operator'
         | 'administrator'
       application_status: ApplicationStatus
+      certification_status: CertificationStatus
       payout_status: PayoutStatus
       incident_status: IncidentStatus
     }

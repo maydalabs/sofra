@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 
 import { RepositoryDataError, RepositoryUnavailableError } from '../errors'
 import type {
+  HostCertificationRow,
+  HostRosterRow,
   HostedTableRow,
   HouseholdRow,
   PublishedTableRow,
@@ -105,6 +107,23 @@ const hostedTableRow: HostedTableRow = {
   updated_at: '2026-08-24T00:00:00.000Z',
 }
 
+const certificationRow: HostCertificationRow = {
+  id: 'certification-1',
+  household_id: 'household-1',
+  status: 'active',
+  certified_traveler_capacity: 4,
+  valid_from: '2026-01-01T00:00:00.000Z',
+  valid_until: null,
+}
+
+const rosterRow: HostRosterRow = {
+  id: 'booking-1',
+  table_id: 'table-1',
+  party_size: 2,
+  status: 'confirmed',
+  compatibility_status: 'accepted',
+}
+
 function createGateway(
   overrides: Partial<SofraReadGateway> = {},
 ): SofraReadGateway {
@@ -115,6 +134,8 @@ function createGateway(
     readTravelerBookings: async () => [bookingRow],
     readOwnedHouseholds: async () => [householdRow],
     readHostedTables: async () => [hostedTableRow],
+    readHostCertifications: async () => [certificationRow],
+    readHostRoster: async () => [rosterRow],
     ...overrides,
   }
 }
@@ -147,6 +168,17 @@ describe('SupabaseSofraReadRepository', () => {
     await expect(repository.listHostTables()).resolves.toMatchObject([
       { id: 'table-1', householdId: 'household-1' },
     ])
+    await expect(repository.findHostCertification()).resolves.toMatchObject({
+      status: 'active',
+      certifiedTravelerCapacity: 4,
+    })
+    await expect(repository.listHostRoster('table-1')).resolves.toMatchObject([
+      {
+        bookingId: 'booking-1',
+        partySize: 2,
+        compatibilityStatus: 'accepted',
+      },
+    ])
   })
 
   it('fails closed when protected reads have no actor', async () => {
@@ -156,6 +188,39 @@ describe('SupabaseSofraReadRepository', () => {
     )
     await expect(repository.listHostTables()).rejects.toBeInstanceOf(
       RepositoryUnavailableError,
+    )
+    await expect(repository.findHostCertification()).rejects.toBeInstanceOf(
+      RepositoryUnavailableError,
+    )
+  })
+
+  it('rejects roster rows outside the requested host-owned table', async () => {
+    const repository = new SupabaseSofraReadRepository(
+      createGateway({
+        readHostRoster: async () => [
+          { ...rosterRow, table_id: 'table-outside-scope' },
+        ],
+      }),
+      'actor-1',
+    )
+
+    await expect(repository.listHostRoster('table-1')).rejects.toBeInstanceOf(
+      RepositoryUnavailableError,
+    )
+  })
+
+  it('rejects non-confirmed records at the host roster mapper boundary', async () => {
+    const repository = new SupabaseSofraReadRepository(
+      createGateway({
+        readHostRoster: async () => [
+          { ...rosterRow, status: 'pending_minimum' },
+        ],
+      }),
+      'actor-1',
+    )
+
+    await expect(repository.listHostRoster('table-1')).rejects.toBeInstanceOf(
+      RepositoryDataError,
     )
   })
 

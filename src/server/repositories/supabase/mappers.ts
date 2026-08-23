@@ -1,8 +1,15 @@
 import type { PublicHostedTable } from '@/features/hosted-tables/types'
 
 import { RepositoryDataError } from '../errors'
-import type { HostTableRecord, TravelerBookingRecord } from '../contracts'
 import type {
+  HostCertificationRecord,
+  HostRosterPartyRecord,
+  HostTableRecord,
+  TravelerBookingRecord,
+} from '../contracts'
+import type {
+  HostCertificationRow,
+  HostRosterRow,
   HostedTableRow,
   HouseholdRow,
   PublishedTableRow,
@@ -167,5 +174,31 @@ export function mapHostTable(
     status: row.status,
     publishedAt: row.published_at,
     cancellationReason: row.cancellation_reason,
+  }
+}
+
+export function mapHostCertification(
+  row: HostCertificationRow,
+): HostCertificationRecord {
+  return {
+    id: row.id,
+    householdId: row.household_id,
+    status: row.status,
+    certifiedTravelerCapacity: row.certified_traveler_capacity,
+    validFrom: row.valid_from,
+    validUntil: row.valid_until,
+  }
+}
+
+export function mapHostRosterParty(row: HostRosterRow): HostRosterPartyRecord {
+  if (row.status !== 'confirmed' && row.status !== 'completed') {
+    throw new RepositoryDataError('get_my_host_roster.status')
+  }
+  return {
+    bookingId: row.id,
+    tableId: row.table_id,
+    partySize: row.party_size,
+    bookingStatus: row.status,
+    compatibilityStatus: row.compatibility_status,
   }
 }

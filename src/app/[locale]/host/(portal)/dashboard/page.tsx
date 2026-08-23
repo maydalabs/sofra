@@ -10,11 +10,17 @@ import { redirect } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { isHostCertificationActive } from '@/features/hosts/certification'
 import { formatTry } from '@/features/pricing/pricing'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
 import { getCurrentActor } from '@/server/auth/current-actor'
-import { listHostTables } from '@/server/repositories/queries'
+import {
+  findHostCertification,
+  listHostRoster,
+  listHostTables,
+} from '@/server/repositories/queries'
+import { getServerTimeMilliseconds } from '@/server/time/clock'
 
 export default async function HostDashboardPage({
   params,
@@ -26,9 +32,38 @@ export default async function HostDashboardPage({
   const t = await getTranslations('HostPortal')
   const actor = await getCurrentActor()
   if (!actor) redirect(`/${locale}/sign-in`)
-  const tables = await listHostTables(actor.id)
+  const [tables, certification] = await Promise.all([
+    listHostTables(actor.id),
+    findHostCertification(actor.id),
+  ])
   const upcoming = tables.filter(
     (table) => !['completed', 'archived', 'cancelled'].includes(table.status),
+  )
+  const rosters = await Promise.all(
+    upcoming.map(async (table) => ({
+      table,
+      parties: await listHostRoster(actor.id, table.id),
+    })),
+  )
+  const confirmedTravelers = rosters.reduce(
+    (total, roster) =>
+      total +
+      roster.parties.reduce((count, party) => count + party.partySize, 0),
+    0,
+  )
+  const projectedHostNetKurus = rosters.reduce(
+    (total, roster) =>
+      total +
+      roster.parties.reduce(
+        (subtotal, party) =>
+          subtotal + party.partySize * roster.table.hostNetPayoutKurus,
+        0,
+      ),
+    0,
+  )
+  const certificationActive = isHostCertificationActive(
+    certification,
+    new Date(getServerTimeMilliseconds()),
   )
 
   return (
@@ -36,19 +71,30 @@ export default async function HostDashboardPage({
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
           icon={CalendarClock}
-          label="Upcoming tables"
+          label={t('upcomingTables')}
           value={String(upcoming.length)}
         />
         <SummaryCard
           icon={ClipboardCheck}
-          label="Certified capacity"
-          value="6"
+          label={t('certifiedCapacity')}
+          value={
+            certificationActive && certification
+              ? String(certification.certifiedTravelerCapacity)
+              : t('unavailable')
+          }
         />
-        <SummaryCard icon={UsersRound} label="Confirmed travelers" value="3" />
+        <SummaryCard
+          icon={UsersRound}
+          label={t('confirmedTravelers')}
+          value={String(confirmedTravelers)}
+        />
         <SummaryCard
           icon={CircleDollarSign}
           label={t('payouts')}
-          value={formatTry(360_000, locale === 'tr' ? 'tr-TR' : 'en-US')}
+          value={formatTry(
+            projectedHostNetKurus,
+            locale === 'tr' ? 'tr-TR' : 'en-US',
+          )}
         />
       </div>
       <Card>
@@ -71,13 +117,13 @@ export default async function HostDashboardPage({
                 </p>
                 <p className="text-muted-foreground mt-1 text-xs">
                   {formatTableDate(table.startsAt, locale)} ·{' '}
-                  {table.availableSeats} seats available
+                  {t('seatsAvailable', { count: table.availableSeats })}
                 </p>
               </div>
               <Badge
                 variant={table.status === 'draft' ? 'secondary' : 'outline'}
               >
-                {table.status.replace('_', ' ')}
+                {t(`statuses.${table.status}`)}
               </Badge>
             </Link>
           ))}

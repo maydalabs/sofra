@@ -45,7 +45,7 @@ export default async function HostTablesPage({
                 proposed/certified
               </p>
             </div>
-            <Badge variant="outline">{table.status.replace('_', ' ')}</Badge>
+            <Badge variant="outline">{t(`statuses.${table.status}`)}</Badge>
           </Link>
         ))}
       </CardContent>

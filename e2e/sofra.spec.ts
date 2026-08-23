@@ -109,10 +109,37 @@ test('certified host creates a validated private draft', async ({ page }) => {
   await page
     .getByLabel('Practical home information')
     .fill('Shoes stay near the entrance and slippers are provided.')
-  await page.getByRole('button', { name: /validate and save draft/i }).click()
+  await page.getByRole('button', { name: /review private draft/i }).click()
   await expect(page.getByRole('status')).toContainText(
-    /remains private until submitted and approved/i,
+    /no durable table was saved/i,
   )
+})
+
+test('host application review does not claim a durable certification', async ({
+  page,
+}) => {
+  await choosePersona(page, /continue as traveler/i)
+  await page.goto('/en/host/apply')
+  await page.getByLabel(/household public name/i).fill('A demo household')
+  await page.getByLabel(/approximate neighborhood/i).fill('Kadıköy')
+  await page
+    .getByLabel(/household story/i)
+    .fill(
+      'Our Sunday dinner moves slowly from a household-selected meal into tea and conversation.',
+    )
+  await page
+    .getByLabel(/why would you like to host/i)
+    .fill(
+      'We would like to welcome travelers into the ordinary rhythm of dinner in our home.',
+    )
+  await page
+    .getByLabel(/who will participate/i)
+    .fill('Two verified adult hosts will join dinner and tea.')
+  await page
+    .getByRole('button', { name: /submit application for review/i })
+    .click()
+  await expect(page.getByText(/local demo validated/i)).toBeVisible()
+  await expect(page.getByText(/no durable application/i)).toBeVisible()
 })
 
 test('host creation UI enforces seven-day lead and certified capacity', async ({
@@ -136,8 +163,9 @@ test('host submits a draft through the domain service', async ({ page }) => {
   await choosePersona(page, /continue as certified host/i)
   await page.goto('/en/host/tables/table-ayse-draft/edit')
   await page.getByRole('button', { name: /submit for sofra approval/i }).click()
-  await expect(page.getByText(/submitted for sofra approval/i)).toBeVisible()
-  await expect(page.getByText(/not public and is now read-only/i)).toBeVisible()
+  await expect(page.getByText(/local demo validated/i)).toBeVisible()
+  await expect(page.getByText(/no durable status changed/i)).toBeVisible()
+  await expect(page.getByText(/^draft$/i).first()).toBeVisible()
 })
 
 test('operator approves a submitted table through server authorization', async ({
@@ -195,6 +223,8 @@ test('guided journey switches persona and opens the privacy-safe host roster', a
   await expect(
     page.getByRole('heading', { name: /joining parties/i }),
   ).toBeVisible()
+  await expect(page.getByText(/confirmed party/i)).toBeVisible()
+  await expect(page.getByText(/2 travelers/i)).toBeVisible()
   await expect(page.locator('body')).not.toContainText(
     'Development-only arrival instructions',
   )

@@ -28,7 +28,8 @@ export default async function PrivateAddressPage({
           <AlertDescription>
             This record is separate from the public neighborhood. It must never
             enter listing HTML, public map inputs, analytics, metadata, or
-            public database views.
+            public database views. Protected address writes are not connected,
+            so this preview does not save or echo an exact address.
           </AlertDescription>
         </Alert>
         <form className="grid gap-5 sm:grid-cols-2">
@@ -50,7 +51,9 @@ export default async function PrivateAddressPage({
             </Label>
             <Textarea id="arrival" rows={4} />
           </div>
-          <Button type="submit">Save private address</Button>
+          <Button type="button" disabled>
+            Protected address editing not connected
+          </Button>
         </form>
       </CardContent>
     </Card>
