@@ -12,12 +12,15 @@ Public page HTML, JSON, metadata, analytics, map inputs, storage metadata, and S
 
 Booking preparation separates the server-only intent from the traveler-facing review. The intent may hold additional-guest names and a private dietary disclosure for future dedicated persistence; the review allowlist contains only party size, total price, compatibility status, and pre-payment booking status. Sensitive form content is never echoed into the page result.
 
+Post-dinner submission repeats this separation for each trust channel. Public review text remains moderation-pending. Private constructive text and confidential safety reports exist only in their server-side intent and are absent from the safe result, redirect URL, demo audit, and analytics contract. The safety result contains only incident state and the required payout state; it never contains severity or report text.
+
 ## Data separation
 
 - Public approximate neighborhood and deliberately coarse coordinates live with the listing.
 - Verified private address and precise coordinates live in a private table.
 - Arrival instructions are separately access-controlled and disclosed only to eligible confirmed travelers and the serving host.
 - Dietary disclosures, safety incidents, and assessments have dedicated restrictive policies.
+- Public reviews, private feedback, and safety reports never share a combined storage or rendering projection.
 
 ## Authorization
 

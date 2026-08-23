@@ -16,6 +16,8 @@ In demo mode, public reads use fictional in-repository fixtures. Demo mutations 
 
 Traveler booking preparation runs through the server-only booking service. It validates the booking cutoff, configurable shared-party limit, seat availability, additional-guest count, compatibility requirement, and integer total before reaching the payment adapter. The service keeps private guest names and dietary text in the server intent while exposing a separate allowlisted pre-payment review.
 
+Post-dinner input uses three distinct server-only intents: moderation-pending public review, operations-only constructive feedback, and restricted safety incident. Each exposes a separate safe result projection. Private feedback and confidential report text are never echoed, audited, or represented by analytics events. An open safety intent invokes the payout rule and requires `held`, but local demo review does not claim a durable incident or payout change.
+
 ## Layers
 
 - `src/app`: routing, metadata, localized layouts, and page composition.

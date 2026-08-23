@@ -39,3 +39,5 @@ payment_authorized/confirmed/completed → disputed
 ## Payout
 
 A payout can move from pending to held or eligible, and from eligible to released. An open safety incident forces or preserves `held`; release is illegal until the hold reason is cleared by an authorized operator.
+
+The local post-dinner safety review validates the paired `open` incident and `held` payout outcome without persisting either state. Production submission remains unavailable until a protected transactional write boundary can create the restricted incident, hold the linked payout, and write its audit event atomically.

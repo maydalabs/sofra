@@ -556,13 +556,50 @@
     "separationBody": "Public experience reviews help future travelers. Constructive notes stay private to Sofra operations and are never appended to the public review.",
     "publicTitle": "Public experience review",
     "privateTitle": "Private constructive feedback",
-    "published": "Published",
+    "moderatedPublic": "Public after review",
     "operationsOnly": "Operations only",
-    "ratingLabel": "{rating} out of 5 stars",
-    "publicNote": "This public record contains no address, dietary disclosure, or information about other travelers.",
-    "privateNote": "Stored separately from public reviews and excluded from public projections and analytics.",
+    "publicIntro": "Share what the household experience felt like. Sofra reviews this channel before anything becomes public.",
+    "privateIntro": "Send a practical improvement note to Sofra operations without adding it to the household’s public review.",
+    "rating": "Rating out of 5",
+    "reviewTitle": "Short review title",
+    "publicBody": "Public experience review",
+    "privateBody": "Private note to Sofra operations",
+    "publicPrivacyAcknowledgment": "I have excluded exact address details, dietary information, private guest information, and safety concerns from this public review.",
+    "publicNote": "Public review content stays pending until moderation; it must not identify other travelers or reveal private home details.",
+    "privateNote": "This channel remains separate from public reviews and analytics. The local demo never echoes its content after submission.",
+    "reviewPublicAction": "Review public submission",
+    "reviewPrivateAction": "Review private submission",
     "safetyTitle": "Safety reports take a different path",
-    "safetyBody": "A safety concern is not a review or private improvement note. It creates a restricted incident record and can automatically hold payout.",
+    "safetyBody": "A safety concern is not a review or private improvement note. It enters a restricted incident workflow and requires any linked payout to be held while the concern is open.",
+    "notEmergencyTitle": "This local demo is not monitored",
+    "notEmergencyBody": "Do not rely on this form for immediate help. Contact the appropriate local emergency service if anyone is in immediate danger.",
+    "severity": "Operational urgency",
+    "severities": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical"
+    },
+    "confidentialReport": "Confidential report",
+    "reviewSafetyAction": "Review confidential report",
+    "results": {
+      "public_reviewed": {
+        "title": "Public review boundary validated",
+        "body": "The local demo validated a moderation-pending review. Nothing was stored or published, and the review text was not echoed or logged."
+      },
+      "private_reviewed": {
+        "title": "Private feedback boundary validated",
+        "body": "The local demo validated an operations-only note. Nothing was stored, and the private text was not echoed, logged, or sent to analytics."
+      },
+      "safety_reviewed": {
+        "title": "Restricted safety path validated",
+        "body": "The local demo validated an open incident and required payout hold. No incident or payout changed, and the confidential report was not echoed, logged, or sent to analytics."
+      },
+      "unavailable": {
+        "title": "Post-dinner submission is not connected",
+        "body": "Nothing was recorded. Production submission remains disabled until the protected write repository and transactional payout hold are connected."
+      }
+    },
     "back": "Back to booking"
   },
   "Payouts": {

@@ -556,13 +556,50 @@
     "separationBody": "Kamusal deneyim yorumları gelecekteki misafirlere yardım eder. Yapıcı notlar Sofra operasyonuna özel kalır ve kamusal yoruma eklenmez.",
     "publicTitle": "Kamusal deneyim yorumu",
     "privateTitle": "Özel yapıcı geri bildirim",
-    "published": "Yayınlandı",
+    "moderatedPublic": "İnceleme sonrası kamusal",
     "operationsOnly": "Yalnızca operasyon",
-    "ratingLabel": "5 üzerinden {rating} yıldız",
-    "publicNote": "Bu kamusal kayıtta adres, beslenme bildirimi veya diğer misafirlere ait bilgi bulunmaz.",
-    "privateNote": "Kamusal yorumlardan ayrı saklanır; kamusal görünümlere ve analitiğe girmez.",
+    "publicIntro": "Ev halkı deneyiminin size nasıl hissettirdiğini paylaşın. Sofra, herhangi bir şey kamusal olmadan önce bu kanalı inceler.",
+    "privateIntro": "Ev halkının kamusal yorumuna eklemeden Sofra operasyonuna pratik bir gelişim notu gönderin.",
+    "rating": "5 üzerinden puan",
+    "reviewTitle": "Kısa yorum başlığı",
+    "publicBody": "Kamusal deneyim yorumu",
+    "privateBody": "Sofra operasyonuna özel not",
+    "publicPrivacyAcknowledgment": "Bu kamusal yorumdan tam adres bilgilerini, beslenme bilgilerini, diğer misafirlere ait özel bilgileri ve güvenlik endişelerini çıkardım.",
+    "publicNote": "Kamusal yorum içeriği moderasyona kadar beklemede kalır; diğer misafirleri tanımlamamalı veya özel ev bilgilerini açıklamamalıdır.",
+    "privateNote": "Bu kanal kamusal yorumlardan ve analitikten ayrı kalır. Yerel demo gönderimden sonra içeriği asla geri göstermez.",
+    "reviewPublicAction": "Kamusal gönderimi incele",
+    "reviewPrivateAction": "Özel gönderimi incele",
     "safetyTitle": "Güvenlik bildirimleri farklı bir yol izler",
-    "safetyBody": "Güvenlik endişesi yorum veya özel gelişim notu değildir. Sınırlı bir olay kaydı oluşturur ve ödemeyi otomatik olarak bekletebilir.",
+    "safetyBody": "Güvenlik endişesi yorum veya özel gelişim notu değildir. Sınırlı bir olay sürecine girer ve endişe açıkken bağlantılı ödemenin bekletilmesini gerektirir.",
+    "notEmergencyTitle": "Bu yerel demo izlenmiyor",
+    "notEmergencyBody": "Acil yardım için bu forma güvenmeyin. Herhangi biri yakın tehlikedeyse uygun yerel acil servisle iletişime geçin.",
+    "severity": "Operasyonel aciliyet",
+    "severities": {
+      "low": "Düşük",
+      "medium": "Orta",
+      "high": "Yüksek",
+      "critical": "Kritik"
+    },
+    "confidentialReport": "Gizli bildirim",
+    "reviewSafetyAction": "Gizli bildirimi incele",
+    "results": {
+      "public_reviewed": {
+        "title": "Kamusal yorum sınırı doğrulandı",
+        "body": "Yerel demo moderasyon bekleyen bir yorumu doğruladı. Hiçbir şey saklanmadı veya yayınlanmadı; yorum metni geri gösterilmedi ya da kayda alınmadı."
+      },
+      "private_reviewed": {
+        "title": "Özel geri bildirim sınırı doğrulandı",
+        "body": "Yerel demo yalnızca operasyona açık bir notu doğruladı. Hiçbir şey saklanmadı; özel metin geri gösterilmedi, kayda alınmadı veya analitiğe gönderilmedi."
+      },
+      "safety_reviewed": {
+        "title": "Sınırlı güvenlik yolu doğrulandı",
+        "body": "Yerel demo açık olay ve gerekli ödeme bekletmesini doğruladı. Olay veya ödeme değişmedi; gizli bildirim geri gösterilmedi, kayda alınmadı veya analitiğe gönderilmedi."
+      },
+      "unavailable": {
+        "title": "Akşam sonrası gönderim bağlı değil",
+        "body": "Hiçbir şey kaydedilmedi. Korumalı yazma deposu ve işlemsel ödeme bekletmesi bağlanana kadar üretimde gönderim devre dışıdır."
+      }
+    },
     "back": "Rezervasyona dön"
   },
   "Payouts": {

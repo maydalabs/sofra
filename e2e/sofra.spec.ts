@@ -247,6 +247,39 @@ test('completed dinner keeps public and private feedback visibly separate', asyn
   await expect(page.getByText(/operations only/i)).toBeVisible()
 })
 
+test('post-dinner submissions preserve moderation, privacy, and payout holds', async ({
+  page,
+}) => {
+  await choosePersona(page, /continue as traveler/i)
+  await page.goto('/en/account/bookings/booking-demo-completed/review')
+
+  const publicText =
+    'Dinner felt personal and unhurried, and the conversation over tea was generous.'
+  await page.getByLabel(/short review title/i).fill('A thoughtful evening')
+  await page.getByLabel(/^public experience review$/i).fill(publicText)
+  await page.getByLabel(/I have excluded exact address details/i).check()
+  await page.getByRole('button', { name: /review public submission/i }).click()
+  await expect(page.getByText(/nothing was stored or published/i)).toBeVisible()
+  await expect(page.locator('body')).not.toContainText(publicText)
+
+  const privateText =
+    'A private suggestion about making the arrival handoff clearer next time.'
+  await page.getByLabel(/private note to sofra operations/i).fill(privateText)
+  await page.getByRole('button', { name: /review private submission/i }).click()
+  await expect(page.getByText(/operations-only note/i)).toBeVisible()
+  await expect(page.locator('body')).not.toContainText(privateText)
+
+  const confidentialReport =
+    'A fictional confidential safety report that must never appear outside restricted operations.'
+  await page.getByLabel(/confidential report/i).fill(confidentialReport)
+  await page
+    .getByRole('button', { name: /review confidential report/i })
+    .click()
+  await expect(page.getByText(/required payout hold/i)).toBeVisible()
+  await expect(page.getByText(/no incident or payout changed/i)).toBeVisible()
+  await expect(page.locator('body')).not.toContainText(confidentialReport)
+})
+
 test('operator payout hold is linked to the restricted incident workflow', async ({
   page,
 }) => {

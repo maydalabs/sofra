@@ -84,7 +84,7 @@ pnpm test:e2e
 pnpm build
 ```
 
-Playwright starts or reuses the local app and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, unauthorized admin access, the guided cross-role journey, roster privacy, feedback separation, and payout holds.
+Playwright starts or reuses the local app and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, unauthorized admin access, the guided cross-role journey, roster privacy, post-dinner moderation/privacy boundaries, confidential-report non-echo, and payout holds.
 
 ## Architecture
 
@@ -99,6 +99,8 @@ Playwright starts or reuses the local app and covers anonymous discovery, table 
 Status changes run through typed services and illegal transitions return domain errors. Public listings use an explicit allowlist projection and `published_hosted_tables`; exact address, precise coordinates, arrival instructions, dietary details, private guest names, assessment notes, and incident content are excluded.
 
 The traveler booking service validates availability, cutoff, configurable shared-party limits, exact additional-guest counts, compatibility requirements, and integer totals. A separate safe review omits guest names and dietary text. Booking details visualize compatibility, payment, table confirmation, and dinner as distinct states. Local cancellation review validates the lifecycle transition without changing durable data or deciding the still-open refund policy.
+
+Completed bookings expose three separate post-dinner channels: a moderation-pending public review, operations-only constructive feedback, and a restricted safety report. The server reloads the traveler-owned completed booking before validating any channel. Private and safety text never appears in the result, URL, demo audit, or analytics; an open safety intent requires the linked payout state to be held. Local review is deliberately non-durable, and production fails honestly until the transactional write boundary is connected.
 
 The host workspace derives certified capacity from the actor-owned certification record, visualizes the table journey from private draft through dinner, and calculates confirmed-party and projected host-net summaries from the delivery roster. Local submission review reloads the host-owned table and active certification before validating the transition, but does not claim a durable write. Host rosters use a narrow authenticated SQL function and never expose guest names, dietary text, exact location, payment detail, or appearance-selection data.
 
