@@ -187,6 +187,7 @@
     "application": "Ev sahibi başvurusu",
     "approval": "Onay durumu",
     "guests": "Onaylı misafir sayısı",
+    "roster": "Misafir listesini görüntüle",
     "submit": "Sofra onayına gönder"
   },
   "Admin": {
@@ -197,6 +198,7 @@
     "certify": "Belgelendirme işlemi",
     "tables": "Sofra onay kuyruğu",
     "bookings": "Rezervasyon görünümü",
+    "payouts": "Ödeme bekletmeleri",
     "incidents": "Olay kuyruğu",
     "audit": "Denetim kaydı",
     "pricing": "Fiyatlandırma politikası",
@@ -228,10 +230,145 @@
   "Demo": {
     "title": "Yerel demo profili seçin",
     "intro": "Bu profiller yalnızca yerel geliştirmede kullanılabilir. HTTP-only demo oturumu oluşturur ve üretim erişimi sağlamaz.",
+    "guidedEyebrow": "Tek sofra, tüm sorumluluklar",
+    "guidedTitle": "Sofra yolculuğunun tamamını izleyin",
+    "guidedBody": "Her adımda doğru rol ve gizlilik sınırıyla belgelendirme, yayınlama, rezervasyon, ev sahipliği, geri bildirim ve müdahale süreçlerinde ilerleyin.",
+    "guidedCta": "Rehberli yolculuğu aç",
     "traveler": "Misafir olarak devam et",
     "host": "Belgeli ev sahibi olarak devam et",
     "partner": "Partner kullanıcısı olarak devam et",
     "operator": "Operatör olarak devam et"
+  },
+  "DemoJourney": {
+    "eyebrow": "Rehberli ürün turu",
+    "title": "Ev halkı başvurusundan özenli takibe",
+    "intro": "Her kart, doğru kurgusal profille gerçek Faz 1 ekranını açar. Yolculuk salt okunurdur: işlemler kuralları doğrular ve kalıcı durum iddiasında bulunmadan sonuçları gösterir.",
+    "readOnly": "Salt okunur kurgusal yolculuk · uzak servis yok",
+    "openStep": "Bu adımı aç",
+    "personas": {
+      "traveler": "Misafir",
+      "host": "Ev sahibi",
+      "operator": "Operatör"
+    },
+    "boundaries": {
+      "public": "Herkese açık ve güvenli",
+      "private": "Hesaba özel",
+      "restricted": "Rol ile sınırlı"
+    },
+    "chapters": {
+      "qualify": {
+        "title": "Ev halkını değerlendirin",
+        "body": "İnsan incelemesinden geçen başvuru, kimin ev sahipliği yapabileceğini ve onaylı misafir kapasitesini belirler."
+      },
+      "publish": {
+        "title": "Planlı sofrayı oluşturun ve onaylayın",
+        "body": "Akşamı ev halkı şekillendirir; Sofra herkese açılmadan önce bağımsız olarak inceler."
+      },
+      "welcome": {
+        "title": "Yer ayırın ve hazırlanın",
+        "body": "Misafirler eksiksiz menüyü ve fiyatı anlar; ev sahipleri yalnızca gereken operasyonel bağlamı görür."
+      },
+      "followUp": {
+        "title": "Öğrenin, müdahale edin ve sonuçlandırın",
+        "body": "Kamusal övgü, özel gelişim notları, güvenlik kayıtları, ödeme kontrolleri ve denetim izleri bilinçli biçimde ayrı kalır."
+      }
+    },
+    "steps": {
+      "application": {
+        "title": "Başvuruyu inceleyin",
+        "body": "Operatörler ev halkının teklifini görür; değerlendirme notlarını sınırlı bir süreçte tutar."
+      },
+      "certification": {
+        "title": "Belgeli ev halkını görün",
+        "body": "Ev sahibi alanı onaylı kapasiteyi ve katılan ev halkı üyelerini yansıtır."
+      },
+      "draft": {
+        "title": "Ev sofrasını şekillendirin",
+        "body": "Menü, hikâye, tarih, atmosfer, katılım ve istenen net kazanç ev sahibine aittir."
+      },
+      "moderation": {
+        "title": "Yayın öncesi onaylayın",
+        "body": "Operatör kapasiteyi, menü bütünlüğünü, katılımı ve pratik bilgileri kontrol eder."
+      },
+      "discovery": {
+        "title": "Güvenli ilan yayınlayın",
+        "body": "Misafirler yaklaşık mahalleyi ve deneyim bilgilerini görür; ev adresini asla görmez."
+      },
+      "booking": {
+        "title": "Bekleyen rezervasyonu izleyin",
+        "body": "Ödeme ve uyumluluk açık durumlar olarak kalırken rezervasyon ortak sofra minimumunu bekleyebilir."
+      },
+      "roster": {
+        "title": "Ev sahibi listesini hazırlayın",
+        "body": "Ev sahipleri grup sayılarını ve uyumluluk kararlarını görür; kamusal misafir seçimi yüzeyi yoktur."
+      },
+      "confirmed": {
+        "title": "Misafiri onaylayın",
+        "body": "Hesap; durumu, zamanı, gizliliği ve varış öncesi süreci açıklar."
+      },
+      "feedback": {
+        "title": "Geri bildirim kanallarını ayırın",
+        "body": "Misafirin kamusal yorumu ve özel gelişim notu ayrı kayıtlar olarak sunulur."
+      },
+      "incident": {
+        "title": "Güvenlik işlemini sınırlayın",
+        "body": "Gizli raporu ve operasyonel etkisini yalnızca yetkili operatörler inceleyebilir."
+      },
+      "payout": {
+        "title": "Ödemeyi güvenle bekletin",
+        "body": "Açık güvenlik incelemesi, alttaki raporu başka yerde göstermeden ödemeyi engeller."
+      },
+      "audit": {
+        "title": "Hesap verebilirliği koruyun",
+        "body": "Önemli yaşam döngüsü ve mali işlemler gerekçeli, operatöre açık bir kayıt bırakır."
+      }
+    }
+  },
+  "Roster": {
+    "eyebrow": "Ev sahibi hazırlığı",
+    "travelers": "Katılacak misafirler",
+    "seatsOpen": "Kalan yer",
+    "lock": "Liste kilit zamanı",
+    "privacyTitle": "Misafir seçimi değil, operasyonel bağlam",
+    "privacyBody": "Bu liste grup büyüklüğünü ve uyumluluk kararlarını gösterir. Beslenme bildirimi metni, görünüş ve hassas misafir özellikleri bilinçli olarak gösterilmez.",
+    "parties": "Katılan gruplar",
+    "partySize": "{count} misafir",
+    "compatibility": {
+      "accepted": "Uyumluluk kabul edildi",
+      "review_required": "İnceleme gerekli",
+      "not_required": "İnceleme gerekmiyor"
+    },
+    "checklistTitle": "Akşam günü hazırlığı",
+    "checklist": {
+      "menu": "Onaylanan eksiksiz ev menüsünü hazırlayın.",
+      "participation": "Doğrulanmış yetişkin ev sahibinin yemeğe veya çay ve sohbete katılacağını teyit edin.",
+      "welcome": "Karşılamayı net tutun ve her gruba aynı pratik yönlendirmeyi verin.",
+      "tea": "Tatlı veya meyve, Türk çayı ya da kahvesi ve sohbet için acele edilmeyen zaman bırakın."
+    },
+    "back": "Sofraya dön"
+  },
+  "Feedback": {
+    "eyebrow": "Tamamlanan akşam",
+    "separationTitle": "Tek akşam, ayrı geri bildirim kayıtları",
+    "separationBody": "Kamusal deneyim yorumları gelecekteki misafirlere yardım eder. Yapıcı notlar Sofra operasyonuna özel kalır ve kamusal yoruma eklenmez.",
+    "publicTitle": "Kamusal deneyim yorumu",
+    "privateTitle": "Özel yapıcı geri bildirim",
+    "published": "Yayınlandı",
+    "operationsOnly": "Yalnızca operasyon",
+    "ratingLabel": "5 üzerinden {rating} yıldız",
+    "publicNote": "Bu kamusal kayıtta adres, beslenme bildirimi veya diğer misafirlere ait bilgi bulunmaz.",
+    "privateNote": "Kamusal yorumlardan ayrı saklanır; kamusal görünümlere ve analitiğe girmez.",
+    "safetyTitle": "Güvenlik bildirimleri farklı bir yol izler",
+    "safetyBody": "Güvenlik endişesi yorum veya özel gelişim notu değildir. Sınırlı bir olay kaydı oluşturur ve ödemeyi otomatik olarak bekletebilir.",
+    "back": "Rezervasyona dön"
+  },
+  "Payouts": {
+    "title": "Ödeme kontrolleri",
+    "intro": "Operatöre açık sonuçlandırma durumları. Bu ortamda hiçbir sağlayıcı ödemesi denenmez.",
+    "hostNet": "Ev sahibinin net kazancı",
+    "holdTitle": "Güvenlik bekletmesi ödeme işleminden üstündür",
+    "holdBody": "İlgili güvenlik olayı açıkken ödeme serbest bırakılamaz. Gizli rapor olay sürecinde kalır.",
+    "incidents": "Olay kuyruğunu incele"
   },
   "States": {
     "unauthorizedTitle": "Bu alan farklı bir hesap rolü gerektiriyor",

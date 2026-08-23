@@ -83,8 +83,16 @@ export default async function BookingDetailPage({
               <Button variant="outline">{t('cancel')}</Button>
             ) : (
               <>
-                <Button>{t('review')}</Button>
-                <Button variant="outline">{t('privateFeedback')}</Button>
+                <Button asChild>
+                  <Link href={`/account/bookings/${booking.id}/review`}>
+                    {t('review')}
+                  </Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href={`/account/bookings/${booking.id}/review`}>
+                    {t('privateFeedback')}
+                  </Link>
+                </Button>
               </>
             )}
           </div>

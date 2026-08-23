@@ -4,6 +4,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Link } from '@/i18n/navigation'
 
 export default async function IncidentQueuePage({
   params,
@@ -44,6 +46,9 @@ export default async function IncidentQueuePage({
             operators only. This fixture demonstrates separation without
             describing a real event or person.
           </p>
+          <Button variant="outline" className="mt-5" asChild>
+            <Link href="/admin/payouts">Review related payout hold</Link>
+          </Button>
         </div>
       </CardContent>
     </Card>

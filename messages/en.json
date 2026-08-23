@@ -187,6 +187,7 @@
     "application": "Host application",
     "approval": "Approval status",
     "guests": "Confirmed guest count",
+    "roster": "View guest roster",
     "submit": "Submit for Sofra approval"
   },
   "Admin": {
@@ -197,6 +198,7 @@
     "certify": "Certification action",
     "tables": "Table approval queue",
     "bookings": "Booking overview",
+    "payouts": "Payout holds",
     "incidents": "Incident queue",
     "audit": "Audit log",
     "pricing": "Pricing policy",
@@ -228,10 +230,145 @@
   "Demo": {
     "title": "Choose a local demo persona",
     "intro": "These personas are available only in local development. They set an HTTP-only demo session and never grant production access.",
+    "guidedEyebrow": "One table, every responsibility",
+    "guidedTitle": "Follow the complete Sofra journey",
+    "guidedBody": "Move through qualification, publication, booking, hosting, feedback, and intervention with the correct role and privacy boundary at every step.",
+    "guidedCta": "Open guided journey",
     "traveler": "Continue as traveler",
     "host": "Continue as certified host",
     "partner": "Continue as partner user",
     "operator": "Continue as operator"
+  },
+  "DemoJourney": {
+    "eyebrow": "Guided product walkthrough",
+    "title": "From household application to careful follow-up",
+    "intro": "Each card opens the real Phase 1 surface with the correct fictional persona. The journey is read-only: actions validate rules and demonstrate outcomes without claiming durable state.",
+    "readOnly": "Read-only fictional journey · no remote services",
+    "openStep": "Open this step",
+    "personas": {
+      "traveler": "Traveler",
+      "host": "Host",
+      "operator": "Operator"
+    },
+    "boundaries": {
+      "public": "Public-safe",
+      "private": "Account-private",
+      "restricted": "Role-restricted"
+    },
+    "chapters": {
+      "qualify": {
+        "title": "Qualify the household",
+        "body": "A human-reviewed application establishes who may host and the certified traveler capacity."
+      },
+      "publish": {
+        "title": "Create and approve a scheduled table",
+        "body": "The household shapes the evening; Sofra independently reviews it before anything becomes public."
+      },
+      "welcome": {
+        "title": "Reserve and prepare",
+        "body": "Travelers understand the complete menu and price while hosts receive only the operational context they need."
+      },
+      "followUp": {
+        "title": "Learn, intervene, and settle",
+        "body": "Public praise, private improvement notes, safety reports, payout controls, and audit records stay deliberately separate."
+      }
+    },
+    "steps": {
+      "application": {
+        "title": "Review the application",
+        "body": "Operators see the household proposal and keep assessment notes inside a restricted workflow."
+      },
+      "certification": {
+        "title": "See the certified household",
+        "body": "The host workspace reflects approved capacity and participating household members."
+      },
+      "draft": {
+        "title": "Shape a household table",
+        "body": "The host owns the menu, story, date, atmosphere, participation, and desired net payout."
+      },
+      "moderation": {
+        "title": "Approve before publication",
+        "body": "An operator checks capacity, menu completeness, participation, and practical information."
+      },
+      "discovery": {
+        "title": "Publish a safe listing",
+        "body": "Travelers see the approximate neighborhood and experience details, never a home address."
+      },
+      "booking": {
+        "title": "Track a pending reservation",
+        "body": "A booking can wait for the shared-table minimum while payment and compatibility remain explicit states."
+      },
+      "roster": {
+        "title": "Prepare the host roster",
+        "body": "Hosts see party counts and compatibility decisions without a public guest-selection surface."
+      },
+      "confirmed": {
+        "title": "Confirm the traveler",
+        "body": "The account explains status, timing, privacy, and what happens before arrival."
+      },
+      "feedback": {
+        "title": "Separate feedback channels",
+        "body": "The traveler’s public review and private constructive note are presented as different records."
+      },
+      "incident": {
+        "title": "Restrict safety handling",
+        "body": "Only authorized operators can inspect a confidential report and its operational effect."
+      },
+      "payout": {
+        "title": "Hold payout safely",
+        "body": "An open safety review prevents release without exposing the underlying report elsewhere."
+      },
+      "audit": {
+        "title": "Preserve accountability",
+        "body": "Material lifecycle and financial actions leave a reasoned operator-visible record."
+      }
+    }
+  },
+  "Roster": {
+    "eyebrow": "Host preparation",
+    "travelers": "Travelers joining",
+    "seatsOpen": "Seats still open",
+    "lock": "Roster locks",
+    "privacyTitle": "Operational context, not guest selection",
+    "privacyBody": "This roster shows party size and compatibility decisions. Dietary disclosure text, appearance, and sensitive traveler traits are intentionally absent.",
+    "parties": "Joining parties",
+    "partySize": "{count, plural, one {# traveler} other {# travelers}}",
+    "compatibility": {
+      "accepted": "Compatibility accepted",
+      "review_required": "Review required",
+      "not_required": "No review required"
+    },
+    "checklistTitle": "Dinner-day preparation",
+    "checklist": {
+      "menu": "Prepare the complete household-selected menu as approved.",
+      "participation": "Confirm that a verified adult host joins dinner or tea and conversation.",
+      "welcome": "Keep the welcome clear and give every party the same practical orientation.",
+      "tea": "Leave unhurried time for dessert or fruit, Turkish tea or coffee, and conversation."
+    },
+    "back": "Back to table"
+  },
+  "Feedback": {
+    "eyebrow": "Completed dinner",
+    "separationTitle": "One evening, separate feedback records",
+    "separationBody": "Public experience reviews help future travelers. Constructive notes stay private to Sofra operations and are never appended to the public review.",
+    "publicTitle": "Public experience review",
+    "privateTitle": "Private constructive feedback",
+    "published": "Published",
+    "operationsOnly": "Operations only",
+    "ratingLabel": "{rating} out of 5 stars",
+    "publicNote": "This public record contains no address, dietary disclosure, or information about other travelers.",
+    "privateNote": "Stored separately from public reviews and excluded from public projections and analytics.",
+    "safetyTitle": "Safety reports take a different path",
+    "safetyBody": "A safety concern is not a review or private improvement note. It creates a restricted incident record and can automatically hold payout.",
+    "back": "Back to booking"
+  },
+  "Payouts": {
+    "title": "Payout controls",
+    "intro": "Operator-visible settlement states. No provider release is attempted in this environment.",
+    "hostNet": "Host net payout",
+    "holdTitle": "Safety hold overrides release",
+    "holdBody": "A payout cannot be released while a related safety incident remains open. The confidential report stays in the incident workflow.",
+    "incidents": "Review incident queue"
   },
   "States": {
     "unauthorizedTitle": "This area needs a different account role",

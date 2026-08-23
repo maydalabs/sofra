@@ -26,6 +26,7 @@ export default async function AdminLayout({
     { href: '/admin/host-applications', label: t('applications') },
     { href: '/admin/tables', label: t('tables') },
     { href: '/admin/bookings', label: t('bookings') },
+    { href: '/admin/payouts', label: t('payouts') },
     { href: '/admin/incidents', label: t('incidents') },
     { href: '/admin/audit', label: t('audit') },
     { href: '/admin/pricing', label: t('pricing') },

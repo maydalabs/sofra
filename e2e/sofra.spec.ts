@@ -148,3 +148,57 @@ test('unauthorized traveler cannot enter admin operations', async ({
     page.getByRole('heading', { name: /needs a different account role/i }),
   ).toBeVisible()
 })
+
+test('guided journey switches persona and opens the privacy-safe host roster', async ({
+  page,
+}) => {
+  await page.goto('/en/demo/journey')
+  await expect(
+    page.getByRole('heading', {
+      name: /from household application to careful follow-up/i,
+    }),
+  ).toBeVisible()
+  const rosterForm = page.locator('form').filter({
+    has: page.locator('input[name="step"][value="roster"]'),
+  })
+  await rosterForm.getByRole('button', { name: /open this step/i }).click()
+  await expect(page).toHaveURL(
+    /\/en\/host\/tables\/table-mercimek-kadikoy\/roster/,
+  )
+  await expect(
+    page.getByRole('heading', { name: /joining parties/i }),
+  ).toBeVisible()
+  await expect(page.locator('body')).not.toContainText(
+    'Development-only arrival instructions',
+  )
+  await expect(page.locator('body')).not.toContainText(
+    'Fictional development address',
+  )
+})
+
+test('completed dinner keeps public and private feedback visibly separate', async ({
+  page,
+}) => {
+  await choosePersona(page, /continue as traveler/i)
+  await page.goto('/en/account/bookings/booking-demo-completed/review')
+  await expect(
+    page.getByRole('heading', { name: /public experience review/i }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: /private constructive feedback/i }),
+  ).toBeVisible()
+  await expect(page.getByText(/operations only/i)).toBeVisible()
+})
+
+test('operator payout hold is linked to the restricted incident workflow', async ({
+  page,
+}) => {
+  await choosePersona(page, /continue as operator/i)
+  await page.goto('/en/admin/payouts')
+  await expect(
+    page.getByRole('heading', { name: /payout controls/i }),
+  ).toBeVisible()
+  await expect(page.getByText(/safety hold overrides release/i)).toBeVisible()
+  await page.getByRole('link', { name: /review incident queue/i }).click()
+  await expect(page).toHaveURL(/\/en\/admin\/incidents/)
+})

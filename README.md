@@ -4,7 +4,7 @@ Sofra is a Türkiye-first managed marketplace where travelers reserve seats at s
 
 > Be welcomed into a Turkish household and join the table.
 
-This repository is the local Phase 1 modular monolith. It includes localized public discovery, demo-safe traveler/host/operator/partner workspaces, a normalized Supabase schema with RLS, server-side domain rules, provider adapters, fictional development data, and automated coverage. It does not contain real payments or a production deployment.
+This repository is the Phase 1 modular monolith. It includes localized public discovery, demo-safe traveler/host/operator/partner workspaces, a normalized Supabase schema with RLS, server-side domain rules, provider adapters, fictional development data, and automated coverage. It does not contain real payments or connected production services.
 
 ## Project
 
@@ -35,7 +35,7 @@ cp .env.example .env.local
 pnpm dev
 ```
 
-Open `http://localhost:3000/en`. With `SOFRA_DEMO_MODE=true`, `/en/demo` sets a local-only HTTP-only persona cookie for traveler, certified-host, partner, or operator walkthroughs. The persona mechanism is rejected in production.
+Open `http://localhost:3000/en`. With `SOFRA_DEMO_MODE=true`, `/en/demo` sets a local-only HTTP-only persona cookie for traveler, certified-host, partner, or operator walkthroughs. `/en/demo/journey` connects qualification, publication, booking, hosting, feedback, safety intervention, payout holds, and audit into one guided read-only walkthrough. The persona mechanism is rejected in production.
 
 ## Environment
 
@@ -82,7 +82,7 @@ pnpm test:e2e
 pnpm build
 ```
 
-Playwright starts or reuses the local app and covers anonymous discovery, table detail, honest payment-disabled checkout, host draft rules/submission, operator approval, public address privacy, and unauthorized admin access.
+Playwright starts or reuses the local app and covers anonymous discovery, table detail, honest payment-disabled checkout, host draft rules/submission, operator approval, public address privacy, unauthorized admin access, the guided cross-role journey, roster privacy, feedback separation, and payout holds.
 
 ## Architecture
 
@@ -105,7 +105,7 @@ Status changes run through typed services and illegal transitions return domain 
 
 ## Intentional Phase 1 limits
 
-- No real payment provider, payouts, tax logic, phone verification, production identity verification, or production deployment
+- No real payment provider, payout release, tax logic, phone verification, or production identity verification
 - No live chat, native apps, automated host/safety decisions, or AI recommendation system
 - Demo mutations demonstrate validation, authorization, lifecycle, and audit boundaries; durable remote writes require local/hosted Supabase wiring
 - Google Maps, Resend, PostHog, and Sentry are adapter-ready but optional

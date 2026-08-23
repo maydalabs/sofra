@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getPrivateDemoTables } from '@/features/hosted-tables/demo-tables'
+import { Link } from '@/i18n/navigation'
 
 export default async function EditHostedTablePage({
   params,
@@ -80,13 +81,22 @@ export default async function EditHostedTablePage({
             </p>
           </div>
         </div>
-        <form action={submitHostedTableAction}>
-          <input type="hidden" name="tableId" value={table.id} />
-          <input type="hidden" name="locale" value={locale} />
-          <Button disabled={!editable || query.submitted === '1'}>
-            {t('submit')}
-          </Button>
-        </form>
+        <div className="flex flex-wrap gap-3">
+          <form action={submitHostedTableAction}>
+            <input type="hidden" name="tableId" value={table.id} />
+            <input type="hidden" name="locale" value={locale} />
+            <Button disabled={!editable || query.submitted === '1'}>
+              {t('submit')}
+            </Button>
+          </form>
+          {table.certifiedCapacity - table.availableSeats > 0 ? (
+            <Button variant="outline" asChild>
+              <Link href={`/host/tables/${table.id}/roster`}>
+                {t('roster')}
+              </Link>
+            </Button>
+          ) : null}
+        </div>
       </CardContent>
     </Card>
   )

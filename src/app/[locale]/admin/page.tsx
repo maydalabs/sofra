@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   CalendarCheck,
+  CircleDollarSign,
   ClipboardList,
   ShieldCheck,
 } from 'lucide-react'
@@ -22,11 +23,12 @@ export default async function AdminOverviewPage({
     { icon: ClipboardList, value: '1', label: t('applications') },
     { icon: CalendarCheck, value: '1', label: t('tables') },
     { icon: AlertTriangle, value: '1', label: t('incidents') },
+    { icon: CircleDollarSign, value: '1', label: t('payouts') },
     { icon: ShieldCheck, value: '24', label: t('audit') },
   ]
   return (
     <div className="space-y-8">
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {metrics.map(({ icon: Icon, value, label }) => (
           <Card key={label}>
             <CardContent className="p-5">

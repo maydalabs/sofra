@@ -1,9 +1,12 @@
 import { BriefcaseBusiness, House, ShieldCheck, UserRound } from 'lucide-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { redirect } from 'next/navigation'
 
 import { chooseDemoPersona } from './actions'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Link } from '@/i18n/navigation'
+import { isDemoMode } from '@/server/auth/demo-session'
 
 export default async function DemoPage({
   params,
@@ -11,6 +14,7 @@ export default async function DemoPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
+  if (!isDemoMode()) redirect(`/${locale}/unavailable`)
   setRequestLocale(locale)
   const t = await getTranslations('Demo')
   const personas = [
@@ -49,6 +53,20 @@ export default async function DemoPage({
           {t('intro')}
         </p>
       </div>
+      <Card className="border-primary/20 bg-primary/5 mx-auto mt-10 max-w-4xl">
+        <CardContent className="flex flex-col justify-between gap-6 p-6 sm:flex-row sm:items-center">
+          <div>
+            <p className="eyebrow">{t('guidedEyebrow')}</p>
+            <h2 className="mt-2 text-3xl font-medium">{t('guidedTitle')}</h2>
+            <p className="text-muted-foreground mt-2 max-w-2xl text-sm leading-6">
+              {t('guidedBody')}
+            </p>
+          </div>
+          <Button asChild className="shrink-0">
+            <Link href="/demo/journey">{t('guidedCta')}</Link>
+          </Button>
+        </CardContent>
+      </Card>
       <div className="mx-auto mt-10 grid max-w-4xl gap-4 sm:grid-cols-2">
         {personas.map(({ value, label, icon: Icon, detail }) => (
           <Card key={value} className="bg-card/80">
