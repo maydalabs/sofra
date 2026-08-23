@@ -29,19 +29,17 @@ export default async function AdminBookingsPage({
     <Card>
       <CardHeader>
         <CardTitle className="text-3xl">{t('bookings')}</CardTitle>
-        <p className="text-muted-foreground text-sm">
-          Operational status without dietary text or additional-guest names.
-        </p>
+        <p className="text-muted-foreground text-sm">{t('bookingsIntro')}</p>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Booking</TableHead>
-              <TableHead>Table</TableHead>
-              <TableHead>Party</TableHead>
-              <TableHead>Total</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{t('bookingColumn')}</TableHead>
+              <TableHead>{t('tableColumn')}</TableHead>
+              <TableHead>{t('partyColumn')}</TableHead>
+              <TableHead>{t('totalColumn')}</TableHead>
+              <TableHead>{t('statusColumn')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -52,9 +50,16 @@ export default async function AdminBookingsPage({
                 </TableCell>
                 <TableCell>{booking.menuTitle}</TableCell>
                 <TableCell>{booking.partySize}</TableCell>
-                <TableCell>{formatTry(booking.guestTotalKurus)}</TableCell>
                 <TableCell>
-                  <Badge variant="outline">{booking.status}</Badge>
+                  {formatTry(
+                    booking.guestTotalKurus,
+                    locale === 'tr' ? 'tr-TR' : 'en-US',
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline">
+                    {t(`bookingStatuses.${booking.status}`)}
+                  </Badge>
                 </TableCell>
               </TableRow>
             ))}

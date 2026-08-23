@@ -38,10 +38,7 @@ export default async function NewHostedTablePage({
     <Card>
       <CardHeader>
         <CardTitle className="text-3xl">{t('newTable')}</CardTitle>
-        <p className="text-muted-foreground text-sm">
-          The household chooses the complete menu. Saving creates a private
-          draft; publication always requires Sofra approval.
-        </p>
+        <p className="text-muted-foreground text-sm">{t('newTableIntro')}</p>
       </CardHeader>
       <CardContent>
         {certification && certificationIsActive ? (

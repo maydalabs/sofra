@@ -27,35 +27,42 @@ export default async function PrivateAddressPage({
       <CardContent className="space-y-6">
         <Alert>
           <LockKeyhole className="size-4" />
-          <AlertTitle>Private operational record</AlertTitle>
-          <AlertDescription>
-            This record is separate from the public neighborhood. It must never
-            enter listing HTML, public map inputs, analytics, metadata, or
-            public database views. Protected address writes are not connected,
-            so this preview does not save or echo an exact address.
+          <AlertTitle>{t('privateRecordTitle')}</AlertTitle>
+          <AlertDescription id="private-address-note">
+            {t('privateRecordBody')}
           </AlertDescription>
         </Alert>
-        <form className="grid gap-5 sm:grid-cols-2">
+        <form
+          aria-describedby="private-address-note"
+          className="grid gap-5 sm:grid-cols-2"
+        >
           <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="address-line">Address line</Label>
-            <Input id="address-line" placeholder="Not populated in demo data" />
+            <Label htmlFor="address-line">{t('addressLine')}</Label>
+            <Input
+              id="address-line"
+              placeholder={t('addressPlaceholder')}
+              readOnly
+            />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="district">District</Label>
-            <Input id="district" defaultValue="Kadıköy" />
+            <Label htmlFor="district">{t('district')}</Label>
+            <Input id="district" defaultValue="Kadıköy" readOnly />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="city">City</Label>
-            <Input id="city" defaultValue="Istanbul" />
+            <Label htmlFor="city">{t('city')}</Label>
+            <Input id="city" defaultValue="İstanbul" readOnly />
           </div>
           <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="arrival">
-              Post-confirmation arrival instructions
-            </Label>
-            <Textarea id="arrival" rows={4} />
+            <Label htmlFor="arrival">{t('arrivalInstructions')}</Label>
+            <Textarea
+              id="arrival"
+              rows={4}
+              placeholder={t('arrivalPlaceholder')}
+              readOnly
+            />
           </div>
           <Button type="button" disabled>
-            Protected address editing not connected
+            {t('addressEditingUnavailable')}
           </Button>
         </form>
       </CardContent>

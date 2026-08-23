@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -23,52 +24,76 @@ export default async function PricingPolicyPage({
     <Card>
       <CardHeader>
         <CardTitle className="text-3xl">{t('pricing')}</CardTitle>
-        <p className="text-muted-foreground text-sm">
-          Development policy editor. Changes would create a new dated policy and
-          audit entry rather than rewriting booking snapshots.
-        </p>
+        <p className="text-muted-foreground text-sm">{t('pricingIntro')}</p>
       </CardHeader>
       <CardContent className="space-y-7">
-        <form className="grid gap-5 sm:grid-cols-3">
+        <Alert>
+          <AlertTitle>{t('pricingPreviewTitle')}</AlertTitle>
+          <AlertDescription id="pricing-preview-note">
+            {t('pricingPreviewBody')}
+          </AlertDescription>
+        </Alert>
+        <form
+          aria-describedby="pricing-preview-note"
+          className="grid gap-5 sm:grid-cols-3"
+        >
           <PolicyField
-            label="Take rate (basis points)"
+            id="take-rate"
+            label={t('takeRateBasisPoints')}
             value={developmentPolicy.takeRateBasisPoints}
           />
           <PolicyField
-            label="Minimum lead days"
+            id="minimum-lead"
+            label={t('minimumLeadDays')}
             value={developmentPolicy.minimumLeadDays}
           />
           <PolicyField
-            label="Publishing horizon days"
+            id="publishing-horizon"
+            label={t('publishingHorizonDays')}
             value={developmentPolicy.maximumPublishingHorizonDays}
           />
           <PolicyField
-            label="Booking cutoff hours"
+            id="booking-cutoff"
+            label={t('bookingCutoffHours')}
             value={developmentPolicy.bookingCutoffHours}
           />
           <PolicyField
-            label="Roster lock hours"
+            id="roster-lock"
+            label={t('rosterLockHours')}
             value={developmentPolicy.rosterLockHours}
           />
           <PolicyField
-            label="New-host active limit"
+            id="new-host-limit"
+            label={t('newHostActiveLimit')}
             value={developmentPolicy.newHostActiveTableLimit}
           />
-          <Button type="submit" className="w-fit sm:col-span-3">
-            Create new development policy
+          <Button type="button" className="w-fit sm:col-span-3" disabled>
+            {t('policyEditingUnavailable')}
           </Button>
         </form>
         <div className="bg-secondary rounded-2xl border p-5">
-          <p className="eyebrow">Integer pricing example</p>
+          <p className="eyebrow">{t('integerPricingExample')}</p>
           <div className="mt-4 grid gap-4 sm:grid-cols-3">
-            <Detail label="Host net" value={formatTry(example.hostNetKurus)} />
             <Detail
-              label="Guest total"
-              value={formatTry(example.guestTotalKurus)}
+              label={t('hostNet')}
+              value={formatTry(
+                example.hostNetKurus,
+                locale === 'tr' ? 'tr-TR' : 'en-US',
+              )}
             />
             <Detail
-              label="Sofra gross fee"
-              value={formatTry(example.sofraGrossFeeKurus)}
+              label={t('guestTotal')}
+              value={formatTry(
+                example.guestTotalKurus,
+                locale === 'tr' ? 'tr-TR' : 'en-US',
+              )}
+            />
+            <Detail
+              label={t('sofraGrossFee')}
+              value={formatTry(
+                example.sofraGrossFeeKurus,
+                locale === 'tr' ? 'tr-TR' : 'en-US',
+              )}
             />
           </div>
         </div>
@@ -77,11 +102,19 @@ export default async function PricingPolicyPage({
   )
 }
 
-function PolicyField({ label, value }: { label: string; value: number }) {
+function PolicyField({
+  id,
+  label,
+  value,
+}: {
+  id: string
+  label: string
+  value: number
+}) {
   return (
     <div className="space-y-2">
-      <Label>{label}</Label>
-      <Input type="number" defaultValue={value} />
+      <Label htmlFor={id}>{label}</Label>
+      <Input id={id} type="number" defaultValue={value} readOnly />
     </div>
   )
 }

@@ -45,7 +45,7 @@ export default async function PayoutQueuePage({
                       payout.status === 'held' ? 'destructive' : 'secondary'
                     }
                   >
-                    {payout.status}
+                    {t(`statuses.${payout.status}`)}
                   </Badge>
                 </div>
                 <p className="text-muted-foreground mt-1 font-mono text-xs">

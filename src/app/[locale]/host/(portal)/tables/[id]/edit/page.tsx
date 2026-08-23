@@ -58,30 +58,33 @@ export default async function EditHostedTablePage({
         ) : null}
         {!editable ? (
           <Alert>
-            <AlertDescription>
-              This table is read-only while Sofra reviews or publishes it.
-              Lifecycle changes go through the table service.
-            </AlertDescription>
+            <AlertDescription>{t('readOnlyTable')}</AlertDescription>
           </Alert>
         ) : null}
         <div className="grid gap-5 rounded-2xl border p-5 sm:grid-cols-2">
           <div>
-            <p className="text-muted-foreground text-xs">Complete menu</p>
+            <p className="text-muted-foreground text-xs">{t('completeMenu')}</p>
             <p className="mt-1 font-medium">{table.menuDescription}</p>
           </div>
           <div>
-            <p className="text-muted-foreground text-xs">Approval status</p>
+            <p className="text-muted-foreground text-xs">
+              {t('approvalStatus')}
+            </p>
             <p className="mt-1 font-medium">{t(`statuses.${table.status}`)}</p>
           </div>
           <div>
-            <p className="text-muted-foreground text-xs">Capacity</p>
+            <p className="text-muted-foreground text-xs">{t('capacity')}</p>
             <p className="mt-1 font-medium">
-              {table.proposedCapacity} proposed · {table.certifiedCapacity}{' '}
-              certified
+              {t('capacityDetail', {
+                proposed: table.proposedCapacity,
+                certified: table.certifiedCapacity,
+              })}
             </p>
           </div>
           <div>
-            <p className="text-muted-foreground text-xs">Confirmed guests</p>
+            <p className="text-muted-foreground text-xs">
+              {t('confirmedGuests')}
+            </p>
             <p className="mt-1 font-medium">
               {table.certifiedCapacity - table.availableSeats}
             </p>

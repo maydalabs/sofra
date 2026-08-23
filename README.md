@@ -85,7 +85,7 @@ pnpm test:e2e
 pnpm build
 ```
 
-Playwright starts or reuses the local app and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, cross-role access rejection, keyboard skip navigation, active portal navigation, Turkish shell localization, the guided cross-role journey, roster privacy, post-dinner moderation/privacy boundaries, confidential-report non-echo, payout holds, and partner-owned referral visibility.
+Playwright starts the app on an isolated test port and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, cross-role access rejection, keyboard skip navigation, active portal navigation, English and Turkish protected-form localization, keyboard-readable read-only previews, the guided cross-role journey, roster privacy, post-dinner moderation/privacy boundaries, confidential-report non-echo, payout holds, and partner-owned referral visibility.
 
 ## Architecture
 
@@ -108,6 +108,8 @@ The host workspace derives certified capacity from the actor-owned certification
 The partner workspace replaces hard-coded referral metrics with an actor-owned conversion projection: landing recorded, booking attributed, dinner completed, or booking closed. Its authenticated SQL function returns only organization identity, referral stage, party count, and public table context. Traveler identity, attribution metadata, private location, dietary data, payment details, commissions, and settlement data are excluded. The final attribution window, economics, and settlement remain open product decisions.
 
 Shared launch-readiness components provide a keyboard skip link, localized loading/error/empty states, content-level language metadata, and active-section announcements in horizontally scrollable portal navigation. Empty traveler, host, partner, and operator queues now explain what happens next instead of rendering blank cards. Every protected page repeats its portal authorization gate before content or data access so parallel rendering cannot attempt a protected read for the wrong role.
+
+Protected account, household, address, assessment, pricing, booking, incident, and audit interfaces now localize their operational labels in English and Turkish. Preview-only profile, address, assessment, and policy fields are explicitly read-only and paired with visible explanations; unavailable buttons no longer imply that a durable write can occur.
 
 Public, traveler, host, partner, and operator page components covered by the current contracts read through repository queries rather than importing database clients or fictional fixtures. Anonymous discovery uses the public-safe view when Supabase is configured and retains the fictional public fallback otherwise. Protected repositories use local personas only in demo mode and fail closed when production credentials or an authorized actor are absent. Cross-user operator reads use a dedicated server-only repository that checks the actor role before creating a service-role client and exposes purpose-specific records for applications, table reviews, booking operations, incidents, payouts, and audit events.
 

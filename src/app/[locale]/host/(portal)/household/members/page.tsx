@@ -17,13 +17,13 @@ export default async function HouseholdMembersPage({
   const members = [
     {
       name: 'Ayşe',
-      role: 'Lead verified host',
-      participation: 'Dinner and tea',
+      role: t('leadVerifiedHost'),
+      participation: t('dinnerAndTea'),
     },
     {
       name: 'Levent',
-      role: 'Verified adult host',
-      participation: 'Dinner and conversation',
+      role: t('verifiedAdultHost'),
+      participation: t('dinnerAndConversation'),
     },
   ]
   return (

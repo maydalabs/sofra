@@ -39,7 +39,7 @@ export default async function HostApplicationQueuePage({
                   </p>
                   <p className="text-muted-foreground mt-1 text-xs">
                     {application.householdStructure ?? t('householdPending')} ·{' '}
-                    {application.status}
+                    {t(`applicationStatuses.${application.status}`)}
                   </p>
                 </div>
                 <Badge>{t('awaitingReview')}</Badge>

@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -20,26 +21,34 @@ export default async function ProfilePage({
     <Card>
       <CardHeader>
         <CardTitle className="text-3xl">{t('profile')}</CardTitle>
-        <p className="text-muted-foreground text-sm">
-          Public profile fields are kept separate from dietary disclosures.
-        </p>
+        <p className="text-muted-foreground text-sm">{t('profileIntro')}</p>
       </CardHeader>
-      <CardContent>
-        <form className="grid max-w-2xl gap-5 sm:grid-cols-2">
+      <CardContent className="space-y-5">
+        <Alert id="profile-preview-note">
+          <AlertDescription>{t('profilePreview')}</AlertDescription>
+        </Alert>
+        <form
+          aria-describedby="profile-preview-note"
+          className="grid max-w-2xl gap-5 sm:grid-cols-2"
+        >
           <div className="space-y-2">
-            <Label htmlFor="name">Display name</Label>
-            <Input id="name" defaultValue="Demo Traveler" />
+            <Label htmlFor="name">{t('displayName')}</Label>
+            <Input id="name" defaultValue={t('profileExampleName')} readOnly />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="locale">Preferred language</Label>
+            <Label htmlFor="locale">{t('preferredLanguage')}</Label>
             <Input id="locale" defaultValue={locale.toUpperCase()} readOnly />
           </div>
           <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="context">Travel context (optional)</Label>
-            <Input id="context" placeholder="First visit to Istanbul" />
+            <Label htmlFor="context">{t('travelContext')}</Label>
+            <Input
+              id="context"
+              defaultValue={t('travelContextExample')}
+              readOnly
+            />
           </div>
-          <Button type="submit" className="w-fit">
-            Save profile
+          <Button type="button" className="w-fit" disabled>
+            {t('profileEditingUnavailable')}
           </Button>
         </form>
       </CardContent>

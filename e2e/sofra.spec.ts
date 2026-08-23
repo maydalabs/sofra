@@ -352,6 +352,70 @@ test('localized shell marks Turkish content and translates shared controls', asy
   ).toBeAttached()
 })
 
+test('traveler profile preview is honest, labeled, and read-only', async ({
+  page,
+}) => {
+  await choosePersona(page, /continue as traveler/i)
+  await page.goto('/en/account/profile')
+
+  await expect(
+    page.getByText(/profile editing is not connected/i),
+  ).toBeVisible()
+  await expect(page.getByLabel(/display name/i)).toHaveAttribute('readonly', '')
+  await expect(page.getByLabel(/preferred language/i)).toHaveAttribute(
+    'readonly',
+    '',
+  )
+  await expect(page.getByLabel(/travel context/i)).toHaveAttribute(
+    'readonly',
+    '',
+  )
+  await expect(
+    page.getByRole('button', { name: /profile editing not connected/i }),
+  ).toBeDisabled()
+})
+
+test('Turkish protected previews localize controls and prevent false writes', async ({
+  page,
+}) => {
+  await choosePersona(page, /continue as certified host/i)
+  await page.goto('/tr/host/address')
+  await page.waitForLoadState('networkidle')
+
+  const addressLine = page.getByLabel('Adres satırı')
+  await expect(addressLine).toHaveAttribute('readonly', '')
+  await addressLine.focus()
+  await expect(addressLine).toBeFocused()
+  await expect(
+    page.getByRole('button', {
+      name: /korumalı adres düzenleme bağlı değil/i,
+    }),
+  ).toBeDisabled()
+
+  await choosePersona(page, /continue as operator/i)
+  await page.goto('/tr/admin/pricing')
+  await expect(page.getByLabel(/komisyon oranı/i)).toHaveAttribute(
+    'readonly',
+    '',
+  )
+  await expect(
+    page.getByRole('button', { name: /politika düzenleme bağlı değil/i }),
+  ).toBeDisabled()
+  await expect(page.locator('body')).not.toContainText('Take rate')
+
+  await page.goto('/tr/admin/host-applications/demo-application')
+  await expect(page.getByLabel(/özel değerlendirme notları/i)).toHaveAttribute(
+    'readonly',
+    '',
+  )
+  await expect(
+    page.getByRole('button', { name: /değerlendirme kaydı bağlı değil/i }),
+  ).toBeDisabled()
+  await expect(
+    page.getByRole('button', { name: /belgelendirme işlemi bağlı değil/i }),
+  ).toBeDisabled()
+})
+
 test('protected workspaces reject the wrong authenticated role', async ({
   page,
 }) => {

@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
@@ -28,37 +29,37 @@ export default async function HostAssessmentPage({
             {application.householdName ?? application.applicantName}
           </CardTitle>
           <p className="text-muted-foreground text-sm">
-            Restricted application · exact home details are not part of this
-            read model
+            {t('restrictedApplication')}
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-5 rounded-2xl border p-5 sm:grid-cols-2">
-            <Detail label="Applicant" value={application.applicantName} />
+            <Detail label={t('applicant')} value={application.applicantName} />
             <Detail
-              label="Household structure"
-              value={
-                application.householdStructure ?? 'Pending household profile'
-              }
+              label={t('householdStructure')}
+              value={application.householdStructure ?? t('householdPending')}
             />
-            <Detail label="Status" value={application.status} />
             <Detail
-              label="Submitted"
+              label={t('status')}
+              value={t(`applicationStatuses.${application.status}`)}
+            />
+            <Detail
+              label={t('submitted')}
               value={
                 application.submittedAt
-                  ? 'Application received'
-                  : 'Not submitted'
+                  ? t('applicationReceived')
+                  : t('notSubmitted')
               }
             />
           </div>
           <div>
-            <h2 className="text-2xl">Hosting motivation</h2>
+            <h2 className="text-2xl">{t('hostingMotivation')}</h2>
             <p className="text-muted-foreground mt-2 leading-7">
               {application.motivation}
             </p>
           </div>
           <div>
-            <h2 className="text-2xl">Hosting plan</h2>
+            <h2 className="text-2xl">{t('hostingPlan')}</h2>
             <p className="text-muted-foreground mt-2 leading-7">
               {application.hostingPlan}
             </p>
@@ -69,17 +70,31 @@ export default async function HostAssessmentPage({
         <CardHeader>
           <CardTitle className="text-2xl">{t('assessments')}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <form className="space-y-4">
+        <CardContent className="space-y-4">
+          <Alert>
+            <AlertTitle>{t('assessmentUnavailableTitle')}</AlertTitle>
+            <AlertDescription id="assessment-preview-note">
+              {t('assessmentUnavailableBody')}
+            </AlertDescription>
+          </Alert>
+          <form
+            aria-describedby="assessment-preview-note"
+            className="space-y-4"
+          >
             <div className="space-y-2">
-              <Label htmlFor="notes">Private assessment notes</Label>
-              <Textarea id="notes" rows={6} />
+              <Label htmlFor="notes">{t('privateAssessmentNotes')}</Label>
+              <Textarea
+                id="notes"
+                rows={6}
+                placeholder={t('assessmentPlaceholder')}
+                readOnly
+              />
             </div>
-            <Button type="submit" className="w-full">
-              Save assessment
+            <Button type="button" className="w-full" disabled>
+              {t('saveAssessmentUnavailable')}
             </Button>
-            <Button type="button" variant="outline" className="w-full">
-              {t('certify')}
+            <Button type="button" variant="outline" className="w-full" disabled>
+              {t('certifyUnavailable')}
             </Button>
           </form>
         </CardContent>

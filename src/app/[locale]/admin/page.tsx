@@ -96,7 +96,9 @@ export default async function AdminOverviewPage({
                       pendingApplications[0].applicantName,
                   })}
                   note={t('assessmentQueue', {
-                    status: pendingApplications[0].status,
+                    status: t(
+                      `applicationStatuses.${pendingApplications[0].status}`,
+                    ),
                   })}
                   badge={t('hostReview')}
                 />
@@ -113,7 +115,7 @@ export default async function AdminOverviewPage({
                 <AdminQueueLink
                   href="/admin/incidents"
                   title={t('incidentTitle', {
-                    severity: openIncidents[0].severity,
+                    severity: t(`severities.${openIncidents[0].severity}`),
                   })}
                   note={
                     openIncidents[0].payoutHeld

@@ -22,40 +22,40 @@ export default async function HouseholdPage({
     <Card>
       <CardHeader>
         <CardTitle className="text-3xl">{t('household')}</CardTitle>
-        <p className="text-muted-foreground text-sm">
-          Public story and atmosphere. The private address lives in a separate
-          protected record.
-        </p>
+        <p className="text-muted-foreground text-sm">{t('householdIntro')}</p>
       </CardHeader>
       <CardContent className="space-y-5">
-        <Alert>
-          <AlertDescription>
-            This is a fictional profile preview. Protected household writes are
-            not connected, so editing these fields will not change durable data.
-          </AlertDescription>
+        <Alert id="household-preview-note">
+          <AlertDescription>{t('householdPreview')}</AlertDescription>
         </Alert>
-        <form className="space-y-5">
+        <form aria-describedby="household-preview-note" className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="household-name">Public household name</Label>
-            <Input id="household-name" defaultValue="Ayşe & Levent’s table" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="structure">Household structure</Label>
+            <Label htmlFor="household-name">{t('publicHouseholdName')}</Label>
             <Input
-              id="structure"
-              defaultValue="A couple who have shared this neighborhood for three decades"
+              id="household-name"
+              defaultValue={t('demoHouseholdName')}
+              readOnly
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="story">Household story</Label>
+            <Label htmlFor="structure">{t('householdStructure')}</Label>
+            <Input
+              id="structure"
+              defaultValue={t('demoHouseholdStructure')}
+              readOnly
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="story">{t('householdStory')}</Label>
             <Textarea
               id="story"
               rows={6}
-              defaultValue="Sunday dinner stretches into tea in this home. This is how dinner happens in our home."
+              defaultValue={t('demoHouseholdStory')}
+              readOnly
             />
           </div>
           <Button type="button" disabled>
-            Durable profile editing not connected
+            {t('profileEditingUnavailable')}
           </Button>
         </form>
       </CardContent>

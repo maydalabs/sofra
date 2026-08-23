@@ -32,10 +32,10 @@ export default async function AuditLogPage({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Action</TableHead>
-              <TableHead>Entity</TableHead>
-              <TableHead>Actor</TableHead>
-              <TableHead>Reason</TableHead>
+              <TableHead>{t('actionColumn')}</TableHead>
+              <TableHead>{t('entityColumn')}</TableHead>
+              <TableHead>{t('actorColumn')}</TableHead>
+              <TableHead>{t('reasonColumn')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -47,7 +47,7 @@ export default async function AuditLogPage({
                 <TableCell className="font-mono text-xs">
                   {row.entityId}
                 </TableCell>
-                <TableCell>{row.actorId ?? 'system'}</TableCell>
+                <TableCell>{row.actorId ?? t('systemActor')}</TableCell>
                 <TableCell>{row.reason ?? '—'}</TableCell>
               </TableRow>
             ))}

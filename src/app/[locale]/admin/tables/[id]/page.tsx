@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { formatTry } from '@/features/pricing/pricing'
 import { findOperatorTableReviewById } from '@/server/repositories/operator/queries'
 
@@ -24,6 +25,7 @@ export default async function AdminTableDetailPage({
   setRequestLocale(locale)
   await requireOperatorPageActor(locale)
   const t = await getTranslations('Admin')
+  const tableT = await getTranslations('HostPortal')
   const table = await findOperatorTableReviewById(id)
   if (!table) notFound()
   return (
@@ -34,10 +36,10 @@ export default async function AdminTableDetailPage({
             <CardTitle className="text-3xl">{table.menuTitle}</CardTitle>
             <Badge>
               {query.approved === '1'
-                ? 'approved'
+                ? tableT('statuses.approved')
                 : query.changes === '1'
-                  ? 'changes requested'
-                  : table.status}
+                  ? tableT('statuses.changes_requested')
+                  : tableT(`statuses.${table.status}`)}
             </Badge>
           </div>
           <p className="text-muted-foreground text-sm">
@@ -47,49 +49,44 @@ export default async function AdminTableDetailPage({
         <CardContent className="space-y-7">
           {query.approved === '1' ? (
             <Alert>
-              <AlertDescription>
-                Table approved through the server service and recorded in the
-                demo audit log. Publication remains a separate operator
-                transition.
-              </AlertDescription>
+              <AlertDescription>{t('tableApprovedNotice')}</AlertDescription>
             </Alert>
           ) : null}
           {query.changes === '1' ? (
             <Alert>
-              <AlertDescription>
-                Changes requested and audit entry created. The host can revise
-                before resubmitting.
-              </AlertDescription>
+              <AlertDescription>{t('changesRequestedNotice')}</AlertDescription>
             </Alert>
           ) : null}
           <Alert>
-            <AlertDescription>
-              Private address reference is intentionally not rendered in the
-              approval interface. Address verification is a separate privileged
-              workflow.
-            </AlertDescription>
+            <AlertDescription>{t('privateAddressNotice')}</AlertDescription>
           </Alert>
           <section>
-            <h2 className="text-2xl">Complete menu</h2>
+            <h2 className="text-2xl">{t('completeMenu')}</h2>
             <p className="text-muted-foreground mt-2 leading-7">
               {table.menuDescription}
             </p>
           </section>
           <div className="grid gap-5 rounded-2xl border p-5 sm:grid-cols-2">
             <Detail
-              label="Proposed / certified capacity"
+              label={t('capacityReview')}
               value={`${table.proposedCapacity} / ${table.certifiedCapacity}`}
             />
             <Detail
-              label="Host net / guest total"
-              value={`${formatTry(table.hostNetPayoutKurus)} / ${formatTry(table.guestPriceKurus)}`}
+              label={t('priceReview')}
+              value={`${formatTry(
+                table.hostNetPayoutKurus,
+                locale === 'tr' ? 'tr-TR' : 'en-US',
+              )} / ${formatTry(
+                table.guestPriceKurus,
+                locale === 'tr' ? 'tr-TR' : 'en-US',
+              )}`}
             />
             <Detail
-              label="Household participants"
+              label={t('householdParticipants')}
               value={table.expectedHouseholdParticipants}
             />
             <Detail
-              label="Accessibility"
+              label={t('accessibility')}
               value={table.accessibilityInformation}
             />
           </div>
@@ -97,7 +94,7 @@ export default async function AdminTableDetailPage({
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Review action</CardTitle>
+          <CardTitle className="text-2xl">{t('reviewAction')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <form action={approveTableAction}>
@@ -116,7 +113,13 @@ export default async function AdminTableDetailPage({
           <form action={requestTableChangesAction} className="space-y-3">
             <input type="hidden" name="tableId" value={table.id} />
             <input type="hidden" name="locale" value={locale} />
-            <Input name="reason" placeholder="Reason required" required />
+            <Label htmlFor="change-reason">{t('reason')}</Label>
+            <Input
+              id="change-reason"
+              name="reason"
+              placeholder={t('reasonPlaceholder')}
+              required
+            />
             <Button
               variant="outline"
               className="w-full"
@@ -129,8 +132,7 @@ export default async function AdminTableDetailPage({
             </Button>
           </form>
           <p className="text-muted-foreground text-xs leading-5">
-            Every action uses server-side permission checks and creates an audit
-            entry.
+            {t('actionAuditNote')}
           </p>
         </CardContent>
       </Card>
