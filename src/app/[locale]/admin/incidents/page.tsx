@@ -6,6 +6,9 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from '@/i18n/navigation'
+import { listOperatorIncidents } from '@/server/repositories/operator/queries'
+
+import { requireOperatorPageActor } from '../authorize'
 
 export default async function IncidentQueuePage({
   params,
@@ -14,7 +17,9 @@ export default async function IncidentQueuePage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  await requireOperatorPageActor(locale)
   const t = await getTranslations('Admin')
+  const incidents = await listOperatorIncidents()
   return (
     <Card>
       <CardHeader>
@@ -29,27 +34,33 @@ export default async function IncidentQueuePage({
             absent from public fixtures, analytics, and host/traveler pages.
           </AlertDescription>
         </Alert>
-        <div className="rounded-2xl border p-5">
-          <div className="flex flex-wrap justify-between gap-3">
-            <div>
-              <p className="font-heading text-2xl font-semibold">
-                Arrival-boundary concern
-              </p>
-              <p className="text-muted-foreground mt-1 text-xs">
-                Fictional report · booking-demo-completed
-              </p>
+        {incidents.map((incident) => (
+          <div key={incident.id} className="rounded-2xl border p-5">
+            <div className="flex flex-wrap justify-between gap-3">
+              <div>
+                <p className="font-heading text-2xl font-semibold">
+                  {incident.severity} safety concern
+                </p>
+                <p className="text-muted-foreground mt-1 text-xs">
+                  Restricted report ·{' '}
+                  {incident.bookingId ?? 'no linked booking'}
+                </p>
+              </div>
+              <Badge variant="destructive">
+                {incident.status} ·{' '}
+                {incident.payoutHeld ? 'payout held' : 'no payout hold'}
+              </Badge>
             </div>
-            <Badge variant="destructive">Open · payout held</Badge>
+            <p className="text-muted-foreground mt-5 text-sm leading-6">
+              {incident.confidentialReport}
+            </p>
+            {incident.relatedPayoutId ? (
+              <Button variant="outline" className="mt-5" asChild>
+                <Link href="/admin/payouts">Review related payout hold</Link>
+              </Button>
+            ) : null}
           </div>
-          <p className="text-muted-foreground mt-5 text-sm leading-6">
-            The full confidential report would appear here for authorized
-            operators only. This fixture demonstrates separation without
-            describing a real event or person.
-          </p>
-          <Button variant="outline" className="mt-5" asChild>
-            <Link href="/admin/payouts">Review related payout hold</Link>
-          </Button>
-        </div>
+        ))}
       </CardContent>
     </Card>
   )

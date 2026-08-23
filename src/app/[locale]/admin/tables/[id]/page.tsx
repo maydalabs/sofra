@@ -7,8 +7,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { getPrivateDemoTables } from '@/features/hosted-tables/demo-tables'
 import { formatTry } from '@/features/pricing/pricing'
+import { findOperatorTableReviewById } from '@/server/repositories/operator/queries'
+
+import { requireOperatorPageActor } from '../../authorize'
 
 export default async function AdminTableDetailPage({
   params,
@@ -20,8 +22,9 @@ export default async function AdminTableDetailPage({
   const { locale, id } = await params
   const query = await searchParams
   setRequestLocale(locale)
+  await requireOperatorPageActor(locale)
   const t = await getTranslations('Admin')
-  const table = getPrivateDemoTables().find((item) => item.id === id)
+  const table = await findOperatorTableReviewById(id)
   if (!table) notFound()
   return (
     <div className="grid gap-6 xl:grid-cols-[1fr_20rem]">

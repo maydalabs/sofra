@@ -9,6 +9,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { listOperatorAuditEvents } from '@/server/repositories/operator/queries'
+
+import { requireOperatorPageActor } from '../authorize'
 
 export default async function AuditLogPage({
   params,
@@ -17,27 +20,9 @@ export default async function AuditLogPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  await requireOperatorPageActor(locale)
   const t = await getTranslations('Admin')
-  const rows = [
-    {
-      action: 'hosted_table.submitted',
-      entity: 'table-ece-can-besiktas',
-      actor: 'demo-host',
-      reason: 'Host submitted complete table',
-    },
-    {
-      action: 'host_application.submitted',
-      entity: 'demo-application',
-      actor: 'demo-applicant',
-      reason: 'Verified email application',
-    },
-    {
-      action: 'payout.held',
-      entity: 'demo-payout-1',
-      actor: 'demo-operator',
-      reason: 'Related safety incident open',
-    },
-  ]
+  const rows = await listOperatorAuditEvents()
   return (
     <Card>
       <CardHeader>
@@ -55,15 +40,15 @@ export default async function AuditLogPage({
           </TableHeader>
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.action}>
+              <TableRow key={row.id}>
                 <TableCell className="font-mono text-xs">
                   {row.action}
                 </TableCell>
                 <TableCell className="font-mono text-xs">
-                  {row.entity}
+                  {row.entityId}
                 </TableCell>
-                <TableCell>{row.actor}</TableCell>
-                <TableCell>{row.reason}</TableCell>
+                <TableCell>{row.actorId ?? 'system'}</TableCell>
+                <TableCell>{row.reason ?? '—'}</TableCell>
               </TableRow>
             ))}
           </TableBody>

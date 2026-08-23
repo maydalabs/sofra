@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { formatTry } from '@/features/pricing/pricing'
 import { Link } from '@/i18n/navigation'
-import { getDemoPayouts } from '@/server/demo/operations'
+import { listOperatorPayouts } from '@/server/repositories/operator/queries'
+
+import { requireOperatorPageActor } from '../authorize'
 
 export default async function PayoutQueuePage({
   params,
@@ -16,8 +18,9 @@ export default async function PayoutQueuePage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  await requireOperatorPageActor(locale)
   const t = await getTranslations('Payouts')
-  const payouts = getDemoPayouts()
+  const payouts = await listOperatorPayouts()
 
   return (
     <div className="space-y-6">

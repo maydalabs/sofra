@@ -10,8 +10,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { getDemoBookings } from '@/features/bookings/demo-bookings'
 import { formatTry } from '@/features/pricing/pricing'
+import { listOperatorBookings } from '@/server/repositories/operator/queries'
+
+import { requireOperatorPageActor } from '../authorize'
 
 export default async function AdminBookingsPage({
   params,
@@ -20,7 +22,9 @@ export default async function AdminBookingsPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  await requireOperatorPageActor(locale)
   const t = await getTranslations('Admin')
+  const bookings = await listOperatorBookings()
   return (
     <Card>
       <CardHeader>
@@ -41,7 +45,7 @@ export default async function AdminBookingsPage({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {getDemoBookings().map((booking) => (
+            {bookings.map((booking) => (
               <TableRow key={booking.id}>
                 <TableCell className="font-mono text-xs">
                   {booking.id}

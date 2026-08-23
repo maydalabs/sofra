@@ -37,9 +37,12 @@ In demo mode, public reads use fictional in-repository fixtures. Demo mutations 
 
 Certification, role assignment, approval, audit inspection, incident handling, payout controls, and selected cross-user operational reads may use a server-only service-role connection. The key is read only in server-only modules and never uses a `NEXT_PUBLIC_` name.
 
+Cross-user operator reads use a separate `SofraOperatorReadRepository`. Its factory resolves the current actor and requires the `operator` or `administrator` role before reading service-role configuration or constructing a privileged client. Repository methods repeat the authorization check, and gateway queries select only the fields required by the protected screen.
+
 ## Repository selection
 
 - Anonymous listing reads use `published_hosted_tables` through an anonymous Supabase client when public credentials are configured. Without them, the existing fictional public projection remains available.
 - Traveler-owned booking summaries use the authenticated `get_my_booking_summaries()` read model. It filters by `auth.uid()` inside a security-definer function with an empty search path and an explicit safe return shape.
 - Host table reads use the authenticated server client and existing household-owner RLS. The repository maps an allowlist that excludes address IDs, exact addresses, precise coordinates, arrival instructions, and guest-selection data.
+- Operator queues use fictional protected records in local demo mode. Outside demo mode they fail closed unless an authorized operator has server-only Supabase service-role configuration. Operator records are separate from public, traveler, and host contracts so confidential incident and audit fields cannot drift into those projections.
 - Protected production reads never fall back to a demo actor. Missing authentication or Supabase configuration fails closed.

@@ -1,45 +1,66 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { notFound } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { findOperatorHostApplicationById } from '@/server/repositories/operator/queries'
+
+import { requireOperatorPageActor } from '../../authorize'
 
 export default async function HostAssessmentPage({
   params,
 }: {
   params: Promise<{ locale: string; id: string }>
 }) {
-  const { locale } = await params
+  const { locale, id } = await params
   setRequestLocale(locale)
+  await requireOperatorPageActor(locale)
   const t = await getTranslations('Admin')
+  const application = await findOperatorHostApplicationById(id)
+  if (!application) notFound()
   return (
     <div className="grid gap-6 xl:grid-cols-[1fr_20rem]">
       <Card>
         <CardHeader>
-          <CardTitle className="text-3xl">Selin & Derya household</CardTitle>
+          <CardTitle className="text-3xl">
+            {application.householdName ?? application.applicantName}
+          </CardTitle>
           <p className="text-muted-foreground text-sm">
-            Fictional application · no real household or address
+            Restricted application · exact home details are not part of this
+            read model
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-5 rounded-2xl border p-5 sm:grid-cols-2">
+            <Detail label="Applicant" value={application.applicantName} />
             <Detail
               label="Household structure"
-              value="A parent and adult child"
+              value={
+                application.householdStructure ?? 'Pending household profile'
+              }
             />
+            <Detail label="Status" value={application.status} />
             <Detail
-              label="Proposed neighborhood"
-              value="Üsküdar demo cluster"
+              label="Submitted"
+              value={
+                application.submittedAt
+                  ? 'Application received'
+                  : 'Not submitted'
+              }
             />
-            <Detail label="Desired capacity" value="4 travelers" />
-            <Detail label="Languages" value="Turkish · English" />
           </div>
           <div>
             <h2 className="text-2xl">Hosting motivation</h2>
             <p className="text-muted-foreground mt-2 leading-7">
-              We already host long Sunday dinners and would like to welcome
-              careful, curious visitors into that rhythm.
+              {application.motivation}
+            </p>
+          </div>
+          <div>
+            <h2 className="text-2xl">Hosting plan</h2>
+            <p className="text-muted-foreground mt-2 leading-7">
+              {application.hostingPlan}
             </p>
           </div>
         </CardContent>

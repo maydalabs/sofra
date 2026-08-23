@@ -23,6 +23,8 @@ Public page HTML, JSON, metadata, analytics, map inputs, storage metadata, and S
 - Operator and administrator operations execute server-side with explicit role checks and audit entries.
 - Role assignment is server controlled and cannot derive from client-editable auth metadata.
 
+The operator read repository checks the server-resolved actor before a service-role client can be created, then checks again at every repository entry point. Host applications, table review, booking operations, incidents, payouts, and audit records have dedicated server-only contracts with purpose-specific allowlists. Confidential incident text is available only in the incident contract; address, precise location, dietary disclosure, and guest-name fields are absent from unrelated operator records.
+
 ## Secrets and telemetry
 
 Only publishable Supabase, public map, and public analytics identifiers may use `NEXT_PUBLIC_`. Service-role, Resend, Sentry, and payment credentials remain server-only. Typed analytics events contain identifiers and non-sensitive product state only; dietary text, address data, guest names, incident content, and secrets are excluded by contract.

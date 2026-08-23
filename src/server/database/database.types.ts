@@ -48,6 +48,24 @@ export type PaymentStatus =
   | 'refunded'
   | 'held'
 
+export type ApplicationStatus =
+  | 'draft'
+  | 'submitted'
+  | 'under_review'
+  | 'changes_requested'
+  | 'approved'
+  | 'declined'
+  | 'withdrawn'
+
+export type PayoutStatus = 'pending' | 'eligible' | 'held' | 'released'
+
+export type IncidentStatus =
+  | 'open'
+  | 'triaged'
+  | 'investigating'
+  | 'resolved'
+  | 'closed'
+
 export interface Database {
   public: {
     Tables: {
@@ -117,6 +135,23 @@ export interface Database {
           household_structure: string
           public_story: string
           status: 'applicant' | 'certified' | 'suspended' | 'retired'
+          created_at: string
+          updated_at: string
+        }
+        Insert: Record<string, never>
+        Update: Record<string, never>
+        Relationships: []
+      }
+      host_applications: {
+        Row: {
+          id: string
+          applicant_profile_id: string
+          household_id: string | null
+          status: ApplicationStatus
+          motivation: string
+          hosting_plan: string
+          submitted_at: string | null
+          decided_at: string | null
           created_at: string
           updated_at: string
         }
@@ -196,6 +231,57 @@ export interface Database {
         Update: Record<string, never>
         Relationships: []
       }
+      payout_records: {
+        Row: {
+          id: string
+          hosted_table_id: string
+          household_id: string
+          amount_kurus: number
+          currency: 'TRY'
+          status: PayoutStatus
+          hold_reason: string | null
+          released_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Record<string, never>
+        Update: Record<string, never>
+        Relationships: []
+      }
+      safety_incidents: {
+        Row: {
+          id: string
+          booking_id: string | null
+          hosted_table_id: string | null
+          reporter_profile_id: string
+          status: IncidentStatus
+          severity: 'low' | 'medium' | 'high' | 'critical'
+          confidential_report: string
+          assigned_to: string | null
+          resolved_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Record<string, never>
+        Update: Record<string, never>
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          id: string
+          actor_profile_id: string | null
+          action: string
+          entity_type: string
+          entity_id: string
+          reason: string | null
+          previous_state: Json | null
+          new_state: Json | null
+          occurred_at: string
+        }
+        Insert: Record<string, never>
+        Update: Record<string, never>
+        Relationships: []
+      }
     }
     Views: {
       published_hosted_tables: {
@@ -265,6 +351,9 @@ export interface Database {
         | 'partner_user'
         | 'operator'
         | 'administrator'
+      application_status: ApplicationStatus
+      payout_status: PayoutStatus
+      incident_status: IncidentStatus
     }
     CompositeTypes: Record<string, never>
   }

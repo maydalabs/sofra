@@ -2,9 +2,11 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getPrivateDemoTables } from '@/features/hosted-tables/demo-tables'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
+import { listOperatorTableReviews } from '@/server/repositories/operator/queries'
+
+import { requireOperatorPageActor } from '../authorize'
 
 export default async function TableApprovalQueuePage({
   params,
@@ -13,8 +15,9 @@ export default async function TableApprovalQueuePage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  await requireOperatorPageActor(locale)
   const t = await getTranslations('Admin')
-  const submitted = getPrivateDemoTables().filter(
+  const submitted = (await listOperatorTableReviews()).filter(
     (table) => table.status === 'submitted',
   )
   return (
