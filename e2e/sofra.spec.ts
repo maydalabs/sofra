@@ -292,3 +292,27 @@ test('operator payout hold is linked to the restricted incident workflow', async
   await page.getByRole('link', { name: /review incident queue/i }).click()
   await expect(page).toHaveURL(/\/en\/admin\/incidents/)
 })
+
+test('partner sees actor-owned referral stages without traveler or commission data', async ({
+  page,
+}) => {
+  await choosePersona(page, /continue as partner/i)
+  await page.goto('/en/partner')
+
+  await expect(
+    page.getByRole('heading', {
+      name: /see referral progress without traveler identities/i,
+    }),
+  ).toBeVisible()
+  await expect(page.getByRole('code')).toHaveText('SOFRA-DEMO')
+  await expect(page.getByText(/landing recorded/i).first()).toBeVisible()
+  await expect(page.getByText(/booking attributed/i).first()).toBeVisible()
+  await expect(page.getByText(/dinner completed/i).first()).toBeVisible()
+  await expect(page.getByText(/partner economics/i)).toBeVisible()
+
+  const html = await page.content()
+  expect(html).not.toContain('Demo Traveler')
+  expect(html).not.toContain('partnerCommissionKurus')
+  expect(html).not.toContain('attributedProfileId')
+  expect(html).not.toContain('Fictional development address')
+})

@@ -67,6 +67,7 @@ pnpm db:types
 - Foundation migration: `supabase/migrations/202608030001_initial_foundation.sql`
 - Authenticated read-model migration: `supabase/migrations/202608240001_repository_read_models.sql`
 - Host operations read-model migration: `supabase/migrations/202608240002_host_operations_read_models.sql`
+- Partner referral read-model migration: `supabase/migrations/202608240003_partner_referral_read_models.sql`
 - Fictional seed: `supabase/seed.sql`
 - Generated-shape fallback types: `src/server/database/database.types.ts`
 
@@ -84,14 +85,14 @@ pnpm test:e2e
 pnpm build
 ```
 
-Playwright starts or reuses the local app and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, unauthorized admin access, the guided cross-role journey, roster privacy, post-dinner moderation/privacy boundaries, confidential-report non-echo, and payout holds.
+Playwright starts or reuses the local app and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, unauthorized admin access, the guided cross-role journey, roster privacy, post-dinner moderation/privacy boundaries, confidential-report non-echo, payout holds, and partner-owned referral visibility.
 
 ## Architecture
 
 - `src/app/[locale]`: localized public and role-specific routes
-- `src/features`: pricing, policy, scheduled tables, bookings, dietary privacy, and payout rules
+- `src/features`: pricing, policy, scheduled tables, bookings, dietary privacy, partner referral projections, and payout rules
 - `src/server`: auth, authorization, Supabase clients, services, payments, maps, notifications, analytics, monitoring, and audit
-- `src/server/repositories`: typed public, traveler, host, and protected operator read contracts with demo and Supabase implementations
+- `src/server/repositories`: typed public, traveler, host, partner, and protected operator read contracts with demo and Supabase implementations
 - `messages`: English and Turkish interface messages
 - `supabase`: local configuration, SQL migration, RLS, public-safe view, and fictional seed
 - `docs`: product constitution, decisions, open questions, architecture, domain, states, privacy, and plan
@@ -104,7 +105,9 @@ Completed bookings expose three separate post-dinner channels: a moderation-pend
 
 The host workspace derives certified capacity from the actor-owned certification record, visualizes the table journey from private draft through dinner, and calculates confirmed-party and projected host-net summaries from the delivery roster. Local submission review reloads the host-owned table and active certification before validating the transition, but does not claim a durable write. Host rosters use a narrow authenticated SQL function and never expose guest names, dietary text, exact location, payment detail, or appearance-selection data.
 
-Public, traveler, host, and operator page components covered by the current contracts read through repository queries rather than importing database clients or fictional fixtures. Anonymous discovery uses the public-safe view when Supabase is configured and retains the fictional public fallback otherwise. Protected repositories use local personas only in demo mode and fail closed when production credentials or an authorized actor are absent. Cross-user operator reads use a dedicated server-only repository that checks the actor role before creating a service-role client and exposes purpose-specific records for applications, table reviews, booking operations, incidents, payouts, and audit events.
+The partner workspace replaces hard-coded referral metrics with an actor-owned conversion projection: landing recorded, booking attributed, dinner completed, or booking closed. Its authenticated SQL function returns only organization identity, referral stage, party count, and public table context. Traveler identity, attribution metadata, private location, dietary data, payment details, commissions, and settlement data are excluded. The final attribution window, economics, and settlement remain open product decisions.
+
+Public, traveler, host, partner, and operator page components covered by the current contracts read through repository queries rather than importing database clients or fictional fixtures. Anonymous discovery uses the public-safe view when Supabase is configured and retains the fictional public fallback otherwise. Protected repositories use local personas only in demo mode and fail closed when production credentials or an authorized actor are absent. Cross-user operator reads use a dedicated server-only repository that checks the actor role before creating a service-role client and exposes purpose-specific records for applications, table reviews, booking operations, incidents, payouts, and audit events.
 
 ## Adapters and local fallbacks
 

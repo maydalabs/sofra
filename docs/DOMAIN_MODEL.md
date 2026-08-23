@@ -22,6 +22,8 @@ A booking records the primary traveler, party, lifecycle, compatibility outcome,
 
 Public reviews, private constructive feedback, and confidential safety incidents are separate aggregates. Payments, payouts, partner referrals, administrative notes, and audit logs retain their own operational histories.
 
+A partner attribution records a referral landing independently from any later booking. The partner-facing projection derives landing, attributed-booking, completed-dinner, and closed-booking stages without exposing the attributed traveler or referral metadata. Partner commission stays in the immutable booking price snapshot and is not exposed as settlement reporting while partner economics remain open.
+
 ## Money
 
 All stored amounts are integer kuruş. The price snapshot preserves host payout, Sofra gross fee, partner commission, currency, take rate, and guest total as booked.

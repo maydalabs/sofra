@@ -73,6 +73,8 @@ export type IncidentStatus =
   | 'resolved'
   | 'closed'
 
+export type PartnerOrganizationStatus = 'active' | 'paused' | 'closed'
+
 export interface Database {
   public: {
     Tables: {
@@ -369,6 +371,25 @@ export interface Database {
           party_size: number
           status: BookingStatus
           compatibility_status: CompatibilityStatus
+        }[]
+      }
+      get_my_partner_referral_summary: {
+        Args: Record<string, never>
+        Returns: {
+          organization_id: string
+          organization_name: string
+          organization_code: string
+          organization_status: PartnerOrganizationStatus
+          attribution_id: string | null
+          referral_code: string | null
+          landed_at: string | null
+          booking_id: string | null
+          booking_status: BookingStatus | null
+          party_size: number | null
+          table_slug: string | null
+          menu_title: string | null
+          starts_at: string | null
+          public_neighborhood: string | null
         }[]
       }
       has_role: {

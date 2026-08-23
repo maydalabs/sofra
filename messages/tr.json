@@ -261,9 +261,38 @@
   },
   "Partner": {
     "title": "Partner özeti",
+    "description": "Kurumunuzun yönlendirmelerini ve herkese açık Sofra envanterini gizlilik odaklı biçimde görün.",
     "upcoming": "Yaklaşan onaylı sofralar",
-    "referrals": "Yönlendirme atfı",
-    "completed": "Tamamlanan yönlendirmeler"
+    "upcomingBody": "Burada yalnızca onaylanmış, herkese açık ve güvenli sofra alanları gösterilir.",
+    "approved": "Onaylandı",
+    "scopeEyebrow": "Faz 1 atıf sınırı",
+    "scopeTitle": "Misafir kimlikleri olmadan yönlendirme ilerlemesini görün",
+    "scopeBody": "Bu çalışma alanı yönlendirme ziyaretlerini, atfedilen rezervasyonları ve tamamlanan akşamları gösterir. Partner ekonomisi, nihai atıf süresi ve ödeme süreci açık kararlar olarak kalır ve burada hesaplanmaz.",
+    "organizationBody": "Etkinlik yalnızca bu partner kurumuna ait yönlendirmelerle sınırlıdır.",
+    "referralCode": "Yönlendirme kodu",
+    "attributedVisits": "Atfedilen ziyaretler",
+    "attributedBookings": "Atfedilen rezervasyonlar",
+    "completed": "Tamamlanan yönlendirmeler",
+    "completedTravelers": "Akşamı tamamlayan misafirler",
+    "activityTitle": "Yönlendirme etkinliği",
+    "activityBody": "Yalnızca dönüşüm aşamalarını gösterir. Misafir adları, profilleri, özel üst veriler, ödemeler ve komisyon tutarları dahil edilmez.",
+    "landingOnly": "Yönlendirme ziyareti kaydedildi",
+    "viewTable": "Herkese açık sofrayı görüntüle",
+    "travelers": "{count} misafir",
+    "emptyActivity": "Bu kurum için henüz bir yönlendirme etkinliği kaydedilmedi.",
+    "emptyOrganizationTitle": "Partner kurumu atanmamış",
+    "emptyOrganizationBody": "Yönlendirme verilerinin görünmesi için Sofra operasyonlarının bu hesabı bir partner kurumuna ataması gerekir.",
+    "organizationStatus": {
+      "active": "Aktif",
+      "paused": "Duraklatıldı",
+      "closed": "Kapandı"
+    },
+    "stages": {
+      "landed": "Ziyaret kaydedildi",
+      "booked": "Rezervasyon atfedildi",
+      "completed": "Akşam tamamlandı",
+      "closed": "Rezervasyon kapandı"
+    }
   },
   "Booking": {
     "eyebrow": "Rezervasyon temeli",

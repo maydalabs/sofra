@@ -24,7 +24,7 @@ export default async function PartnerLayout({
   return (
     <PortalShell
       title={t('title')}
-      description="A deliberately lightweight referral and approved-table scaffold."
+      description={t('description')}
       items={[{ href: '/partner', label: t('title') }]}
       actorLabel={actor.email}
     >

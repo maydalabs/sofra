@@ -261,9 +261,38 @@
   },
   "Partner": {
     "title": "Partner overview",
+    "description": "A privacy-safe view of your organization’s referrals and public Sofra inventory.",
     "upcoming": "Upcoming approved tables",
-    "referrals": "Referral attribution",
-    "completed": "Completed referrals"
+    "upcomingBody": "Only approved, public-safe listing fields are shown here.",
+    "approved": "Approved",
+    "scopeEyebrow": "Phase 1 attribution boundary",
+    "scopeTitle": "See referral progress without traveler identities",
+    "scopeBody": "This workspace reports referral landings, attributed bookings, and completed dinners. Partner economics, the final attribution window, and settlement remain open decisions and are not calculated here.",
+    "organizationBody": "Activity is limited to referrals owned by this partner organization.",
+    "referralCode": "Referral code",
+    "attributedVisits": "Attributed visits",
+    "attributedBookings": "Attributed bookings",
+    "completed": "Completed referrals",
+    "completedTravelers": "Completed travelers",
+    "activityTitle": "Referral activity",
+    "activityBody": "A conversion-stage view only. Traveler names, profiles, private metadata, payments, and commission amounts are excluded.",
+    "landingOnly": "Referral landing recorded",
+    "viewTable": "View public table",
+    "travelers": "{count, plural, one {# traveler} other {# travelers}}",
+    "emptyActivity": "No referral activity has been recorded for this organization yet.",
+    "emptyOrganizationTitle": "No partner organization is assigned",
+    "emptyOrganizationBody": "Sofra operations must assign this account to a partner organization before referral data can appear.",
+    "organizationStatus": {
+      "active": "Active",
+      "paused": "Paused",
+      "closed": "Closed"
+    },
+    "stages": {
+      "landed": "Landing recorded",
+      "booked": "Booking attributed",
+      "completed": "Dinner completed",
+      "closed": "Booking closed"
+    }
   },
   "Booking": {
     "eyebrow": "Reservation foundation",
