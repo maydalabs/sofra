@@ -20,6 +20,7 @@ In demo mode, public reads use fictional in-repository fixtures. Demo mutations 
 - `src/components`: shared visual building blocks and shadcn-owned components.
 - `src/features`: domain types, policies, schemas, projections, demo repositories, and feature components.
 - `src/server`: authentication, authorization, database clients, service boundaries, adapters, and audit.
+- `src/server/repositories`: actor-bound read contracts, explicit row mappers, and demo/Supabase implementations. Page components depend on these contracts rather than database clients.
 - `supabase/migrations`: normalized schema, views, functions, and RLS policies.
 - `supabase/seed.sql`: fictional development data only.
 
@@ -35,3 +36,10 @@ In demo mode, public reads use fictional in-repository fixtures. Demo mutations 
 ## Service-role operations
 
 Certification, role assignment, approval, audit inspection, incident handling, payout controls, and selected cross-user operational reads may use a server-only service-role connection. The key is read only in server-only modules and never uses a `NEXT_PUBLIC_` name.
+
+## Repository selection
+
+- Anonymous listing reads use `published_hosted_tables` through an anonymous Supabase client when public credentials are configured. Without them, the existing fictional public projection remains available.
+- Traveler-owned booking summaries use the authenticated `get_my_booking_summaries()` read model. It filters by `auth.uid()` inside a security-definer function with an empty search path and an explicit safe return shape.
+- Host table reads use the authenticated server client and existing household-owner RLS. The repository maps an allowlist that excludes address IDs, exact addresses, precise coordinates, arrival instructions, and guest-selection data.
+- Protected production reads never fall back to a demo actor. Missing authentication or Supabase configuration fails closed.

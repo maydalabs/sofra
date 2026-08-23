@@ -18,10 +18,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { getPublicDemoTable } from '@/features/hosted-tables/demo-tables'
 import { formatTry } from '@/features/pricing/pricing'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
+import { findPublicTableBySlug } from '@/server/repositories/queries'
 
 type PageProps = { params: Promise<{ locale: string; slug: string }> }
 
@@ -29,7 +29,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const table = getPublicDemoTable(slug)
+  const table = await findPublicTableBySlug(slug)
   if (!table) return { title: 'Table unavailable' }
   return { title: table.menuTitle, description: table.menuDescription }
 }
@@ -37,7 +37,7 @@ export async function generateMetadata({
 export default async function TableDetailPage({ params }: PageProps) {
   const { locale, slug } = await params
   setRequestLocale(locale)
-  const table = getPublicDemoTable(slug)
+  const table = await findPublicTableBySlug(slug)
   if (!table) notFound()
   const t = await getTranslations('Table')
   const common = await getTranslations('Common')

@@ -5,8 +5,8 @@ import { simulateBookingAction } from './actions'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BookingForm } from '@/features/bookings/booking-form'
-import { getPublicDemoTable } from '@/features/hosted-tables/demo-tables'
 import { formatTableDate } from '@/lib/date'
+import { findPublicTableBySlug } from '@/server/repositories/queries'
 
 export default async function BookingPage({
   params,
@@ -15,7 +15,7 @@ export default async function BookingPage({
 }) {
   const { locale, slug } = await params
   setRequestLocale(locale)
-  const table = getPublicDemoTable(slug)
+  const table = await findPublicTableBySlug(slug)
   if (!table || table.status === 'roster_locked') notFound()
   const t = await getTranslations('Booking')
 

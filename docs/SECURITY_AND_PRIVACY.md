@@ -6,6 +6,8 @@ Public page HTML, JSON, metadata, analytics, map inputs, storage metadata, and S
 
 `public.published_hosted_tables` is the intended anonymous-query boundary. Application projections repeat the allowlist so accidental schema expansion does not expand public output.
 
+`get_my_booking_summaries()` is the authenticated traveler read boundary. It filters on `auth.uid()` and returns only booking status, party context, public table information, compatibility status, payment status, and total price. It cannot return address, arrival, guest-name, dietary-text, assessment, incident, or audit fields.
+
 ## Data separation
 
 - Public approximate neighborhood and deliberately coarse coordinates live with the listing.

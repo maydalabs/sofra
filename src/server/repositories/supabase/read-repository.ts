@@ -1,0 +1,70 @@
+import 'server-only'
+
+import { RepositoryUnavailableError } from '../errors'
+import type {
+  HostTableRecord,
+  SofraReadRepository,
+  TravelerBookingRecord,
+} from '../contracts'
+import type { SofraReadGateway } from './gateway'
+import { mapHostTable, mapPublishedTable, mapTravelerBooking } from './mappers'
+
+export class SupabaseSofraReadRepository implements SofraReadRepository {
+  constructor(
+    private readonly gateway: SofraReadGateway,
+    private readonly actorId: string | null = null,
+  ) {}
+
+  async listPublicTables() {
+    const rows = await this.gateway.readPublishedTables()
+    return rows.map(mapPublishedTable)
+  }
+
+  async findPublicTableBySlug(slug: string) {
+    const row = await this.gateway.readPublishedTableBySlug(slug)
+    return row ? mapPublishedTable(row) : undefined
+  }
+
+  async listTravelerBookings(): Promise<TravelerBookingRecord[]> {
+    this.assertActor()
+    const rows = await this.gateway.readTravelerBookings()
+    return rows.map(mapTravelerBooking)
+  }
+
+  async findTravelerBookingById(id: string) {
+    const bookings = await this.listTravelerBookings()
+    return bookings.find((booking) => booking.id === id)
+  }
+
+  async listHostTables(): Promise<HostTableRecord[]> {
+    const actorId = this.assertActor()
+    const households = await this.gateway.readOwnedHouseholds(actorId)
+    const householdById = new Map(
+      households.map((household) => [household.id, household]),
+    )
+    const rows = await this.gateway.readHostedTables([...householdById.keys()])
+    return rows.map((row) => {
+      const household = householdById.get(row.household_id)
+      if (!household) {
+        throw new RepositoryUnavailableError(
+          'A hosted table was returned outside the actor household scope',
+        )
+      }
+      return mapHostTable(row, household)
+    })
+  }
+
+  async findHostTableById(id: string) {
+    const tables = await this.listHostTables()
+    return tables.find((table) => table.id === id)
+  }
+
+  private assertActor() {
+    if (!this.actorId) {
+      throw new RepositoryUnavailableError(
+        'An authenticated actor is required for this repository operation',
+      )
+    }
+    return this.actorId
+  }
+}

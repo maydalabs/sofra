@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { getPublicDemoTables } from '@/features/hosted-tables/demo-tables'
+import { listPublicTables } from '@/server/repositories/queries'
 import { getServerTimeMilliseconds } from '@/server/time/clock'
 
 type SearchParameters = { format?: string; area?: string; date?: string }
@@ -28,7 +28,7 @@ export default async function TablesPage({
   const filters = await searchParams
   setRequestLocale(locale)
   const t = await getTranslations('Discovery')
-  const allTables = getPublicDemoTables()
+  const allTables = await listPublicTables()
   const now = getServerTimeMilliseconds()
   const tables = allTables.filter((table) => {
     const daysAway =

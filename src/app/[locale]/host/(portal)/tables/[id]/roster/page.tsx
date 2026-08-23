@@ -11,10 +11,11 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getPrivateDemoTables } from '@/features/hosted-tables/demo-tables'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
+import { getCurrentActor } from '@/server/auth/current-actor'
 import { getDemoRoster } from '@/server/demo/rosters'
+import { findHostTableById } from '@/server/repositories/queries'
 
 export default async function HostRosterPage({
   params,
@@ -24,7 +25,9 @@ export default async function HostRosterPage({
   const { locale, id } = await params
   setRequestLocale(locale)
   const t = await getTranslations('Roster')
-  const table = getPrivateDemoTables().find((item) => item.id === id)
+  const actor = await getCurrentActor()
+  if (!actor) notFound()
+  const table = await findHostTableById(actor.id, id)
   if (!table) notFound()
   const roster = getDemoRoster(table.id)
   const travelerCount = roster.reduce(

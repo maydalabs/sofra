@@ -1,8 +1,52 @@
 /**
- * Generated-shape database types for the checked-in migration. Regenerate with
- * `pnpm db:types` whenever a local Supabase stack is available.
+ * Generated-shape database types for the checked-in migrations. Regenerate
+ * with `pnpm db:types` whenever a local Supabase stack is available.
  */
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type HostedTableStatus =
+  | 'draft'
+  | 'submitted'
+  | 'changes_requested'
+  | 'approved'
+  | 'published'
+  | 'minimum_reached'
+  | 'confirmed'
+  | 'roster_locked'
+  | 'completed'
+  | 'cancelled'
+  | 'archived'
+
+export type BookingStatus =
+  | 'draft'
+  | 'awaiting_payment'
+  | 'payment_authorized'
+  | 'pending_minimum'
+  | 'confirmed'
+  | 'cancelled'
+  | 'refunded'
+  | 'completed'
+  | 'disputed'
+
+export type CompatibilityStatus =
+  | 'not_required'
+  | 'pending'
+  | 'accepted'
+  | 'declined'
+
+export type PaymentStatus =
+  | 'not_started'
+  | 'created'
+  | 'authorized'
+  | 'failed'
+  | 'refunded'
+  | 'held'
 
 export interface Database {
   public: {
@@ -29,6 +73,17 @@ export interface Database {
         }
         Relationships: []
       }
+      roles: {
+        Row: {
+          id: string
+          code: Database['public']['Enums']['application_role']
+          description: string
+          created_at: string
+        }
+        Insert: Record<string, never>
+        Update: Record<string, never>
+        Relationships: []
+      }
       role_assignments: {
         Row: {
           id: string
@@ -44,6 +99,29 @@ export interface Database {
           assigned_by?: string | null
         }
         Update: { revoked_at?: string | null }
+        Relationships: [
+          {
+            foreignKeyName: 'role_assignments_role_id_fkey'
+            columns: ['role_id']
+            isOneToOne: false
+            referencedRelation: 'roles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      households: {
+        Row: {
+          id: string
+          owner_profile_id: string
+          public_name: string
+          household_structure: string
+          public_story: string
+          status: 'applicant' | 'certified' | 'suspended' | 'retired'
+          created_at: string
+          updated_at: string
+        }
+        Insert: Record<string, never>
+        Update: Record<string, never>
         Relationships: []
       }
       hosted_tables: {
@@ -53,28 +131,36 @@ export interface Database {
           household_id: string
           lead_verified_host_id: string
           private_address_id: string
+          pricing_policy_id: string
           starts_at: string
+          timezone: string
           public_neighborhood: string
+          public_approximate_latitude: number | null
+          public_approximate_longitude: number | null
           format: 'shared' | 'private'
           menu_title: string
           menu_description: string
+          atmosphere: string
+          languages: string[]
+          expected_household_participants: string
+          practical_information: string
+          accessibility_information: string
           proposed_capacity: number
           certified_capacity: number
           available_seats: number
+          minimum_guest_count: number
+          guaranteed_operation: boolean
           host_net_payout_kurus: number
           guest_price_kurus: number
-          status:
-            | 'draft'
-            | 'submitted'
-            | 'changes_requested'
-            | 'approved'
-            | 'published'
-            | 'minimum_reached'
-            | 'confirmed'
-            | 'roster_locked'
-            | 'completed'
-            | 'cancelled'
-            | 'archived'
+          currency: 'TRY'
+          booking_cutoff_at: string
+          roster_lock_at: string
+          status: HostedTableStatus
+          published_at: string | null
+          cancelled_at: string | null
+          cancellation_reason: string | null
+          created_at: string
+          updated_at: string
         }
         Insert: Record<string, never>
         Update: Record<string, never>
@@ -85,20 +171,26 @@ export interface Database {
           id: string
           hosted_table_id: string
           primary_traveler_id: string
+          referral_attribution_id: string | null
           party_size: number
-          status:
-            | 'draft'
-            | 'awaiting_payment'
-            | 'payment_authorized'
-            | 'pending_minimum'
-            | 'confirmed'
-            | 'cancelled'
-            | 'refunded'
-            | 'completed'
-            | 'disputed'
-          compatibility_status: 'not_required' | 'pending' | 'accepted' | 'declined'
+          party_type: string
+          status: BookingStatus
+          compatibility_status: CompatibilityStatus
+          payment_status: PaymentStatus
+          refund_status: string
+          host_net_payout_kurus: number
+          sofra_gross_fee_kurus: number
+          partner_commission_kurus: number
           guest_total_kurus: number
+          take_rate_basis_points: number
           currency: 'TRY'
+          policy_snapshot: Json
+          table_policy_acknowledged_at: string | null
+          compatibility_acknowledged_at: string | null
+          cancelled_at: string | null
+          cancellation_reason: string | null
+          created_at: string
+          updated_at: string
         }
         Insert: Record<string, never>
         Update: Record<string, never>
@@ -112,21 +204,58 @@ export interface Database {
           slug: string | null
           household_name: string | null
           household_story: string | null
+          household_structure: string | null
           lead_host_name: string | null
           starts_at: string | null
+          timezone: string | null
           public_neighborhood: string | null
+          public_approximate_latitude: number | null
+          public_approximate_longitude: number | null
           format: 'shared' | 'private' | null
           menu_title: string | null
           menu_description: string | null
+          atmosphere: string | null
+          languages: string[] | null
+          expected_household_participants: string | null
+          practical_information: string | null
+          accessibility_information: string | null
+          certified_capacity: number | null
           available_seats: number | null
+          minimum_guest_count: number | null
+          guaranteed_operation: boolean | null
           guest_price_kurus: number | null
-          currency: string | null
+          currency: 'TRY' | null
+          booking_cutoff_at: string | null
+          status: HostedTableStatus | null
         }
         Relationships: []
       }
     }
     Functions: {
-      has_role: { Args: { required_role: Database['public']['Enums']['application_role'] }; Returns: boolean }
+      get_my_booking_summaries: {
+        Args: Record<string, never>
+        Returns: {
+          id: string
+          table_id: string
+          table_slug: string
+          menu_title: string
+          household_name: string
+          starts_at: string
+          public_neighborhood: string
+          party_size: number
+          party_type: string
+          status: BookingStatus
+          compatibility_status: CompatibilityStatus
+          payment_status: PaymentStatus
+          guest_total_kurus: number
+        }[]
+      }
+      has_role: {
+        Args: {
+          required_role: Database['public']['Enums']['application_role']
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       application_role:
@@ -140,4 +269,3 @@ export interface Database {
     CompositeTypes: Record<string, never>
   }
 }
-

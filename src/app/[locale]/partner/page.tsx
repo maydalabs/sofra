@@ -3,8 +3,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getPublicDemoTables } from '@/features/hosted-tables/demo-tables'
 import { formatTableDate } from '@/lib/date'
+import { listPublicTables } from '@/server/repositories/queries'
 
 export default async function PartnerPage({
   params,
@@ -14,7 +14,7 @@ export default async function PartnerPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('Partner')
-  const tables = getPublicDemoTables().slice(0, 3)
+  const tables = (await listPublicTables()).slice(0, 3)
   return (
     <div className="space-y-8">
       <div className="grid gap-4 sm:grid-cols-3">

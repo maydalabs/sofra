@@ -1,10 +1,12 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { redirect } from 'next/navigation'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getDemoBookings } from '@/features/bookings/demo-bookings'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
+import { getCurrentActor } from '@/server/auth/current-actor'
+import { listTravelerBookings } from '@/server/repositories/queries'
 
 export default async function BookingsPage({
   params,
@@ -14,13 +16,16 @@ export default async function BookingsPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('Account')
+  const actor = await getCurrentActor()
+  if (!actor) redirect(`/${locale}/sign-in`)
+  const bookings = await listTravelerBookings(actor.id)
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-3xl">{t('bookingDetails')}</CardTitle>
       </CardHeader>
       <CardContent className="divide-y">
-        {getDemoBookings().map((booking) => (
+        {bookings.map((booking) => (
           <Link
             href={`/account/bookings/${booking.id}`}
             key={booking.id}

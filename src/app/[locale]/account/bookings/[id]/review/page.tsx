@@ -1,14 +1,15 @@
 import { LockKeyhole, MessageCircleMore, ShieldAlert, Star } from 'lucide-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { getDemoBooking } from '@/features/bookings/demo-bookings'
 import { Link } from '@/i18n/navigation'
+import { getCurrentActor } from '@/server/auth/current-actor'
 import { getDemoCompletedFeedback } from '@/server/demo/feedback'
+import { findTravelerBookingById } from '@/server/repositories/queries'
 
 export default async function BookingReviewPage({
   params,
@@ -18,7 +19,9 @@ export default async function BookingReviewPage({
   const { locale, id } = await params
   setRequestLocale(locale)
   const t = await getTranslations('Feedback')
-  const booking = getDemoBooking(id)
+  const actor = await getCurrentActor()
+  if (!actor) redirect(`/${locale}/sign-in`)
+  const booking = await findTravelerBookingById(actor.id, id)
   const feedback = getDemoCompletedFeedback(id)
   if (!booking || booking.status !== 'completed' || !feedback) notFound()
 

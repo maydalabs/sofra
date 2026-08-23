@@ -12,8 +12,8 @@ import { EditorialPhoto } from '@/components/editorial-photo'
 import { TableCard } from '@/components/table-card'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { getPublicDemoTables } from '@/features/hosted-tables/demo-tables'
 import { Link } from '@/i18n/navigation'
+import { listPublicTables } from '@/server/repositories/queries'
 
 export default async function HomePage({
   params,
@@ -24,7 +24,7 @@ export default async function HomePage({
   setRequestLocale(locale)
   const t = await getTranslations('Home')
   const common = await getTranslations('Common')
-  const tables = getPublicDemoTables().slice(0, 3)
+  const tables = (await listPublicTables()).slice(0, 3)
   const rhythm = t.raw('rhythm') as string[]
   const trust = [
     { icon: ShieldCheck, title: t('trustOne'), body: t('trustOneText') },

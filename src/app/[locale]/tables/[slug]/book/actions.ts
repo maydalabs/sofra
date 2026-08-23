@@ -1,17 +1,18 @@
 'use server'
 
 import { bookingRequestSchema } from '@/features/bookings/schemas'
-import { getPublicDemoTable } from '@/features/hosted-tables/demo-tables'
 import { assertVerifiedEmail } from '@/server/authorization/roles'
 import { getCurrentActor } from '@/server/auth/current-actor'
 import { getPaymentProvider } from '@/server/payments/mock-payment-provider'
+import { getPublicSofraReadRepository } from '@/server/repositories/factory'
 
 export async function simulateBookingAction(slug: string, rawInput: unknown) {
   const actor = await getCurrentActor()
   if (!actor) return { status: 'authentication_required' as const }
   assertVerifiedEmail(actor)
   const input = bookingRequestSchema.parse(rawInput)
-  const table = getPublicDemoTable(slug)
+  const repository = await getPublicSofraReadRepository()
+  const table = await repository.findPublicTableBySlug(slug)
   if (!table) return { status: 'table_unavailable' as const }
   if (input.partySize > table.availableSeats)
     return { status: 'table_unavailable' as const }

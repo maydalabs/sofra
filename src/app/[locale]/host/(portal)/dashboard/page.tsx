@@ -5,14 +5,16 @@ import {
   UsersRound,
 } from 'lucide-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { redirect } from 'next/navigation'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getPrivateDemoTables } from '@/features/hosted-tables/demo-tables'
 import { formatTry } from '@/features/pricing/pricing'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
+import { getCurrentActor } from '@/server/auth/current-actor'
+import { listHostTables } from '@/server/repositories/queries'
 
 export default async function HostDashboardPage({
   params,
@@ -22,9 +24,9 @@ export default async function HostDashboardPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('HostPortal')
-  const tables = getPrivateDemoTables().filter(
-    (table) => table.householdId === 'household-ayse-levent',
-  )
+  const actor = await getCurrentActor()
+  if (!actor) redirect(`/${locale}/sign-in`)
+  const tables = await listHostTables(actor.id)
   const upcoming = tables.filter(
     (table) => !['completed', 'archived', 'cancelled'].includes(table.status),
   )

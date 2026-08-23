@@ -6,8 +6,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getPrivateDemoTables } from '@/features/hosted-tables/demo-tables'
 import { Link } from '@/i18n/navigation'
+import { getCurrentActor } from '@/server/auth/current-actor'
+import { findHostTableById } from '@/server/repositories/queries'
 
 export default async function EditHostedTablePage({
   params,
@@ -20,7 +21,9 @@ export default async function EditHostedTablePage({
   const query = await searchParams
   setRequestLocale(locale)
   const t = await getTranslations('HostPortal')
-  const table = getPrivateDemoTables().find((item) => item.id === id)
+  const actor = await getCurrentActor()
+  if (!actor) notFound()
+  const table = await findHostTableById(actor.id, id)
   if (!table) notFound()
   const editable =
     table.status === 'draft' || table.status === 'changes_requested'
