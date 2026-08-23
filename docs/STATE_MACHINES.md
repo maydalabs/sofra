@@ -33,6 +33,7 @@ payment_authorized/confirmed/completed → disputed
 - Compatibility must be accepted when a dietary review is required before confirmation.
 - Production cannot leave `awaiting_payment` without a real provider result.
 - Refund and cancellation are separate recorded outcomes.
+- The local cancellation review validates the transition to `cancelled` but does not mutate durable data or infer a refund. Production cancellation remains unavailable until the open cancellation/refund policy is approved and a durable write service exists.
 
 ## Payout
 

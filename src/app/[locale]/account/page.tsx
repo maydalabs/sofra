@@ -23,6 +23,9 @@ export default async function AccountPage({
   const bookings = await listTravelerBookings(actor.id)
   const upcoming = bookings.filter((booking) => booking.status !== 'completed')
   const past = bookings.filter((booking) => booking.status === 'completed')
+  const privateDisclosures = bookings.filter(
+    (booking) => booking.compatibilityStatus !== 'not_required',
+  )
 
   return (
     <div className="space-y-8">
@@ -37,13 +40,17 @@ export default async function AccountPage({
           label={t('past')}
           value={String(past.length)}
         />
-        <MetricCard icon={LockKeyhole} label="Private disclosures" value="1" />
+        <MetricCard
+          icon={LockKeyhole}
+          label={t('privateDisclosures')}
+          value={String(privateDisclosures.length)}
+        />
       </div>
       <Card>
         <CardHeader className="flex-row items-center justify-between">
           <CardTitle className="text-3xl">{t('upcoming')}</CardTitle>
           <Button variant="outline" size="sm" asChild>
-            <Link href="/tables">Find another table</Link>
+            <Link href="/tables">{t('findAnotherTable')}</Link>
           </Button>
         </CardHeader>
         <CardContent className="space-y-3">

@@ -5,6 +5,7 @@ import { simulateBookingAction } from './actions'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BookingForm } from '@/features/bookings/booking-form'
+import { developmentPolicy } from '@/features/policy/config'
 import { formatTableDate } from '@/lib/date'
 import { findPublicTableBySlug } from '@/server/repositories/queries'
 
@@ -35,11 +36,11 @@ export default async function BookingPage({
         </div>
         <Card className="bg-card/90 mt-8">
           <CardHeader>
-            <CardTitle className="text-3xl">Reservation details</CardTitle>
+            <CardTitle className="text-3xl">
+              {t('reservationDetails')}
+            </CardTitle>
             <p className="text-muted-foreground text-sm">
-              No card fields are present. This Phase 1 form reaches an honest
-              disabled state unless the local-only mock provider is explicitly
-              enabled.
+              {t('reservationIntro')}
             </p>
           </CardHeader>
           <CardContent>
@@ -49,6 +50,8 @@ export default async function BookingPage({
                 format: table.format,
                 availableSeats: table.availableSeats,
                 guestPriceKurus: table.guestPriceKurus,
+                maximumSharedPartySize:
+                  developmentPolicy.maximumSharedBookingPartySize,
               }}
               locale={locale}
               action={simulateBookingAction}

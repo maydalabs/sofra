@@ -8,6 +8,8 @@ Public page HTML, JSON, metadata, analytics, map inputs, storage metadata, and S
 
 `get_my_booking_summaries()` is the authenticated traveler read boundary. It filters on `auth.uid()` and returns only booking status, party context, public table information, compatibility status, payment status, and total price. It cannot return address, arrival, guest-name, dietary-text, assessment, incident, or audit fields.
 
+Booking preparation separates the server-only intent from the traveler-facing review. The intent may hold additional-guest names and a private dietary disclosure for future dedicated persistence; the review allowlist contains only party size, total price, compatibility status, and pre-payment booking status. Sensitive form content is never echoed into the page result.
+
 ## Data separation
 
 - Public approximate neighborhood and deliberately coarse coordinates live with the listing.

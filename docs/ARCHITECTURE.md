@@ -14,6 +14,8 @@ Browser
 
 In demo mode, public reads use fictional in-repository fixtures. Demo mutations execute domain validation and return safe simulated results without claiming durable production state.
 
+Traveler booking preparation runs through the server-only booking service. It validates the booking cutoff, configurable shared-party limit, seat availability, additional-guest count, compatibility requirement, and integer total before reaching the payment adapter. The service keeps private guest names and dietary text in the server intent while exposing a separate allowlisted pre-payment review.
+
 ## Layers
 
 - `src/app`: routing, metadata, localized layouts, and page composition.

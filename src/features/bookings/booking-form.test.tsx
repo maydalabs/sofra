@@ -17,9 +17,18 @@ describe('guest price display', () => {
             format: 'shared',
             availableSeats: 2,
             guestPriceKurus: 160_000,
+            maximumSharedPartySize: 2,
           }}
           locale="en"
-          action={vi.fn(async () => ({ status: 'payments_disabled' as const }))}
+          action={vi.fn(async () => ({
+            status: 'payments_disabled' as const,
+            review: {
+              partySize: 1,
+              guestTotalKurus: 160_000,
+              compatibilityStatus: 'not_required' as const,
+              bookingStatus: 'awaiting_payment' as const,
+            },
+          }))}
         />
       </NextIntlClientProvider>,
     )

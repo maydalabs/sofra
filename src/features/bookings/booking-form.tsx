@@ -23,18 +23,31 @@ import { formatTry } from '@/features/pricing/pricing'
 
 import { bookingRequestSchema, type BookingRequestInput } from './schemas'
 
+interface BookingReview {
+  partySize: number
+  guestTotalKurus: number
+  compatibilityStatus: 'not_required' | 'pending'
+  bookingStatus: 'awaiting_payment'
+}
+
 type BookingActionResult =
   | {
       status:
         | 'authentication_required'
         | 'table_unavailable'
         | 'party_too_large'
-        | 'payments_disabled'
+        | 'booking_closed'
+        | 'invalid_request'
+    }
+  | {
+      status: 'payments_disabled'
+      review: BookingReview
     }
   | {
       status: 'simulated_success' | 'simulated_failure'
       bookingId: string
       paymentReference: string
+      review: BookingReview
     }
 
 export function BookingForm({
@@ -47,6 +60,7 @@ export function BookingForm({
     format: 'shared' | 'private'
     availableSeats: number
     guestPriceKurus: number
+    maximumSharedPartySize: number
   }
   locale: string
   action: (
@@ -65,16 +79,22 @@ export function BookingForm({
       primaryName: '',
       primaryEmail: '',
       additionalGuests: '',
+      dietaryNeeds: 'none',
       dietaryDisclosure: '',
       compatibilityAcknowledged: false,
       tablePolicyAcknowledged: false,
     },
   })
   const partySize = useWatch({ control: form.control, name: 'partySize' }) || 1
+  const dietaryNeeds = useWatch({
+    control: form.control,
+    name: 'dietaryNeeds',
+  })
   const maximumParty =
     table.format === 'shared'
-      ? Math.min(2, table.availableSeats)
+      ? Math.min(table.maximumSharedPartySize, table.availableSeats)
       : table.availableSeats
+  const errorMessage = result ? getResultErrorMessage(result.status, t) : null
 
   return (
     <form
@@ -107,12 +127,20 @@ export function BookingForm({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="solo">Solo</SelectItem>
-                  <SelectItem value="couple">Couple</SelectItem>
-                  <SelectItem value="family">Family</SelectItem>
-                  <SelectItem value="friends">Friends</SelectItem>
-                  <SelectItem value="colleagues">Colleagues</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  <SelectItem value="solo">{t('partyTypes.solo')}</SelectItem>
+                  <SelectItem value="couple">
+                    {t('partyTypes.couple')}
+                  </SelectItem>
+                  <SelectItem value="family">
+                    {t('partyTypes.family')}
+                  </SelectItem>
+                  <SelectItem value="friends">
+                    {t('partyTypes.friends')}
+                  </SelectItem>
+                  <SelectItem value="colleagues">
+                    {t('partyTypes.colleagues')}
+                  </SelectItem>
+                  <SelectItem value="other">{t('partyTypes.other')}</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -129,11 +157,11 @@ export function BookingForm({
           />
         </FormField>
         <FormField
-          label="Email"
+          label={t('email')}
           error={form.formState.errors.primaryEmail?.message}
         >
           <Input
-            aria-label="Email"
+            aria-label={t('email')}
             type="email"
             autoComplete="email"
             {...form.register('primaryEmail')}
@@ -147,17 +175,43 @@ export function BookingForm({
         <Textarea
           aria-label={t('additionalGuests')}
           rows={3}
-          placeholder="One name per line; kept private"
+          placeholder={t('additionalGuestsPlaceholder')}
           {...form.register('additionalGuests')}
         />
       </FormField>
-      <div className="space-y-2">
-        <Label htmlFor="dietary">{t('dietary')}</Label>
-        <Textarea
-          id="dietary"
-          rows={4}
-          {...form.register('dietaryDisclosure')}
-        />
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label>{t('dietaryNeedQuestion')}</Label>
+          <Controller
+            control={form.control}
+            name="dietaryNeeds"
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger aria-label={t('dietaryNeedQuestion')}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">{t('dietaryNone')}</SelectItem>
+                  <SelectItem value="review_required">
+                    {t('dietaryReview')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </div>
+        {dietaryNeeds === 'review_required' ? (
+          <FormField
+            label={t('dietary')}
+            error={form.formState.errors.dietaryDisclosure?.message}
+          >
+            <Textarea
+              aria-label={t('dietary')}
+              rows={4}
+              {...form.register('dietaryDisclosure')}
+            />
+          </FormField>
+        ) : null}
         <p className="text-muted-foreground flex gap-2 text-xs leading-5">
           <LockKeyhole className="mt-0.5 size-3.5 shrink-0" />
           {t('dietaryHelp')}
@@ -165,11 +219,8 @@ export function BookingForm({
       </div>
       <Alert>
         <ShieldAlert className="size-4" />
-        <AlertTitle>The household’s menu stays as listed</AlertTitle>
-        <AlertDescription>
-          Dietary information checks compatibility; it does not request a custom
-          meal. Alcohol is not included or promised as part of this experience.
-        </AlertDescription>
+        <AlertTitle>{t('menuFixedTitle')}</AlertTitle>
+        <AlertDescription>{t('menuFixedBody')}</AlertDescription>
       </Alert>
       <Controller
         control={form.control}
@@ -231,28 +282,75 @@ export function BookingForm({
       ) : null}
       {result?.status === 'simulated_success' ? (
         <Alert>
-          <AlertTitle>Local booking simulation completed</AlertTitle>
+          <AlertTitle>{t('localSuccessTitle')}</AlertTitle>
           <AlertDescription>
             {t('mockBody')} Reference: {result.bookingId}
           </AlertDescription>
         </Alert>
       ) : null}
-      {result &&
-      [
-        'authentication_required',
-        'table_unavailable',
-        'party_too_large',
-        'simulated_failure',
-      ].includes(result.status) ? (
+      {result && 'review' in result ? (
+        <div className="rounded-2xl border p-5">
+          <h2 className="font-heading text-2xl font-semibold">
+            {t('reviewTitle')}
+          </h2>
+          <p className="text-muted-foreground mt-1 text-sm">
+            {t('reviewBody')}
+          </p>
+          <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-3">
+            <ReviewItem
+              label={t('reviewParty')}
+              value={String(result.review.partySize)}
+            />
+            <ReviewItem
+              label={t('reviewCompatibility')}
+              value={
+                result.review.compatibilityStatus === 'pending'
+                  ? t('reviewCompatibilityPending')
+                  : t('reviewCompatibilityNotRequired')
+              }
+            />
+            <ReviewItem
+              label={t('reviewPayment')}
+              value={formatTry(
+                result.review.guestTotalKurus,
+                locale === 'tr' ? 'tr-TR' : 'en-US',
+              )}
+            />
+          </dl>
+        </div>
+      ) : null}
+      {errorMessage ? (
         <Alert variant="destructive">
-          <AlertTitle>Reservation could not continue</AlertTitle>
-          <AlertDescription>
-            Status: {result.status.replaceAll('_', ' ')}
-          </AlertDescription>
+          <AlertTitle>{t('errorTitle')}</AlertTitle>
+          <AlertDescription>{errorMessage}</AlertDescription>
         </Alert>
       ) : null}
     </form>
   )
+}
+
+function ReviewItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-muted-foreground text-xs">{label}</dt>
+      <dd className="mt-1 font-medium">{value}</dd>
+    </div>
+  )
+}
+
+function getResultErrorMessage(
+  status: BookingActionResult['status'],
+  t: ReturnType<typeof useTranslations<'Booking'>>,
+) {
+  const errors: Partial<Record<BookingActionResult['status'], string>> = {
+    authentication_required: t('errors.authenticationRequired'),
+    table_unavailable: t('errors.tableUnavailable'),
+    party_too_large: t('errors.partyTooLarge'),
+    booking_closed: t('errors.bookingClosed'),
+    invalid_request: t('errors.invalidRequest'),
+    simulated_failure: t('errors.simulatedFailure'),
+  }
+  return errors[status] ?? null
 }
 
 function FormField({

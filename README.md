@@ -83,7 +83,7 @@ pnpm test:e2e
 pnpm build
 ```
 
-Playwright starts or reuses the local app and covers anonymous discovery, table detail, honest payment-disabled checkout, host draft rules/submission, operator approval, public address privacy, unauthorized admin access, the guided cross-role journey, roster privacy, feedback separation, and payout holds.
+Playwright starts or reuses the local app and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, unauthorized admin access, the guided cross-role journey, roster privacy, feedback separation, and payout holds.
 
 ## Architecture
 
@@ -96,6 +96,8 @@ Playwright starts or reuses the local app and covers anonymous discovery, table 
 - `docs`: product constitution, decisions, open questions, architecture, domain, states, privacy, and plan
 
 Status changes run through typed services and illegal transitions return domain errors. Public listings use an explicit allowlist projection and `published_hosted_tables`; exact address, precise coordinates, arrival instructions, dietary details, private guest names, assessment notes, and incident content are excluded.
+
+The traveler booking service validates availability, cutoff, configurable shared-party limits, exact additional-guest counts, compatibility requirements, and integer totals. A separate safe review omits guest names and dietary text. Booking details visualize compatibility, payment, table confirmation, and dinner as distinct states. Local cancellation review validates the lifecycle transition without changing durable data or deciding the still-open refund policy.
 
 Public, traveler, host, and operator page components covered by the current contracts read through repository queries rather than importing database clients or fictional fixtures. Anonymous discovery uses the public-safe view when Supabase is configured and retains the fictional public fallback otherwise. Protected repositories use local personas only in demo mode and fail closed when production credentials or an authorized actor are absent. Cross-user operator reads use a dedicated server-only repository that checks the actor role before creating a service-role client and exposes purpose-specific records for applications, table reviews, booking operations, incidents, payouts, and audit events.
 

@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LockKeyhole } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 
@@ -20,6 +21,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { dietaryDisclosureSchema, type DietaryDisclosureInput } from './schemas'
 
 export function DietaryDisclosureForm() {
+  const t = useTranslations('Dietary')
   const [saved, setSaved] = useState(false)
   const form = useForm<DietaryDisclosureInput>({
     resolver: zodResolver(dietaryDisclosureSchema),
@@ -39,40 +41,40 @@ export function DietaryDisclosureForm() {
     >
       <Alert>
         <LockKeyhole className="size-4" />
-        <AlertTitle>Private compatibility information</AlertTitle>
-        <AlertDescription>
-          This is kept outside your public profile and excluded from product
-          analytics. Hosts receive only the information needed to assess and
-          deliver a confirmed dinner.
-        </AlertDescription>
+        <AlertTitle>{t('privacyTitle')}</AlertTitle>
+        <AlertDescription>{t('privacyBody')}</AlertDescription>
       </Alert>
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label>Disclosure type</Label>
+          <Label>{t('type')}</Label>
           <Select
             value={kind}
             onValueChange={(value) =>
               form.setValue('kind', value as DietaryDisclosureInput['kind'])
             }
           >
-            <SelectTrigger aria-label="Disclosure type">
+            <SelectTrigger aria-label={t('type')}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="allergy">Allergy</SelectItem>
-              <SelectItem value="intolerance">Intolerance</SelectItem>
+              <SelectItem value="allergy">{t('types.allergy')}</SelectItem>
+              <SelectItem value="intolerance">
+                {t('types.intolerance')}
+              </SelectItem>
               <SelectItem value="dietary_restriction">
-                Dietary restriction
+                {t('types.dietaryRestriction')}
               </SelectItem>
               <SelectItem value="religious_food_restriction">
-                Religious food restriction
+                {t('types.religiousRestriction')}
               </SelectItem>
-              <SelectItem value="preference">Preference</SelectItem>
+              <SelectItem value="preference">
+                {t('types.preference')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Importance</Label>
+          <Label>{t('importance')}</Label>
           <Select
             value={importance}
             onValueChange={(value) =>
@@ -82,21 +84,19 @@ export function DietaryDisclosureForm() {
               )
             }
           >
-            <SelectTrigger aria-label="Importance">
+            <SelectTrigger aria-label={t('importance')}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="low">Preference</SelectItem>
-              <SelectItem value="important">Important</SelectItem>
-              <SelectItem value="severe">Severe / safety critical</SelectItem>
+              <SelectItem value="low">{t('levels.low')}</SelectItem>
+              <SelectItem value="important">{t('levels.important')}</SelectItem>
+              <SelectItem value="severe">{t('levels.severe')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="dietary-explanation">
-          What should the compatibility reviewer understand?
-        </Label>
+        <Label htmlFor="dietary-explanation">{t('explanation')}</Label>
         <Textarea
           id="dietary-explanation"
           rows={5}
@@ -108,10 +108,10 @@ export function DietaryDisclosureForm() {
           </p>
         ) : null}
       </div>
-      <Button type="submit">Save private disclosure</Button>
+      <Button type="submit">{t('save')}</Button>
       {saved ? (
         <p role="status" className="text-primary text-sm font-medium">
-          Saved in the local demo. No analytics payload contains the disclosure.
+          {t('saved')}
         </p>
       ) : null}
     </form>

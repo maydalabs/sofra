@@ -170,9 +170,11 @@
     "profile": "Misafir profili",
     "dietary": "Özel beslenme bildirimleri",
     "bookingDetails": "Rezervasyon ayrıntıları",
-    "cancel": "İptal alanı",
+    "cancel": "İptal talebini incele",
     "review": "Kamusal yorum paylaş",
-    "privateFeedback": "Özel geri bildirim gönder"
+    "privateFeedback": "Özel geri bildirim gönder",
+    "privateDisclosures": "Özel bildirimler",
+    "findAnotherTable": "Başka bir sofra bul"
   },
   "HostPortal": {
     "title": "Ev sahibi paneli",
@@ -214,18 +216,147 @@
   "Booking": {
     "eyebrow": "Rezervasyon temeli",
     "title": "{menuTitle} için talep",
+    "reservationDetails": "Rezervasyon ayrıntıları",
+    "reservationIntro": "Grubunuzu, özel uyumluluk bilgilerini ve tek, her şey dahil fiyatı inceleyin. Bu Faz 1 akışında kart alanları kullanılmaz.",
     "partySize": "Grup büyüklüğü",
     "partyType": "Grup türü",
+    "partyTypes": {
+      "solo": "Tek kişi",
+      "couple": "Çift",
+      "family": "Aile",
+      "friends": "Arkadaşlar",
+      "colleagues": "İş arkadaşları",
+      "other": "Diğer"
+    },
     "primaryName": "Ana misafirin adı",
+    "email": "E-posta",
     "additionalGuests": "Diğer misafirlerin adları",
+    "additionalGuestsPlaceholder": "Her ek misafir için bir özel ad",
+    "dietaryNeedQuestion": "Grubunuzdan birinin menü uyumluluğu incelemesine ihtiyacı var mı?",
+    "dietaryNone": "Uyumluluk incelemesi gerekmiyor",
+    "dietaryReview": "Evet — özel bir bildirim ekle",
     "dietary": "Özel beslenme bildirimi",
     "dietaryHelp": "Yalnızca ev halkının mevcut menüsüyle uyumluluğu değerlendirmek için kullanılır. Kamusal olarak veya analitikte paylaşılmaz.",
+    "menuFixedTitle": "Ev halkının menüsü listelendiği gibi kalır",
+    "menuFixedBody": "Beslenme bilgileri uyumluluğu kontrol eder; özel yemek talep etmez. Alkol bu deneyime dahil değildir veya vaat edilmez.",
     "compatibility": "Sofra'nın ve ev halkının menü uyumluluğunu onaylaması gerektiğini anlıyorum.",
     "policy": "Menüyü ev halkının seçtiğini, tam adresin özel olduğunu ve paylaşımlı sofranın minimum misafir sayısına ihtiyaç duyabileceğini anlıyorum.",
     "summary": "Fiyat özeti",
     "continue": "Ödeme kullanılabilirliğine devam et",
     "disabledBody": "Rezervasyon bilgilerinizi inceleyebilirsiniz; ancak Sofra bu ortamda ödeme kabul edemez. Hiçbir rezervasyon ödenmiş sayılmadı ve kart bilgisi istenmedi.",
-    "mockBody": "Yerel simülasyon etkin. Kart bilgisi toplanmayacak."
+    "mockBody": "Yerel simülasyon etkin. Kart bilgisi toplanmayacak.",
+    "localSuccessTitle": "Yerel rezervasyon simülasyonu tamamlandı",
+    "errorTitle": "Rezervasyon devam edemedi",
+    "errors": {
+      "authenticationRequired": "Sofra talep etmeden önce doğrulanmış bir misafir hesabıyla giriş yapın.",
+      "tableUnavailable": "Talep edilen koltuklar artık müsait değil.",
+      "partyTooLarge": "Bu grup mevcut paylaşımlı sofra rezervasyon sınırını aşıyor.",
+      "bookingClosed": "Bu sofra için rezervasyon son tarihi geçti.",
+      "invalidRequest": "Devam etmeden önce grup ve onay alanlarını kontrol edin.",
+      "simulatedFailure": "Yerel ödeme simülasyonu bu talebi yetkilendirmedi."
+    },
+    "reviewTitle": "Ödeme öncesi inceleme",
+    "reviewBody": "Bu bilgiler hazırdır; ancak bu ortamda ödenmiş veya kalıcı bir rezervasyon değildir.",
+    "reviewParty": "Misafirler",
+    "reviewCompatibility": "Menü uyumluluğu",
+    "reviewCompatibilityPending": "Özel inceleme gerekiyor",
+    "reviewCompatibilityNotRequired": "İnceleme gerekmiyor",
+    "reviewPayment": "Her şey dahil toplam"
+  },
+  "TravelerBooking": {
+    "exactAddressWithheld": "tam adres gizli",
+    "party": "{count} kişilik grup",
+    "total": "toplam",
+    "compatibility": "Uyumluluk",
+    "disclosureSeparated": "Bildirim içeriği özel beslenme kaydında kalır ve burada görünmez.",
+    "viewPublicTable": "Kamusal sofrayı görüntüle",
+    "privacyBoundary": "Gizlilik sınırı",
+    "approximateVisible": "Yaklaşık semt şu anda görünür.",
+    "arrivalSeparate": "Varış talimatları uygun onaylı aşamaya kadar ayrı tutulur.",
+    "otherTravelersPrivate": "Diğer misafirler adınızı veya beslenme ihtiyaçlarınızı asla görmez.",
+    "cancellationReviewedTitle": "İptal geçişi incelendi",
+    "cancellationReviewedBody": "Yerel demo bu rezervasyonun iptal durumuna geçebileceğini doğruladı; ancak kalıcı veriyi değiştirmedi veya iadeye karar vermedi. Nihai iptal ve iade politikası açık bir ürün kararı olarak kalır.",
+    "cancellationUnavailableTitle": "İptal bağlantısı kurulmadı",
+    "cancellationUnavailableBody": "Hiçbir iptal kaydedilmedi. Kalıcı rezervasyon yazımları ve nihai iade politikası onaylanana kadar üretim iptali devre dışıdır.",
+    "statuses": {
+      "draft": "Taslak",
+      "awaiting_payment": "Ödeme bekleniyor",
+      "payment_authorized": "Ödeme yetkilendirildi",
+      "pending_minimum": "Minimum bekleniyor",
+      "confirmed": "Onaylandı",
+      "cancelled": "İptal edildi",
+      "refunded": "İade edildi",
+      "completed": "Tamamlandı",
+      "disputed": "İtirazlı"
+    },
+    "compatibilityStatuses": {
+      "not_required": "Gerekli değil",
+      "pending": "Beklemede",
+      "accepted": "Kabul edildi",
+      "declined": "Reddedildi"
+    }
+  },
+  "BookingJourney": {
+    "eyebrow": "Rezervasyon yolculuğu",
+    "title": "Bu rezervasyonun durumu",
+    "intro": "Uyumluluk, ödeme, sofra minimumu ve akşamın tamamlanması ayrı durumlar olarak kalır.",
+    "steps": {
+      "reservation": "Rezervasyon bilgileri",
+      "compatibility": "Menü uyumluluğu",
+      "payment": "Ödeme",
+      "table": "Sofra onayı",
+      "dinner": "Akşam yemeği"
+    },
+    "states": {
+      "complete": "Tamamlandı",
+      "current": "Güncel",
+      "upcoming": "Yaklaşan",
+      "attention": "Dikkat"
+    },
+    "messages": {
+      "reservationRecorded": "Grup ve fiyat bilgileri bu rezervasyon için kaydedildi.",
+      "compatibilityAccepted": "Ev halkının mevcut menüsü bildirilen ihtiyaçlar için uygun bulundu.",
+      "compatibilityNotRequired": "Özel uyumluluk incelemesi gerekmedi.",
+      "compatibilityPending": "Özel beslenme bilgileri uyumluluk incelemesini bekliyor.",
+      "compatibilityDeclined": "Mevcut menü uyumlu bulunmadı; bu rezervasyon onaylanamaz.",
+      "paymentAuthorized": "Kayıtlı her şey dahil toplam için ödeme yetkilendirildi.",
+      "paymentCreated": "Bir ödeme denemesi var ancak henüz yetkilendirilmedi.",
+      "paymentNotStarted": "Ödeme başlamadı.",
+      "paymentFailed": "Ödeme yetkilendirilmedi.",
+      "paymentRefunded": "Kayıtlı ödeme iade edildi.",
+      "paymentHeld": "Ödeme operasyon incelemesi için bekletiliyor.",
+      "tableAwaitingPrerequisites": "Sofra onayı ödeme ve gerekli uyumluluk incelemesini bekliyor.",
+      "tablePendingMinimum": "Bu paylaşımlı sofra gerekli misafir minimumunu bekliyor.",
+      "tableConfirmed": "Sofra kayıtlı grup için onaylandı.",
+      "tableCompleted": "Sofra onaylandı ve akşam tamamlandı.",
+      "tableCancelled": "Rezervasyon artık aktif değil. İade işlemi ayrıca takip edilir.",
+      "tableDisputed": "Bu rezervasyon operasyon incelemesinde.",
+      "dinnerCompleted": "Akşam tamamlandı; kamusal yorum ve özel geri bildirim kullanılabilir.",
+      "dinnerUpcoming": "Rezervasyon ilerledikçe akşam bilgileri burada kalır.",
+      "dinnerStopped": "Bu rezervasyon için normal akşam yolculuğu duraklatıldı veya sona erdi."
+    }
+  },
+  "Dietary": {
+    "intro": "Bildirimler uyumluluk incelemesi için bir misafire veya rezervasyona bağlanır; kamusal profile bağlanmaz.",
+    "privacyTitle": "Özel uyumluluk bilgisi",
+    "privacyBody": "Bu bilgi kamusal profilinizin dışında tutulur ve ürün analitiğine dahil edilmez. Ev sahipleri yalnızca onaylı bir akşamı değerlendirmek ve gerçekleştirmek için gereken bilgiyi alır.",
+    "type": "Bildirim türü",
+    "types": {
+      "allergy": "Alerji",
+      "intolerance": "İntolerans",
+      "dietaryRestriction": "Beslenme kısıtlaması",
+      "religiousRestriction": "Dini gıda kısıtlaması",
+      "preference": "Tercih"
+    },
+    "importance": "Önem",
+    "levels": {
+      "low": "Tercih",
+      "important": "Önemli",
+      "severe": "Ciddi / güvenlik açısından kritik"
+    },
+    "explanation": "Uyumluluk incelemesini yapan kişi neyi bilmeli?",
+    "save": "Özel bildirimi kaydet",
+    "saved": "Yerel demoda doğrulandı. Kalıcı bildirim saklanmadı ve hiçbir analitik yükü bunu içermez."
   },
   "Demo": {
     "title": "Yerel demo profili seçin",

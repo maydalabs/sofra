@@ -170,9 +170,11 @@
     "profile": "Traveler profile",
     "dietary": "Private dietary disclosures",
     "bookingDetails": "Booking details",
-    "cancel": "Cancellation placeholder",
+    "cancel": "Review cancellation request",
     "review": "Share public review",
-    "privateFeedback": "Send private feedback"
+    "privateFeedback": "Send private feedback",
+    "privateDisclosures": "Private disclosures",
+    "findAnotherTable": "Find another table"
   },
   "HostPortal": {
     "title": "Host portal",
@@ -214,18 +216,147 @@
   "Booking": {
     "eyebrow": "Reservation foundation",
     "title": "Request {menuTitle}",
+    "reservationDetails": "Reservation details",
+    "reservationIntro": "Review your party, private compatibility information, and one all-inclusive price. No card fields are used in this Phase 1 flow.",
     "partySize": "Party size",
     "partyType": "Party type",
+    "partyTypes": {
+      "solo": "Solo",
+      "couple": "Couple",
+      "family": "Family",
+      "friends": "Friends",
+      "colleagues": "Colleagues",
+      "other": "Other"
+    },
     "primaryName": "Primary traveler name",
+    "email": "Email",
     "additionalGuests": "Additional guest names",
+    "additionalGuestsPlaceholder": "One private name per additional traveler",
+    "dietaryNeedQuestion": "Does anyone in your party need menu compatibility review?",
+    "dietaryNone": "No compatibility review needed",
+    "dietaryReview": "Yes — add a private disclosure",
     "dietary": "Private dietary disclosure",
     "dietaryHelp": "Used only to assess this household’s existing menu. Never shared publicly or sent to analytics.",
+    "menuFixedTitle": "The household’s menu stays as listed",
+    "menuFixedBody": "Dietary information checks compatibility; it does not request a custom meal. Alcohol is not included or promised as part of this experience.",
     "compatibility": "I understand Sofra and the household must confirm menu compatibility.",
     "policy": "I understand the household chooses the menu, the exact address is private, and a shared table may need a minimum number of travelers.",
     "summary": "Price summary",
     "continue": "Continue to payment availability",
     "disabledBody": "Your reservation details can be reviewed, but Sofra cannot accept payment in this environment. No booking has been marked paid and no card details were requested.",
-    "mockBody": "Local simulation is enabled. No card information will be collected."
+    "mockBody": "Local simulation is enabled. No card information will be collected.",
+    "localSuccessTitle": "Local booking simulation completed",
+    "errorTitle": "Reservation could not continue",
+    "errors": {
+      "authenticationRequired": "Sign in with a verified traveler account before requesting a table.",
+      "tableUnavailable": "The requested seats are no longer available.",
+      "partyTooLarge": "This party exceeds the current shared-table booking limit.",
+      "bookingClosed": "The booking cutoff for this table has passed.",
+      "invalidRequest": "Review the party and acknowledgment fields before continuing.",
+      "simulatedFailure": "The local payment simulation did not authorize this request."
+    },
+    "reviewTitle": "Pre-payment review",
+    "reviewBody": "These details are ready, but they are not a paid or durable booking in this environment.",
+    "reviewParty": "Travelers",
+    "reviewCompatibility": "Menu compatibility",
+    "reviewCompatibilityPending": "Private review required",
+    "reviewCompatibilityNotRequired": "No review required",
+    "reviewPayment": "All-inclusive total"
+  },
+  "TravelerBooking": {
+    "exactAddressWithheld": "exact address withheld",
+    "party": "Party of {count}",
+    "total": "total",
+    "compatibility": "Compatibility",
+    "disclosureSeparated": "Disclosure content remains in the private dietary record and does not appear here.",
+    "viewPublicTable": "View public table",
+    "privacyBoundary": "Privacy boundary",
+    "approximateVisible": "The approximate neighborhood is visible now.",
+    "arrivalSeparate": "Arrival instructions remain separate until the appropriate confirmed stage.",
+    "otherTravelersPrivate": "Other travelers never see your name or dietary needs.",
+    "cancellationReviewedTitle": "Cancellation transition reviewed",
+    "cancellationReviewedBody": "The local demo validated that this booking can move to cancelled, but it did not change durable data or decide a refund. The final cancellation and refund policy remains an open product decision.",
+    "cancellationUnavailableTitle": "Cancellation is not connected",
+    "cancellationUnavailableBody": "No cancellation was recorded. Production cancellation remains disabled until durable booking writes and the final refund policy are approved.",
+    "statuses": {
+      "draft": "Draft",
+      "awaiting_payment": "Awaiting payment",
+      "payment_authorized": "Payment authorized",
+      "pending_minimum": "Pending minimum",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "refunded": "Refunded",
+      "completed": "Completed",
+      "disputed": "Disputed"
+    },
+    "compatibilityStatuses": {
+      "not_required": "Not required",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "declined": "Declined"
+    }
+  },
+  "BookingJourney": {
+    "eyebrow": "Booking journey",
+    "title": "Where this reservation stands",
+    "intro": "Compatibility, payment, the table minimum, and dinner completion remain separate states.",
+    "steps": {
+      "reservation": "Reservation details",
+      "compatibility": "Menu compatibility",
+      "payment": "Payment",
+      "table": "Table confirmation",
+      "dinner": "Dinner"
+    },
+    "states": {
+      "complete": "Complete",
+      "current": "Current",
+      "upcoming": "Upcoming",
+      "attention": "Attention"
+    },
+    "messages": {
+      "reservationRecorded": "Party and price details were recorded for this booking.",
+      "compatibilityAccepted": "The household’s existing menu was accepted for the disclosed needs.",
+      "compatibilityNotRequired": "No private compatibility review was required.",
+      "compatibilityPending": "Private dietary information is awaiting compatibility review.",
+      "compatibilityDeclined": "The existing menu was not accepted as compatible; this booking cannot be confirmed.",
+      "paymentAuthorized": "Payment is authorized for the recorded all-inclusive total.",
+      "paymentCreated": "A payment attempt exists but is not yet authorized.",
+      "paymentNotStarted": "Payment has not started.",
+      "paymentFailed": "Payment was not authorized.",
+      "paymentRefunded": "The recorded payment was refunded.",
+      "paymentHeld": "The payment is held for operational review.",
+      "tableAwaitingPrerequisites": "Table confirmation waits for payment and any required compatibility review.",
+      "tablePendingMinimum": "This shared table is waiting for its required traveler minimum.",
+      "tableConfirmed": "The table is confirmed for the recorded party.",
+      "tableCompleted": "The table was confirmed and the dinner is complete.",
+      "tableCancelled": "The booking is no longer active. Refund handling is tracked separately.",
+      "tableDisputed": "This booking is under operational review.",
+      "dinnerCompleted": "The dinner is complete; review and private feedback are available.",
+      "dinnerUpcoming": "Dinner details will remain here as the booking progresses.",
+      "dinnerStopped": "The normal dinner journey is paused or ended for this booking."
+    }
+  },
+  "Dietary": {
+    "intro": "Disclosures are attached to a traveler or booking for compatibility review, never to a public profile.",
+    "privacyTitle": "Private compatibility information",
+    "privacyBody": "This is kept outside your public profile and excluded from product analytics. Hosts receive only the information needed to assess and deliver a confirmed dinner.",
+    "type": "Disclosure type",
+    "types": {
+      "allergy": "Allergy",
+      "intolerance": "Intolerance",
+      "dietaryRestriction": "Dietary restriction",
+      "religiousRestriction": "Religious food restriction",
+      "preference": "Preference"
+    },
+    "importance": "Importance",
+    "levels": {
+      "low": "Preference",
+      "important": "Important",
+      "severe": "Severe / safety critical"
+    },
+    "explanation": "What should the compatibility reviewer understand?",
+    "save": "Save private disclosure",
+    "saved": "Validated in the local demo. No durable disclosure was stored, and no analytics payload contains it."
   },
   "Demo": {
     "title": "Choose a local demo persona",

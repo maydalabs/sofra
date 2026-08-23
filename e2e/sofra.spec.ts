@@ -59,7 +59,34 @@ test('traveler reaches the honest payment-disabled state without card fields', a
     .click()
   await expect(page.getByText(/payments are not yet enabled/i)).toBeVisible()
   await expect(page.getByText(/no booking has been marked paid/i)).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: /pre-payment review/i }),
+  ).toBeVisible()
+  await expect(page.getByText(/no review required/i)).toBeVisible()
   await expect(page.locator('input[autocomplete="cc-number"]')).toHaveCount(0)
+})
+
+test('traveler sees booking progress and safely reviews cancellation', async ({
+  page,
+}) => {
+  await choosePersona(page, /continue as traveler/i)
+  await page.goto('/en/account/bookings/booking-demo-pending')
+  await expect(
+    page.getByRole('heading', { name: /where this reservation stands/i }),
+  ).toBeVisible()
+  await expect(
+    page.getByText(/waiting for its required traveler minimum/i),
+  ).toBeVisible()
+  await page
+    .getByRole('button', { name: /review cancellation request/i })
+    .click()
+  await expect(
+    page.getByText(/did not change durable data or decide a refund/i),
+  ).toBeVisible()
+  await expect(
+    page.getByText(/final cancellation and refund policy/i),
+  ).toBeVisible()
+  await expect(page.getByText(/pending minimum/i).first()).toBeVisible()
 })
 
 test('certified host creates a validated private draft', async ({ page }) => {

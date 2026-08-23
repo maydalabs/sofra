@@ -11,14 +11,12 @@ export default async function DietaryPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('Account')
+  const dietaryT = await getTranslations('Dietary')
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-3xl">{t('dietary')}</CardTitle>
-        <p className="text-muted-foreground text-sm">
-          Disclosures are attached to a traveler or booking for compatibility
-          review, never to a public profile.
-        </p>
+        <p className="text-muted-foreground text-sm">{dietaryT('intro')}</p>
       </CardHeader>
       <CardContent>
         <DietaryDisclosureForm />
