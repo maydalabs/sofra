@@ -1,14 +1,20 @@
-import { CalendarCheck, History, LockKeyhole } from 'lucide-react'
+import {
+  CalendarCheck,
+  CalendarSearch,
+  History,
+  LockKeyhole,
+} from 'lucide-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { redirect } from 'next/navigation'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { EmptyState } from '@/components/empty-state'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
-import { getCurrentActor } from '@/server/auth/current-actor'
 import { listTravelerBookings } from '@/server/repositories/queries'
+
+import { requireTravelerPageActor } from './authorize'
 
 export default async function AccountPage({
   params,
@@ -18,8 +24,7 @@ export default async function AccountPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('Account')
-  const actor = await getCurrentActor()
-  if (!actor) redirect(`/${locale}/sign-in`)
+  const actor = await requireTravelerPageActor(locale)
   const bookings = await listTravelerBookings(actor.id)
   const upcoming = bookings.filter((booking) => booking.status !== 'completed')
   const past = bookings.filter((booking) => booking.status === 'completed')
@@ -47,37 +52,45 @@ export default async function AccountPage({
         />
       </div>
       <Card>
-        <CardHeader className="flex-row items-center justify-between">
+        <CardHeader className="flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-3xl">{t('upcoming')}</CardTitle>
           <Button variant="outline" size="sm" asChild>
             <Link href="/tables">{t('findAnotherTable')}</Link>
           </Button>
         </CardHeader>
         <CardContent className="space-y-3">
-          {upcoming.map((booking) => (
-            <Link
-              href={`/account/bookings/${booking.id}`}
-              key={booking.id}
-              className="hover:bg-secondary flex flex-col justify-between gap-3 rounded-2xl border p-4 transition-colors sm:flex-row sm:items-center"
-            >
-              <div>
-                <p className="font-heading text-xl font-semibold">
-                  {booking.menuTitle}
-                </p>
-                <p className="text-muted-foreground mt-1 text-xs">
-                  {booking.householdName} ·{' '}
-                  {formatTableDate(booking.startsAt, locale)}
-                </p>
-              </div>
-              <Badge
-                variant={
-                  booking.status === 'confirmed' ? 'default' : 'secondary'
-                }
+          {upcoming.length ? (
+            upcoming.map((booking) => (
+              <Link
+                href={`/account/bookings/${booking.id}`}
+                key={booking.id}
+                className="hover:bg-secondary flex flex-col justify-between gap-3 rounded-2xl border p-4 transition-colors sm:flex-row sm:items-center"
               >
-                {booking.status.replace('_', ' ')}
-              </Badge>
-            </Link>
-          ))}
+                <div>
+                  <p className="font-heading text-xl font-semibold">
+                    {booking.menuTitle}
+                  </p>
+                  <p className="text-muted-foreground mt-1 text-xs">
+                    {booking.householdName} ·{' '}
+                    {formatTableDate(booking.startsAt, locale)}
+                  </p>
+                </div>
+                <Badge
+                  variant={
+                    booking.status === 'confirmed' ? 'default' : 'secondary'
+                  }
+                >
+                  {booking.status.replace('_', ' ')}
+                </Badge>
+              </Link>
+            ))
+          ) : (
+            <EmptyState
+              icon={CalendarSearch}
+              title={t('emptyUpcomingTitle')}
+              description={t('emptyUpcomingBody')}
+            />
+          )}
         </CardContent>
       </Card>
     </div>

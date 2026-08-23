@@ -12,8 +12,9 @@ import {
   type HostJourneyStepState,
 } from '@/features/hosted-tables/host-journey'
 import { Link } from '@/i18n/navigation'
-import { getCurrentActor } from '@/server/auth/current-actor'
 import { findHostTableById } from '@/server/repositories/queries'
+
+import { requireHostPageActor } from '../../../authorize'
 
 export default async function EditHostedTablePage({
   params,
@@ -27,8 +28,7 @@ export default async function EditHostedTablePage({
   setRequestLocale(locale)
   const t = await getTranslations('HostPortal')
   const journeyT = await getTranslations('HostJourney')
-  const actor = await getCurrentActor()
-  if (!actor) notFound()
+  const actor = await requireHostPageActor(locale)
   const table = await findHostTableById(actor.id, id)
   if (!table) notFound()
   const editable =

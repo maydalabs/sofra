@@ -13,7 +13,10 @@ export default async function AdminLayout({
 }) {
   const { locale } = await params
   const actor = await requireOperatorPageActor(locale)
-  const t = await getTranslations('Admin')
+  const [t, common] = await Promise.all([
+    getTranslations('Admin'),
+    getTranslations('Common'),
+  ])
   const items = [
     { href: '/admin', label: t('overview') },
     { href: '/admin/host-applications', label: t('applications') },
@@ -27,9 +30,11 @@ export default async function AdminLayout({
   return (
     <PortalShell
       title={t('title')}
-      description="Human-reviewed certification, publication, safety, and financial operations."
+      description={t('description')}
       items={items}
       actorLabel={actor.email}
+      workspaceLabel={common('productWorkspace')}
+      navigationLabel={common('workspaceNavigation', { workspace: t('title') })}
     >
       {children}
     </PortalShell>

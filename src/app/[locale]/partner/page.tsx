@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react'
 import {
+  CalendarSearch,
   CheckCircle2,
   Link2,
   MousePointerClick,
@@ -9,12 +10,15 @@ import {
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { Badge } from '@/components/ui/badge'
+import { EmptyState } from '@/components/empty-state'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { PartnerReferralActivity } from '@/features/partners/referrals'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
 import { getPartnerReferralOverviews } from '@/server/repositories/partner/queries'
 import { listPublicTables } from '@/server/repositories/queries'
+
+import { requirePartnerPageActor } from './authorize'
 
 export default async function PartnerPage({
   params,
@@ -23,6 +27,7 @@ export default async function PartnerPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  await requirePartnerPageActor(locale)
   const t = await getTranslations('Partner')
   const [organizations, publicTables] = await Promise.all([
     getPartnerReferralOverviews(),
@@ -152,23 +157,31 @@ export default async function PartnerPage({
           <p className="text-muted-foreground text-sm">{t('upcomingBody')}</p>
         </CardHeader>
         <CardContent className="space-y-3">
-          {upcomingTables.map((table) => (
-            <div
-              key={table.id}
-              className="flex flex-col justify-between gap-3 rounded-2xl border p-4 sm:flex-row sm:items-center"
-            >
-              <div>
-                <p className="font-heading text-xl font-semibold">
-                  {table.menuTitle}
-                </p>
-                <p className="text-muted-foreground mt-1 text-xs">
-                  {formatTableDate(table.startsAt, locale)} ·{' '}
-                  {table.neighborhood}
-                </p>
+          {upcomingTables.length ? (
+            upcomingTables.map((table) => (
+              <div
+                key={table.id}
+                className="flex flex-col justify-between gap-3 rounded-2xl border p-4 sm:flex-row sm:items-center"
+              >
+                <div>
+                  <p className="font-heading text-xl font-semibold">
+                    {table.menuTitle}
+                  </p>
+                  <p className="text-muted-foreground mt-1 text-xs">
+                    {formatTableDate(table.startsAt, locale)} ·{' '}
+                    {table.neighborhood}
+                  </p>
+                </div>
+                <Badge variant="outline">{t('approved')}</Badge>
               </div>
-              <Badge variant="outline">{t('approved')}</Badge>
-            </div>
-          ))}
+            ))
+          ) : (
+            <EmptyState
+              icon={CalendarSearch}
+              title={t('emptyUpcomingTitle')}
+              description={t('emptyUpcomingBody')}
+            />
+          )}
         </CardContent>
       </Card>
     </div>

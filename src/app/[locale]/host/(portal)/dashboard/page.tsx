@@ -1,26 +1,28 @@
 import {
   CalendarClock,
+  CalendarPlus,
   CircleDollarSign,
   ClipboardCheck,
   UsersRound,
 } from 'lucide-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { redirect } from 'next/navigation'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { EmptyState } from '@/components/empty-state'
 import { isHostCertificationActive } from '@/features/hosts/certification'
 import { formatTry } from '@/features/pricing/pricing'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
-import { getCurrentActor } from '@/server/auth/current-actor'
 import {
   findHostCertification,
   listHostRoster,
   listHostTables,
 } from '@/server/repositories/queries'
 import { getServerTimeMilliseconds } from '@/server/time/clock'
+
+import { requireHostPageActor } from '../authorize'
 
 export default async function HostDashboardPage({
   params,
@@ -30,8 +32,7 @@ export default async function HostDashboardPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('HostPortal')
-  const actor = await getCurrentActor()
-  if (!actor) redirect(`/${locale}/sign-in`)
+  const actor = await requireHostPageActor(locale)
   const [tables, certification] = await Promise.all([
     listHostTables(actor.id),
     findHostCertification(actor.id),
@@ -98,35 +99,47 @@ export default async function HostDashboardPage({
         />
       </div>
       <Card>
-        <CardHeader className="flex-row items-center justify-between">
+        <CardHeader className="flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-3xl">{t('tables')}</CardTitle>
           <Button asChild>
             <Link href="/host/tables/new">{t('newTable')}</Link>
           </Button>
         </CardHeader>
         <CardContent className="space-y-3">
-          {upcoming.map((table) => (
-            <Link
-              href={`/host/tables/${table.id}/edit`}
-              key={table.id}
-              className="hover:bg-secondary flex flex-col justify-between gap-3 rounded-2xl border p-4 transition-colors sm:flex-row sm:items-center"
-            >
-              <div>
-                <p className="font-heading text-xl font-semibold">
-                  {table.menuTitle}
-                </p>
-                <p className="text-muted-foreground mt-1 text-xs">
-                  {formatTableDate(table.startsAt, locale)} ·{' '}
-                  {t('seatsAvailable', { count: table.availableSeats })}
-                </p>
-              </div>
-              <Badge
-                variant={table.status === 'draft' ? 'secondary' : 'outline'}
+          {upcoming.length ? (
+            upcoming.map((table) => (
+              <Link
+                href={`/host/tables/${table.id}/edit`}
+                key={table.id}
+                className="hover:bg-secondary flex flex-col justify-between gap-3 rounded-2xl border p-4 transition-colors sm:flex-row sm:items-center"
               >
-                {t(`statuses.${table.status}`)}
-              </Badge>
-            </Link>
-          ))}
+                <div>
+                  <p className="font-heading text-xl font-semibold">
+                    {table.menuTitle}
+                  </p>
+                  <p className="text-muted-foreground mt-1 text-xs">
+                    {formatTableDate(table.startsAt, locale)} ·{' '}
+                    {t('seatsAvailable', { count: table.availableSeats })}
+                  </p>
+                </div>
+                <Badge
+                  variant={table.status === 'draft' ? 'secondary' : 'outline'}
+                >
+                  {t(`statuses.${table.status}`)}
+                </Badge>
+              </Link>
+            ))
+          ) : (
+            <EmptyState
+              icon={CalendarPlus}
+              title={t('emptyUpcomingTablesTitle')}
+              description={t('emptyUpcomingTablesBody')}
+            >
+              <Button asChild>
+                <Link href="/host/tables/new">{t('newTable')}</Link>
+              </Button>
+            </EmptyState>
+          )}
         </CardContent>
       </Card>
     </div>

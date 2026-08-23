@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 
+import { requireHostPageActor } from '../authorize'
+
 export default async function HouseholdPage({
   params,
 }: {
@@ -14,6 +16,7 @@ export default async function HouseholdPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  await requireHostPageActor(locale)
   const t = await getTranslations('HostPortal')
   return (
     <Card>

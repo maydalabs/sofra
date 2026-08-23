@@ -1,9 +1,8 @@
 import { getTranslations } from 'next-intl/server'
-import { redirect } from 'next/navigation'
 
 import { PortalShell } from '@/components/portal-shell'
-import { getCurrentActor } from '@/server/auth/current-actor'
-import { assertHasAnyRole } from '@/server/authorization/roles'
+
+import { requireTravelerPageActor } from './authorize'
 
 export default async function AccountLayout({
   children,
@@ -13,14 +12,11 @@ export default async function AccountLayout({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  const actor = await getCurrentActor()
-  if (!actor) redirect(`/${locale}/sign-in`)
-  try {
-    assertHasAnyRole(actor, ['traveler'])
-  } catch {
-    redirect(`/${locale}/unavailable`)
-  }
-  const t = await getTranslations('Account')
+  const actor = await requireTravelerPageActor(locale)
+  const [t, common] = await Promise.all([
+    getTranslations('Account'),
+    getTranslations('Common'),
+  ])
   const items = [
     { href: '/account', label: t('title') },
     { href: '/account/bookings', label: t('upcoming') },
@@ -31,9 +27,11 @@ export default async function AccountLayout({
   return (
     <PortalShell
       title={t('title')}
-      description="Manage upcoming dinners and private traveler information."
+      description={t('description')}
       items={items}
       actorLabel={actor.email}
+      workspaceLabel={common('productWorkspace')}
+      navigationLabel={common('workspaceNavigation', { workspace: t('title') })}
     >
       {children}
     </PortalShell>

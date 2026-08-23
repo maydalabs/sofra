@@ -24,7 +24,15 @@
     "backToTables": "Tüm sofralara dön",
     "demoMode": "Kurgusal demo verileri · uzaktaki servislere bağlı değil",
     "paymentsDisabled": "Ödemeler henüz etkin değil",
-    "language": "Dil"
+    "language": "Dil",
+    "productWorkspace": "Ürün çalışma alanı",
+    "workspaceNavigation": "{workspace} gezinmesi",
+    "phaseOneFoundation": "Faz 1 · Özel geliştirme temeli",
+    "explore": "Keşfet",
+    "foundation": "Temel"
+  },
+  "Accessibility": {
+    "skipToContent": "Ana içeriğe geç"
   },
   "Navigation": {
     "tables": "Sofra bul",
@@ -108,7 +116,16 @@
     "allAreas": "Tüm demo bölgeleri",
     "results": "Yaklaşan {count} sofra",
     "minimumPending": "Minimum katılımcı sayısını bekliyor",
-    "joining": "Katılanlar: {summary}"
+    "joining": "Katılanlar: {summary}",
+    "next14Days": "Önümüzdeki 14 gün",
+    "laterMonth": "Bu ayın ilerleyen günleri",
+    "sharedOption": "Paylaşımlı",
+    "privateOption": "Özel",
+    "applyFilters": "Filtreleri uygula",
+    "demoClusters": "İstanbul demo bölgeleri",
+    "emptyTitle": "Bu filtrelere uyan sofra yok",
+    "emptyBody": "Her iki sofra türünü veya daha geniş bir tarih aralığını deneyin.",
+    "clearFilters": "Filtreleri temizle"
   },
   "Table": {
     "hostedBy": "Ev sahibi: {name}",
@@ -165,6 +182,7 @@
   },
   "Account": {
     "title": "Sofra hesabınız",
+    "description": "Yaklaşan akşamları ve özel misafir bilgilerini yönetin.",
     "upcoming": "Yaklaşan rezervasyonlar",
     "past": "Geçmiş akşamlar",
     "profile": "Misafir profili",
@@ -174,10 +192,15 @@
     "review": "Kamusal yorum paylaş",
     "privateFeedback": "Özel geri bildirim gönder",
     "privateDisclosures": "Özel bildirimler",
-    "findAnotherTable": "Başka bir sofra bul"
+    "findAnotherTable": "Başka bir sofra bul",
+    "emptyUpcomingTitle": "Henüz yaklaşan akşam yok",
+    "emptyUpcomingBody": "Bir ev sofrasında yer ayırdığınızda hazırlık ve kesinleşme ilerlemesi burada görünür.",
+    "emptyBookingsTitle": "Gösterilecek rezervasyon yok",
+    "emptyBookingsBody": "İlk Sofra rezervasyonunuza başlamak için onaylı ev sofralarını keşfedin."
   },
   "HostPortal": {
     "title": "Ev sahibi paneli",
+    "description": "Ev sofraları önerin, onay sürecini izleyin ve kesinleşen misafirler için hazırlanın.",
     "dashboard": "Kontrol paneli",
     "tables": "Ev sofraları",
     "household": "Ev halkı profili",
@@ -200,6 +223,11 @@
     "certificationUnavailableBody": "Sofra etkin bir belgelendirme ve kapasite kaydedene kadar bu ev halkı yeni sofra öneremez.",
     "submissionReviewed": "Yerel demo bu sofranın Sofra incelemesine geçişini doğruladı. Kalıcı durum değişmedi ve sofra özel kalmaya devam ediyor.",
     "submissionUnavailable": "Hiçbir durum değişmedi. Korumalı sofra yazma deposu bağlanana kadar üretimde gönderim devre dışıdır.",
+    "capacitySummary": "{proposed}/{certified} önerilen/belgeli",
+    "emptyTablesTitle": "Henüz ev sofrası yok",
+    "emptyTablesBody": "Ev halkınız ilk planlı akşamını önermeye hazır olduğunda özel bir taslak oluşturun.",
+    "emptyUpcomingTablesTitle": "Hazırlanacak etkin sofra yok",
+    "emptyUpcomingTablesBody": "Ev halkınız yeni bir akşam önermeye hazır olduğunda özel bir taslak oluşturun.",
     "statuses": {
       "draft": "Taslak",
       "submitted": "Gönderildi",
@@ -246,6 +274,7 @@
   },
   "Admin": {
     "title": "Sofra operasyon",
+    "description": "İnsan incelemeli belgelendirme, yayın, güvenlik ve finans operasyonları.",
     "overview": "Genel bakış",
     "applications": "Ev sahibi başvuruları",
     "assessments": "Değerlendirme ayrıntısı",
@@ -257,7 +286,26 @@
     "audit": "Denetim kaydı",
     "pricing": "Fiyatlandırma politikası",
     "approve": "Sofrayı onayla",
-    "requestChanges": "Değişiklik iste"
+    "requestChanges": "Değişiklik iste",
+    "householdPending": "Ev halkı profili bekleniyor",
+    "awaitingReview": "İnceleme bekliyor",
+    "submittedStatus": "Gönderildi",
+    "emptyApplicationsTitle": "Bekleyen ev sahibi başvurusu yok",
+    "emptyApplicationsBody": "Yeni gönderilen başvurular insan incelemesi için burada görünür.",
+    "emptyTablesTitle": "Sofra inceleme kuyruğu boş",
+    "emptyTablesBody": "Yeni gönderilen ev sofraları yayınlanmadan önce burada görünür.",
+    "emptyAttentionTitle": "Şu anda acil inceleme gerekmiyor",
+    "emptyAttentionBody": "İnsan incelemesi gerektiğinde yeni ev sahibi, sofra ve güvenlik kayıtları burada görünür.",
+    "needsAttention": "İnceleme gerekenler",
+    "applicationTitle": "{name} başvurusu",
+    "assessmentQueue": "{status} · değerlendirme kuyruğu",
+    "hostReview": "Ev sahibi incelemesi",
+    "tableReady": "Eksiksiz menü ve kapasite onaya hazır",
+    "tableReview": "Sofra incelemesi",
+    "incidentTitle": "{severity} gizli güvenlik olayı",
+    "incidentPayoutHeld": "Sınırlı kayıt · ödeme bekletmesi etkin",
+    "incidentPayoutClear": "Sınırlı kayıt · ödeme durumu açık",
+    "safety": "Güvenlik"
   },
   "Partner": {
     "title": "Partner özeti",
@@ -282,6 +330,8 @@
     "emptyActivity": "Bu kurum için henüz bir yönlendirme etkinliği kaydedilmedi.",
     "emptyOrganizationTitle": "Partner kurumu atanmamış",
     "emptyOrganizationBody": "Yönlendirme verilerinin görünmesi için Sofra operasyonlarının bu hesabı bir partner kurumuna ataması gerekir.",
+    "emptyUpcomingTitle": "Onaylı sofra bulunmuyor",
+    "emptyUpcomingBody": "Sofra onaylayıp yayınladıktan sonra herkese açık güvenli sofra envanteri burada görünür.",
     "organizationStatus": {
       "active": "Aktif",
       "paused": "Duraklatıldı",
@@ -640,6 +690,10 @@
     "incidents": "Olay kuyruğunu incele"
   },
   "States": {
+    "loading": "Sofra yükleniyor",
+    "safeStop": "Güvenli duruş",
+    "retry": "Yeniden dene",
+    "unavailableEyebrow": "Kullanılamıyor",
     "unauthorizedTitle": "Bu alan farklı bir hesap rolü gerektiriyor",
     "unauthorizedBody": "Yerelde uygun demo profilini seçin veya Supabase bağlandığında yetkili Sofra hesabıyla giriş yapın.",
     "notFoundTitle": "Bu sofra artık uygun değil",

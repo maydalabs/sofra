@@ -16,11 +16,11 @@ export async function SiteFooter() {
             {t('promise')}
           </p>
           <p className="text-muted-foreground mt-6 text-xs">
-            Phase 1 · Private development foundation
+            {t('phaseOneFoundation')}
           </p>
         </div>
         <div className="flex flex-col gap-3 text-sm">
-          <p className="eyebrow">Explore</p>
+          <p className="eyebrow">{t('explore')}</p>
           <Link href="/tables" className="hover:text-primary">
             {navigation('tables')}
           </Link>
@@ -32,7 +32,7 @@ export async function SiteFooter() {
           </Link>
         </div>
         <div className="flex flex-col gap-3 text-sm">
-          <p className="eyebrow">Foundation</p>
+          <p className="eyebrow">{t('foundation')}</p>
           <Link href="/account" className="hover:text-primary">
             {t('account')}
           </Link>

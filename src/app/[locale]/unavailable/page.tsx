@@ -26,7 +26,7 @@ export default async function UnavailablePage({
           <p className="text-muted-foreground mt-3 leading-7">
             {t('unauthorizedBody')}
           </p>
-          <div className="mt-7 flex justify-center gap-3">
+          <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <Button asChild>
               <Link href="/demo">{common('demo')}</Link>
             </Button>

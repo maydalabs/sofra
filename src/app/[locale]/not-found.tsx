@@ -11,7 +11,7 @@ export default async function NotFoundPage() {
     <div className="container-shell flex min-h-[60vh] items-center justify-center py-16">
       <Card className="max-w-xl text-center">
         <CardContent className="p-10">
-          <p className="eyebrow">Unavailable</p>
+          <p className="eyebrow">{t('unavailableEyebrow')}</p>
           <h1 className="mt-4 text-4xl font-medium">{t('notFoundTitle')}</h1>
           <p className="text-muted-foreground mt-3 leading-7">
             {t('notFoundBody')}

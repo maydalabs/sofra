@@ -9,7 +9,7 @@ import {
   Users,
 } from 'lucide-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 import { reviewBookingCancellationAction } from './actions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -23,8 +23,9 @@ import {
 import { formatTry } from '@/features/pricing/pricing'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
-import { getCurrentActor } from '@/server/auth/current-actor'
 import { findTravelerBookingById } from '@/server/repositories/queries'
+
+import { requireTravelerPageActor } from '../../authorize'
 
 export default async function BookingDetailPage({
   params,
@@ -39,8 +40,7 @@ export default async function BookingDetailPage({
   const t = await getTranslations('Account')
   const travelerT = await getTranslations('TravelerBooking')
   const journeyT = await getTranslations('BookingJourney')
-  const actor = await getCurrentActor()
-  if (!actor) redirect(`/${locale}/sign-in`)
+  const actor = await requireTravelerPageActor(locale)
   const booking = await findTravelerBookingById(actor.id, id)
   if (!booking) notFound()
   const journey = getTravelerBookingJourney({

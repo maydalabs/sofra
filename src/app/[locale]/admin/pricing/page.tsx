@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label'
 import { developmentPolicy } from '@/features/policy/config'
 import { calculateGuestPrice, formatTry } from '@/features/pricing/pricing'
 
+import { requireOperatorPageActor } from '../authorize'
+
 export default async function PricingPolicyPage({
   params,
 }: {
@@ -14,6 +16,7 @@ export default async function PricingPolicyPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  await requireOperatorPageActor(locale)
   const t = await getTranslations('Admin')
   const example = calculateGuestPrice(120_000, developmentPolicy)
   return (

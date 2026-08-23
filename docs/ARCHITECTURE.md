@@ -28,6 +28,10 @@ Post-dinner input uses three distinct server-only intents: moderation-pending pu
 - `supabase/migrations`: normalized schema, views, functions, and RLS policies.
 - `supabase/seed.sql`: fictional development data only.
 
+## Interface resilience
+
+The localized shell provides a main-content skip target and a content-level language boundary for assistive technology. Protected portal navigation derives a single current route, exposes it with `aria-current`, and remains horizontally scrollable on narrow screens. Shared empty states use semantic heading levels and route-specific next actions; loading and error boundaries announce their status without exposing technical details. Because App Router layouts and pages may render in parallel, each traveler, host, partner, and operator surface repeats its shared server authorization gate at the page boundary before protected content or repository access.
+
 ## External adapters
 
 - Supabase: browser/server clients and a demo repository fallback.

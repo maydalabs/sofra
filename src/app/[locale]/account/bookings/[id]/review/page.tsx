@@ -1,6 +1,6 @@
 import { LockKeyhole, MessageCircleMore, ShieldAlert, Star } from 'lucide-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 import {
   reviewPrivateFeedbackAction,
@@ -15,8 +15,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Link } from '@/i18n/navigation'
-import { getCurrentActor } from '@/server/auth/current-actor'
 import { findTravelerBookingById } from '@/server/repositories/queries'
+
+import { requireTravelerPageActor } from '../../../authorize'
 
 type FeedbackResult =
   'public_reviewed' | 'private_reviewed' | 'safety_reviewed' | 'unavailable'
@@ -33,8 +34,7 @@ export default async function BookingReviewPage({
   const feedbackResult = parseFeedbackResult(query.feedback)
   setRequestLocale(locale)
   const t = await getTranslations('Feedback')
-  const actor = await getCurrentActor()
-  if (!actor) redirect(`/${locale}/sign-in`)
+  const actor = await requireTravelerPageActor(locale)
   const booking = await findTravelerBookingById(actor.id, id)
   if (!booking || booking.status !== 'completed') notFound()
 

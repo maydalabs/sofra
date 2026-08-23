@@ -316,3 +316,56 @@ test('partner sees actor-owned referral stages without traveler or commission da
   expect(html).not.toContain('attributedProfileId')
   expect(html).not.toContain('Fictional development address')
 })
+
+test('keyboard users can skip repeated navigation and identify the active portal section', async ({
+  page,
+}) => {
+  await page.goto('/en/tables')
+  await page.keyboard.press('Tab')
+  const skipLink = page.getByRole('link', { name: /skip to main content/i })
+  await expect(skipLink).toBeFocused()
+  await expect(skipLink).toBeVisible()
+  await page.keyboard.press('Enter')
+  await expect(page.locator('#main-content')).toBeFocused()
+
+  await choosePersona(page, /continue as certified host/i)
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/en/host/tables/new')
+  const portalNavigation = page.getByRole('navigation', {
+    name: /host portal navigation/i,
+  })
+  await expect(
+    portalNavigation.getByRole('link', { name: /create a table/i }),
+  ).toHaveAttribute('aria-current', 'page')
+})
+
+test('localized shell marks Turkish content and translates shared controls', async ({
+  page,
+}) => {
+  await page.goto('/tr/tables')
+  await expect(page.locator('[lang="tr"]')).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: /filtreleri uygula/i }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: /ana içeriğe geç/i }),
+  ).toBeAttached()
+})
+
+test('protected workspaces reject the wrong authenticated role', async ({
+  page,
+}) => {
+  await choosePersona(page, /continue as partner/i)
+  await page.goto('/en/admin')
+  await expect(page).toHaveURL(/\/en\/unavailable/)
+
+  await page.goto('/en/admin/pricing')
+  await expect(page).toHaveURL(/\/en\/unavailable/)
+
+  await page.goto('/en/host/dashboard')
+  await expect(page).toHaveURL(/\/en\/unavailable/)
+
+  await choosePersona(page, /continue as traveler/i)
+  await page.goto('/en/partner')
+  await expect(page).toHaveURL(/\/en\/unavailable/)
+})

@@ -3,12 +3,14 @@ import {
   CalendarCheck,
   CircleDollarSign,
   ClipboardList,
+  Inbox,
   ShieldCheck,
 } from 'lucide-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { EmptyState } from '@/components/empty-state'
 import { Link } from '@/i18n/navigation'
 import { getOperatorOverview } from '@/server/repositories/operator/queries'
 
@@ -78,33 +80,57 @@ export default async function AdminOverviewPage({
       </div>
       <Card>
         <CardHeader>
-          <CardTitle className="text-3xl">Needs attention</CardTitle>
+          <CardTitle className="text-3xl">{t('needsAttention')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {pendingApplications[0] ? (
-            <AdminQueueLink
-              href={`/admin/host-applications/${pendingApplications[0].id}`}
-              title={`${pendingApplications[0].householdName ?? pendingApplications[0].applicantName} application`}
-              note={`${pendingApplications[0].status} · assessment queue`}
-              badge="Host review"
+          {pendingApplications.length ||
+          submittedTables.length ||
+          openIncidents.length ? (
+            <>
+              {pendingApplications[0] ? (
+                <AdminQueueLink
+                  href={`/admin/host-applications/${pendingApplications[0].id}`}
+                  title={t('applicationTitle', {
+                    name:
+                      pendingApplications[0].householdName ??
+                      pendingApplications[0].applicantName,
+                  })}
+                  note={t('assessmentQueue', {
+                    status: pendingApplications[0].status,
+                  })}
+                  badge={t('hostReview')}
+                />
+              ) : null}
+              {submittedTables[0] ? (
+                <AdminQueueLink
+                  href={`/admin/tables/${submittedTables[0].id}`}
+                  title={submittedTables[0].menuTitle}
+                  note={t('tableReady')}
+                  badge={t('tableReview')}
+                />
+              ) : null}
+              {openIncidents[0] ? (
+                <AdminQueueLink
+                  href="/admin/incidents"
+                  title={t('incidentTitle', {
+                    severity: openIncidents[0].severity,
+                  })}
+                  note={
+                    openIncidents[0].payoutHeld
+                      ? t('incidentPayoutHeld')
+                      : t('incidentPayoutClear')
+                  }
+                  badge={t('safety')}
+                />
+              ) : null}
+            </>
+          ) : (
+            <EmptyState
+              icon={Inbox}
+              title={t('emptyAttentionTitle')}
+              description={t('emptyAttentionBody')}
             />
-          ) : null}
-          {submittedTables[0] ? (
-            <AdminQueueLink
-              href={`/admin/tables/${submittedTables[0].id}`}
-              title={submittedTables[0].menuTitle}
-              note="Complete menu and capacity ready for approval"
-              badge="Table review"
-            />
-          ) : null}
-          {openIncidents[0] ? (
-            <AdminQueueLink
-              href="/admin/incidents"
-              title={`${openIncidents[0].severity} confidential incident`}
-              note={`Restricted record · ${openIncidents[0].payoutHeld ? 'payout hold active' : 'payout status clear'}`}
-              badge="Safety"
-            />
-          ) : null}
+          )}
         </CardContent>
       </Card>
     </div>

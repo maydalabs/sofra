@@ -1,18 +1,18 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { redirect } from 'next/navigation'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { isHostCertificationActive } from '@/features/hosts/certification'
 import { CreateTableForm } from '@/features/hosted-tables/create-table-form'
 import { developmentPolicy } from '@/features/policy/config'
-import { getCurrentActor } from '@/server/auth/current-actor'
 import { findHostCertification } from '@/server/repositories/queries'
 import {
   getMaximumLocalDateTime,
   getMinimumLocalDateTime,
   getServerTimeMilliseconds,
 } from '@/server/time/clock'
+
+import { requireHostPageActor } from '../../authorize'
 
 export default async function NewHostedTablePage({
   params,
@@ -22,8 +22,7 @@ export default async function NewHostedTablePage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('HostPortal')
-  const actor = await getCurrentActor()
-  if (!actor) redirect(`/${locale}/sign-in`)
+  const actor = await requireHostPageActor(locale)
   const certification = await findHostCertification(actor.id)
   const certificationIsActive = isHostCertificationActive(
     certification,

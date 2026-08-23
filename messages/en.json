@@ -24,7 +24,15 @@
     "backToTables": "Back to all tables",
     "demoMode": "Fictional demo data · no remote services connected",
     "paymentsDisabled": "Payments are not yet enabled",
-    "language": "Language"
+    "language": "Language",
+    "productWorkspace": "Product workspace",
+    "workspaceNavigation": "{workspace} navigation",
+    "phaseOneFoundation": "Phase 1 · Private development foundation",
+    "explore": "Explore",
+    "foundation": "Foundation"
+  },
+  "Accessibility": {
+    "skipToContent": "Skip to main content"
   },
   "Navigation": {
     "tables": "Find a table",
@@ -108,7 +116,16 @@
     "allAreas": "All demo areas",
     "results": "{count} upcoming tables",
     "minimumPending": "Still gathering its minimum",
-    "joining": "Already joining: {summary}"
+    "joining": "Already joining: {summary}",
+    "next14Days": "Next 14 days",
+    "laterMonth": "Later this month",
+    "sharedOption": "Shared",
+    "privateOption": "Private",
+    "applyFilters": "Apply filters",
+    "demoClusters": "Istanbul demo clusters",
+    "emptyTitle": "No tables match those filters",
+    "emptyBody": "Try both formats or a wider date window.",
+    "clearFilters": "Clear filters"
   },
   "Table": {
     "hostedBy": "Hosted by {name}",
@@ -165,6 +182,7 @@
   },
   "Account": {
     "title": "Your Sofra account",
+    "description": "Manage upcoming dinners and private traveler information.",
     "upcoming": "Upcoming bookings",
     "past": "Past dinners",
     "profile": "Traveler profile",
@@ -174,10 +192,15 @@
     "review": "Share public review",
     "privateFeedback": "Send private feedback",
     "privateDisclosures": "Private disclosures",
-    "findAnotherTable": "Find another table"
+    "findAnotherTable": "Find another table",
+    "emptyUpcomingTitle": "No upcoming dinners yet",
+    "emptyUpcomingBody": "When you reserve a household table, its preparation and confirmation progress will appear here.",
+    "emptyBookingsTitle": "No bookings to show",
+    "emptyBookingsBody": "Browse approved household tables to begin your first Sofra reservation."
   },
   "HostPortal": {
     "title": "Host portal",
+    "description": "Propose household tables, follow approval, and prepare for confirmed travelers.",
     "dashboard": "Dashboard",
     "tables": "Hosted tables",
     "household": "Household profile",
@@ -200,6 +223,11 @@
     "certificationUnavailableBody": "This household cannot propose another table until Sofra records an active certification and capacity.",
     "submissionReviewed": "The local demo validated this table’s move to Sofra review. No durable status changed, and the table remains private.",
     "submissionUnavailable": "No status changed. Production submission remains disabled until the protected table-write repository is connected.",
+    "capacitySummary": "{proposed}/{certified} proposed/certified",
+    "emptyTablesTitle": "No household tables yet",
+    "emptyTablesBody": "Create a private draft when your household is ready to propose its first scheduled dinner.",
+    "emptyUpcomingTablesTitle": "No active tables to prepare",
+    "emptyUpcomingTablesBody": "Create a private draft when your household is ready to propose another dinner.",
     "statuses": {
       "draft": "Draft",
       "submitted": "Submitted",
@@ -246,6 +274,7 @@
   },
   "Admin": {
     "title": "Sofra operations",
+    "description": "Human-reviewed certification, publication, safety, and financial operations.",
     "overview": "Overview",
     "applications": "Host applications",
     "assessments": "Assessment detail",
@@ -257,7 +286,26 @@
     "audit": "Audit log",
     "pricing": "Pricing policy",
     "approve": "Approve table",
-    "requestChanges": "Request changes"
+    "requestChanges": "Request changes",
+    "householdPending": "Household profile pending",
+    "awaitingReview": "Awaiting review",
+    "submittedStatus": "Submitted",
+    "emptyApplicationsTitle": "No host applications waiting",
+    "emptyApplicationsBody": "New submitted applications will appear here for human review.",
+    "emptyTablesTitle": "The table review queue is clear",
+    "emptyTablesBody": "New submitted household tables will appear here before publication.",
+    "emptyAttentionTitle": "Nothing needs immediate review",
+    "emptyAttentionBody": "New host, table, and safety items will appear here when human attention is required.",
+    "needsAttention": "Needs attention",
+    "applicationTitle": "{name} application",
+    "assessmentQueue": "{status} · assessment queue",
+    "hostReview": "Host review",
+    "tableReady": "Complete menu and capacity ready for approval",
+    "tableReview": "Table review",
+    "incidentTitle": "{severity} confidential incident",
+    "incidentPayoutHeld": "Restricted record · payout hold active",
+    "incidentPayoutClear": "Restricted record · payout status clear",
+    "safety": "Safety"
   },
   "Partner": {
     "title": "Partner overview",
@@ -282,6 +330,8 @@
     "emptyActivity": "No referral activity has been recorded for this organization yet.",
     "emptyOrganizationTitle": "No partner organization is assigned",
     "emptyOrganizationBody": "Sofra operations must assign this account to a partner organization before referral data can appear.",
+    "emptyUpcomingTitle": "No approved tables are available",
+    "emptyUpcomingBody": "Public-safe table inventory will appear here after Sofra approves and publishes it.",
     "organizationStatus": {
       "active": "Active",
       "paused": "Paused",
@@ -640,6 +690,10 @@
     "incidents": "Review incident queue"
   },
   "States": {
+    "loading": "Loading Sofra",
+    "safeStop": "Safe stop",
+    "retry": "Try again",
+    "unavailableEyebrow": "Unavailable",
     "unauthorizedTitle": "This area needs a different account role",
     "unauthorizedBody": "Choose an appropriate demo persona locally, or sign in with an authorized Sofra account when Supabase is connected.",
     "notFoundTitle": "That table is no longer available",

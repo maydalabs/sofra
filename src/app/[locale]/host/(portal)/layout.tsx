@@ -1,9 +1,8 @@
 import { getTranslations } from 'next-intl/server'
-import { redirect } from 'next/navigation'
 
 import { PortalShell } from '@/components/portal-shell'
-import { getCurrentActor } from '@/server/auth/current-actor'
-import { assertHasAnyRole } from '@/server/authorization/roles'
+
+import { requireHostPageActor } from './authorize'
 
 export default async function HostPortalLayout({
   children,
@@ -13,14 +12,11 @@ export default async function HostPortalLayout({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  const actor = await getCurrentActor()
-  if (!actor) redirect(`/${locale}/sign-in`)
-  try {
-    assertHasAnyRole(actor, ['certified_host'])
-  } catch {
-    redirect(`/${locale}/unavailable`)
-  }
-  const t = await getTranslations('HostPortal')
+  const actor = await requireHostPageActor(locale)
+  const [t, common] = await Promise.all([
+    getTranslations('HostPortal'),
+    getTranslations('Common'),
+  ])
   const items = [
     { href: '/host/dashboard', label: t('dashboard') },
     { href: '/host/tables', label: t('tables') },
@@ -32,9 +28,11 @@ export default async function HostPortalLayout({
   return (
     <PortalShell
       title={t('title')}
-      description="Propose household tables, follow approval, and prepare for confirmed travelers."
+      description={t('description')}
       items={items}
       actorLabel={actor.email}
+      workspaceLabel={common('productWorkspace')}
+      navigationLabel={common('workspaceNavigation', { workspace: t('title') })}
     >
       {children}
     </PortalShell>

@@ -1,11 +1,18 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
+
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Loading() {
+  const t = useTranslations('States')
   return (
     <div
       className="container-shell space-y-7 py-16"
       role="status"
-      aria-label="Loading Sofra"
+      aria-label={t('loading')}
+      aria-live="polite"
+      aria-busy="true"
     >
       <Skeleton className="h-4 w-40" />
       <Skeleton className="h-20 max-w-3xl" />

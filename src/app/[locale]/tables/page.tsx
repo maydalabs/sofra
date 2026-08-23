@@ -1,6 +1,7 @@
-import { Filter } from 'lucide-react'
+import { CalendarSearch, Filter } from 'lucide-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
+import { EmptyState } from '@/components/empty-state'
 import { TableCard } from '@/components/table-card'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -12,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Link } from '@/i18n/navigation'
 import { listPublicTables } from '@/server/repositories/queries'
 import { getServerTimeMilliseconds } from '@/server/time/clock'
 
@@ -77,8 +79,8 @@ export default async function TablesPage({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('allDates')}</SelectItem>
-                  <SelectItem value="soon">Next 14 days</SelectItem>
-                  <SelectItem value="later">Later this month</SelectItem>
+                  <SelectItem value="soon">{t('next14Days')}</SelectItem>
+                  <SelectItem value="later">{t('laterMonth')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -90,8 +92,8 @@ export default async function TablesPage({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('allFormats')}</SelectItem>
-                  <SelectItem value="shared">Shared</SelectItem>
-                  <SelectItem value="private">Private</SelectItem>
+                  <SelectItem value="shared">{t('sharedOption')}</SelectItem>
+                  <SelectItem value="private">{t('privateOption')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -109,7 +111,8 @@ export default async function TablesPage({
               </Select>
             </div>
             <Button type="submit">
-              <Filter className="size-4" /> Apply filters
+              <Filter className="size-4" aria-hidden="true" />
+              {t('applyFilters')}
             </Button>
           </form>
         </CardContent>
@@ -119,7 +122,7 @@ export default async function TablesPage({
         <h2 className="font-heading text-2xl font-medium">
           {t('results', { count: tables.length })}
         </h2>
-        <p className="text-muted-foreground text-xs">Istanbul demo clusters</p>
+        <p className="text-muted-foreground text-xs">{t('demoClusters')}</p>
       </div>
       {tables.length ? (
         <div className="mt-9 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
@@ -128,12 +131,17 @@ export default async function TablesPage({
           ))}
         </div>
       ) : (
-        <div className="bg-card mt-8 rounded-3xl border p-12 text-center">
-          <h2 className="text-3xl">No tables match those filters.</h2>
-          <p className="text-muted-foreground mt-2">
-            Try both formats or a wider date window.
-          </p>
-        </div>
+        <EmptyState
+          icon={CalendarSearch}
+          title={t('emptyTitle')}
+          description={t('emptyBody')}
+          headingLevel={3}
+          className="bg-card mt-8 rounded-3xl"
+        >
+          <Button variant="outline" asChild>
+            <Link href="/tables">{t('clearFilters')}</Link>
+          </Button>
+        </EmptyState>
       )}
     </div>
   )

@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DietaryDisclosureForm } from '@/features/dietary/dietary-disclosure-form'
 
+import { requireTravelerPageActor } from '../authorize'
+
 export default async function DietaryPage({
   params,
 }: {
@@ -10,6 +12,7 @@ export default async function DietaryPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  await requireTravelerPageActor(locale)
   const t = await getTranslations('Account')
   const dietaryT = await getTranslations('Dietary')
   return (

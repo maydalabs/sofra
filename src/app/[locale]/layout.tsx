@@ -1,5 +1,9 @@
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
-import { getMessages, setRequestLocale } from 'next-intl/server'
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from 'next-intl/server'
 import { notFound } from 'next/navigation'
 
 import { DemoBanner } from '@/components/demo-banner'
@@ -22,13 +26,22 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound()
   setRequestLocale(locale)
   const messages = await getMessages()
+  const accessibility = await getTranslations('Accessibility')
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <div className="flex min-h-screen flex-col">
+      <div lang={locale} className="flex min-h-screen flex-col">
+        <a
+          href="#main-content"
+          className="bg-background text-foreground focus:ring-ring sr-only z-[100] rounded-lg px-4 py-3 text-sm font-semibold shadow-lg focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:ring-3 focus:outline-none"
+        >
+          {accessibility('skipToContent')}
+        </a>
         <DemoBanner />
         <SiteHeader locale={locale} />
-        <main className="flex-1">{children}</main>
+        <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
+          {children}
+        </main>
         <SiteFooter />
       </div>
     </NextIntlClientProvider>

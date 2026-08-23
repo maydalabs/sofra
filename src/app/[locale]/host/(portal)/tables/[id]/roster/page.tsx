@@ -13,11 +13,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Link } from '@/i18n/navigation'
 import { formatTableDate } from '@/lib/date'
-import { getCurrentActor } from '@/server/auth/current-actor'
 import {
   findHostTableById,
   listHostRoster,
 } from '@/server/repositories/queries'
+
+import { requireHostPageActor } from '../../../authorize'
 
 export default async function HostRosterPage({
   params,
@@ -27,8 +28,7 @@ export default async function HostRosterPage({
   const { locale, id } = await params
   setRequestLocale(locale)
   const t = await getTranslations('Roster')
-  const actor = await getCurrentActor()
-  if (!actor) notFound()
+  const actor = await requireHostPageActor(locale)
   const table = await findHostTableById(actor.id, id)
   if (!table) notFound()
   const roster = await listHostRoster(actor.id, table.id)

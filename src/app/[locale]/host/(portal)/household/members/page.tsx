@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
+import { requireHostPageActor } from '../../authorize'
+
 export default async function HouseholdMembersPage({
   params,
 }: {
@@ -10,6 +12,7 @@ export default async function HouseholdMembersPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  await requireHostPageActor(locale)
   const t = await getTranslations('HostPortal')
   const members = [
     {
