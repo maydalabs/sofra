@@ -1,12 +1,32 @@
 import { CheckCircle2 } from 'lucide-react'
+import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { EditorialPhoto } from '@/components/editorial-photo'
 import { Card, CardContent } from '@/components/ui/card'
+import { createPublicPageMetadata } from '@/features/seo/metadata'
+import { getAppLocale } from '@/i18n/routing'
 
 interface StepCopy {
   title: string
   body: string
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const appLocale = getAppLocale(locale)
+  const t = await getTranslations({ locale: appLocale, namespace: 'Meta' })
+  return createPublicPageMetadata({
+    locale: appLocale,
+    path: '/how-it-works',
+    title: t('howTitle'),
+    description: t('howDescription'),
+    socialImageAlt: t('socialImageAlt'),
+  })
 }
 
 export default async function HowItWorksPage({

@@ -1,10 +1,30 @@
 import { Check, HandHeart, ShieldCheck } from 'lucide-react'
+import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { EditorialPhoto } from '@/components/editorial-photo'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { createPublicPageMetadata } from '@/features/seo/metadata'
+import { getAppLocale } from '@/i18n/routing'
 import { Link } from '@/i18n/navigation'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const appLocale = getAppLocale(locale)
+  const t = await getTranslations({ locale: appLocale, namespace: 'Meta' })
+  return createPublicPageMetadata({
+    locale: appLocale,
+    path: '/host',
+    title: t('hostTitle'),
+    description: t('hostDescription'),
+    socialImageAlt: t('socialImageAlt'),
+  })
+}
 
 export default async function HostRecruitmentPage({
   params,

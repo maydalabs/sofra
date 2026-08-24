@@ -1,8 +1,12 @@
+import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 
 import { PortalShell } from '@/components/portal-shell'
+import { privatePageMetadata } from '@/features/seo/config'
 
 import { requireOperatorPageActor } from './authorize'
+
+export const metadata: Metadata = privatePageMetadata
 
 export default async function AdminLayout({
   children,

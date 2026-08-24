@@ -1,4 +1,5 @@
 import { CalendarSearch, Filter } from 'lucide-react'
+import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { EmptyState } from '@/components/empty-state'
@@ -6,6 +7,8 @@ import { TableCard } from '@/components/table-card'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import { createPublicPageMetadata } from '@/features/seo/metadata'
+import { getAppLocale } from '@/i18n/routing'
 import {
   Select,
   SelectContent,
@@ -18,6 +21,23 @@ import { listPublicTables } from '@/server/repositories/queries'
 import { getServerTimeMilliseconds } from '@/server/time/clock'
 
 type SearchParameters = { format?: string; area?: string; date?: string }
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const appLocale = getAppLocale(locale)
+  const t = await getTranslations({ locale: appLocale, namespace: 'Meta' })
+  return createPublicPageMetadata({
+    locale: appLocale,
+    path: '/tables',
+    title: t('tablesTitle'),
+    description: t('tablesDescription'),
+    socialImageAlt: t('socialImageAlt'),
+  })
+}
 
 export default async function TablesPage({
   params,

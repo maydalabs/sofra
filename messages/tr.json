@@ -34,6 +34,20 @@
   "Accessibility": {
     "skipToContent": "Ana içeriğe geç"
   },
+  "Meta": {
+    "homeTitle": "Sofra — Bir Türk evinde sofraya katılın",
+    "homeDescription": "Doğrulanmış bir Türk evindeki planlı akşam yemeğine; ev sahibinin seçtiği menüye, çaya ve samimi sohbete yer ayırtın.",
+    "tablesTitle": "İstanbul'daki ev sofraları · Sofra",
+    "tablesDescription": "İstanbul'daki onaylı ev sofralarını tarihe, sofra türüne ve yaklaşık mahalleye göre keşfedin.",
+    "howTitle": "Ev sofraları nasıl çalışır? · Sofra",
+    "howDescription": "Sofra'nın ev halklarını nasıl doğruladığını, özel bilgileri nasıl koruduğunu ve ev sahibinin seçtiği akşamı rezervasyondan çay ve sohbete kadar nasıl desteklediğini öğrenin.",
+    "hostTitle": "Sofra'da ev sofrasına ev sahipliği yapın",
+    "hostDescription": "Doğrulanmış ev halklarının kendi menülerini ve planlı akşam sofralarını Sofra'nın insan incelemesine nasıl önerdiğini öğrenin.",
+    "tableDescription": "{neighborhood} bölgesinde {household} ile ev sahibinin seçtiği menü, çay ve sohbet için sofraya katılın.",
+    "tableUnavailableTitle": "Sofra kullanılamıyor · Sofra",
+    "tableUnavailableDescription": "Bu ev sofrası şu anda herkese açık keşifte bulunmuyor.",
+    "socialImageAlt": "Bir Sofra sofrasında akşam yemeği paylaşan Türk ev halkı"
+  },
   "Navigation": {
     "tables": "Sofra bul",
     "how": "Sofra nasıl çalışır?",

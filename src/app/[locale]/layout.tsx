@@ -27,9 +27,14 @@ export default async function LocaleLayout({
   setRequestLocale(locale)
   const messages = await getMessages()
   const accessibility = await getTranslations('Accessibility')
+  const clientMessages = {
+    Common: messages.Common,
+    Navigation: messages.Navigation,
+    States: messages.States,
+  }
 
   return (
-    <NextIntlClientProvider messages={messages}>
+    <NextIntlClientProvider messages={clientMessages}>
       <div lang={locale} className="flex min-h-screen flex-col">
         <a
           href="#main-content"

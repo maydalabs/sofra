@@ -7,3 +7,9 @@ export const routing = defineRouting({
 })
 
 export type AppLocale = (typeof routing.locales)[number]
+
+export function getAppLocale(value: string): AppLocale {
+  return routing.locales.includes(value as AppLocale)
+    ? (value as AppLocale)
+    : routing.defaultLocale
+}

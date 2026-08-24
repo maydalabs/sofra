@@ -194,6 +194,54 @@ test('published listing exposes approximate area but never exact address', async
   expect(html).not.toContain('preciseCoordinate')
 })
 
+test('localized metadata and structured data stay inside the public projection', async ({
+  page,
+}) => {
+  await page.goto('/tr/tables/ayse-levent-sunday-table')
+
+  await expect(page).toHaveTitle(/A slow Sunday table · Sofra/)
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    'content',
+    /Moda, Kadıköy bölgesinde/i,
+  )
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    /\/tr\/tables\/ayse-levent-sunday-table$/,
+  )
+  await expect(
+    page.locator('link[rel="alternate"][hreflang="en"]'),
+  ).toHaveAttribute('href', /\/en\/tables\/ayse-levent-sunday-table$/)
+  await expect(page.locator('meta[property="og:image"]')).toHaveCount(0)
+
+  const structuredData = JSON.parse(
+    (await page.locator('script[type="application/ld+json"]').textContent()) ??
+      '{}',
+  )
+  expect(structuredData.location).toEqual({
+    '@type': 'Place',
+    name: 'Moda, Kadıköy',
+  })
+  expect(JSON.stringify(structuredData)).not.toMatch(
+    /address|coordinate|arrival|dietary|guestName/i,
+  )
+
+  const html = await page.content()
+  expect(html).not.toContain('Private assessment notes')
+  expect(html).not.toContain('Assessment writes are not connected')
+  expect(html).not.toContain('Primary traveler name')
+})
+
+test('indexing defaults closed and private routes send crawler headers', async ({
+  page,
+}) => {
+  const robots = await page.request.get('/robots.txt')
+  expect(await robots.text()).toContain('Disallow: /')
+
+  const signIn = await page.request.get('/en/sign-in')
+  expect(signIn.headers()['x-robots-tag']).toContain('noindex')
+  expect(signIn.headers()['x-robots-tag']).toContain('noarchive')
+})
+
 test('unauthorized traveler cannot enter admin operations', async ({
   page,
 }) => {

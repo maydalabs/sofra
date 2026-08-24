@@ -1,4 +1,9 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { NextIntlClientProvider } from 'next-intl'
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from 'next-intl/server'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DietaryDisclosureForm } from '@/features/dietary/dietary-disclosure-form'
@@ -13,8 +18,11 @@ export default async function DietaryPage({
   const { locale } = await params
   setRequestLocale(locale)
   await requireTravelerPageActor(locale)
-  const t = await getTranslations('Account')
-  const dietaryT = await getTranslations('Dietary')
+  const [t, dietaryT, messages] = await Promise.all([
+    getTranslations('Account'),
+    getTranslations('Dietary'),
+    getMessages(),
+  ])
   return (
     <Card>
       <CardHeader>
@@ -22,7 +30,9 @@ export default async function DietaryPage({
         <p className="text-muted-foreground text-sm">{dietaryT('intro')}</p>
       </CardHeader>
       <CardContent>
-        <DietaryDisclosureForm />
+        <NextIntlClientProvider messages={{ Dietary: messages.Dietary }}>
+          <DietaryDisclosureForm />
+        </NextIntlClientProvider>
       </CardContent>
     </Card>
   )

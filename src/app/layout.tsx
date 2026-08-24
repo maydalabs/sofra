@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { DM_Sans, Newsreader } from 'next/font/google'
 
+import { getSeoRuntimeConfig, privatePageRobots } from '@/features/seo/config'
+
 import './globals.css'
 
 const sans = DM_Sans({
@@ -15,10 +17,10 @@ const editorial = Newsreader({
   display: 'swap',
 })
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+const { appUrl } = getSeoRuntimeConfig()
 
 export const metadata: Metadata = {
-  metadataBase: new URL(appUrl),
+  metadataBase: appUrl,
   title: {
     default: 'Sofra — Join a Turkish household table',
     template: '%s · Sofra',
@@ -46,7 +48,13 @@ export const metadata: Metadata = {
     description: 'Be welcomed into a Turkish household and join the table.',
     images: ['/og.png'],
   },
-  robots: { index: false, follow: false },
+  robots: privatePageRobots,
+  referrer: 'strict-origin-when-cross-origin',
+  formatDetection: {
+    address: false,
+    email: false,
+    telephone: false,
+  },
 }
 
 export default function RootLayout({

@@ -34,6 +34,20 @@
   "Accessibility": {
     "skipToContent": "Skip to main content"
   },
+  "Meta": {
+    "homeTitle": "Sofra — Join a Turkish household table",
+    "homeDescription": "Reserve a seat at a scheduled dinner inside a verified Turkish household, with a host-selected menu, tea, and genuine conversation.",
+    "tablesTitle": "Household dinner tables in Istanbul · Sofra",
+    "tablesDescription": "Explore approved household dinner tables in Istanbul by date, format, and approximate neighborhood.",
+    "howTitle": "How household dinners work · Sofra",
+    "howDescription": "Learn how Sofra verifies households, protects private information, and supports a host-selected dinner from booking through tea and conversation.",
+    "hostTitle": "Host a household table with Sofra",
+    "hostDescription": "Learn how verified households propose their own menus and scheduled dinner tables for human review by Sofra.",
+    "tableDescription": "Join {household} in {neighborhood} for a host-selected menu, tea, and conversation.",
+    "tableUnavailableTitle": "Table unavailable · Sofra",
+    "tableUnavailableDescription": "This household table is not currently available for public discovery.",
+    "socialImageAlt": "A Turkish household sharing dinner around a Sofra table"
+  },
   "Navigation": {
     "tables": "Find a table",
     "how": "How Sofra works",

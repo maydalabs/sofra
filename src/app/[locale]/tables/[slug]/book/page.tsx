@@ -1,4 +1,9 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { NextIntlClientProvider } from 'next-intl'
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from 'next-intl/server'
 import { notFound } from 'next/navigation'
 
 import { simulateBookingAction } from './actions'
@@ -18,7 +23,10 @@ export default async function BookingPage({
   setRequestLocale(locale)
   const table = await findPublicTableBySlug(slug)
   if (!table || table.status === 'roster_locked') notFound()
-  const t = await getTranslations('Booking')
+  const [t, messages] = await Promise.all([
+    getTranslations('Booking'),
+    getMessages(),
+  ])
 
   return (
     <div className="container-shell py-12 sm:py-16">
@@ -44,18 +52,22 @@ export default async function BookingPage({
             </p>
           </CardHeader>
           <CardContent>
-            <BookingForm
-              table={{
-                slug: table.slug,
-                format: table.format,
-                availableSeats: table.availableSeats,
-                guestPriceKurus: table.guestPriceKurus,
-                maximumSharedPartySize:
-                  developmentPolicy.maximumSharedBookingPartySize,
-              }}
-              locale={locale}
-              action={simulateBookingAction}
-            />
+            <NextIntlClientProvider
+              messages={{ Booking: messages.Booking, Common: messages.Common }}
+            >
+              <BookingForm
+                table={{
+                  slug: table.slug,
+                  format: table.format,
+                  availableSeats: table.availableSeats,
+                  guestPriceKurus: table.guestPriceKurus,
+                  maximumSharedPartySize:
+                    developmentPolicy.maximumSharedBookingPartySize,
+                }}
+                locale={locale}
+                action={simulateBookingAction}
+              />
+            </NextIntlClientProvider>
           </CardContent>
         </Card>
       </div>

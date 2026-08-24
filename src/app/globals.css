@@ -87,7 +87,7 @@
         color-mix(in oklab, var(--secondary) 35%, transparent),
         transparent 32rem
       );
-    background-attachment: fixed;
+    background-attachment: scroll;
   }
 
   h1,
@@ -148,6 +148,12 @@
 
   .rule-dot::before {
     @apply bg-clay me-3 inline-block size-1.5 rounded-full align-middle content-[''];
+  }
+}
+
+@media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+  body {
+    background-attachment: fixed;
   }
 }
 

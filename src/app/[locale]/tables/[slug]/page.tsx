@@ -19,7 +19,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { formatTry } from '@/features/pricing/pricing'
+import { privatePageMetadata } from '@/features/seo/config'
+import { createPublicPageMetadata } from '@/features/seo/metadata'
+import {
+  createPublicTableEventJsonLd,
+  serializeJsonLd,
+} from '@/features/seo/structured-data'
 import { Link } from '@/i18n/navigation'
+import { getAppLocale } from '@/i18n/routing'
 import { formatTableDate } from '@/lib/date'
 import { findPublicTableBySlug } from '@/server/repositories/queries'
 
@@ -28,10 +35,27 @@ type PageProps = { params: Promise<{ locale: string; slug: string }> }
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params
+  const { locale, slug } = await params
+  const appLocale = getAppLocale(locale)
+  const t = await getTranslations({ locale: appLocale, namespace: 'Meta' })
   const table = await findPublicTableBySlug(slug)
-  if (!table) return { title: 'Table unavailable' }
-  return { title: table.menuTitle, description: table.menuDescription }
+  if (!table)
+    return {
+      ...privatePageMetadata,
+      title: { absolute: t('tableUnavailableTitle') },
+      description: t('tableUnavailableDescription'),
+    }
+  return createPublicPageMetadata({
+    locale: appLocale,
+    path: `/tables/${table.slug}`,
+    title: `${table.menuTitle} · Sofra`,
+    description: t('tableDescription', {
+      household: table.householdName,
+      neighborhood: table.neighborhood,
+    }),
+    socialImageAlt: t('socialImageAlt'),
+    includeSocialImage: false,
+  })
 }
 
 export default async function TableDetailPage({ params }: PageProps) {
@@ -42,9 +66,14 @@ export default async function TableDetailPage({ params }: PageProps) {
   const t = await getTranslations('Table')
   const common = await getTranslations('Common')
   const isBookable = table.status !== 'roster_locked'
+  const eventJsonLd = createPublicTableEventJsonLd(table, getAppLocale(locale))
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(eventJsonLd) }}
+      />
       <section className="container-shell pt-8 sm:pt-12">
         <Button variant="ghost" className="-ms-4" asChild>
           <Link href="/tables">← {common('backToTables')}</Link>

@@ -43,6 +43,7 @@ Copy `.env.example` and supply only the services you are using:
 
 - `NEXT_PUBLIC_APP_URL`
 - `SOFRA_DEMO_MODE`
+- `SOFRA_ALLOW_INDEXING` (safe default: `false`; `true` requires a trusted HTTPS app URL)
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY` (server only)
@@ -85,7 +86,7 @@ pnpm test:e2e
 pnpm build
 ```
 
-Playwright starts the app on an isolated test port and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, cross-role access rejection, keyboard skip navigation, active portal navigation, English and Turkish protected-form localization, keyboard-readable read-only previews, the guided cross-role journey, roster privacy, post-dinner moderation/privacy boundaries, confidential-report non-echo, payout holds, and partner-owned referral visibility.
+Playwright starts the app on an isolated test port and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, localized canonical and structured metadata, crawler restrictions, cross-role access rejection, keyboard skip navigation, active portal navigation, English and Turkish protected-form localization, keyboard-readable read-only previews, the guided cross-role journey, roster privacy, post-dinner moderation/privacy boundaries, confidential-report non-echo, payout holds, and partner-owned referral visibility.
 
 ## Architecture
 
@@ -110,6 +111,8 @@ The partner workspace replaces hard-coded referral metrics with an actor-owned c
 Shared launch-readiness components provide a keyboard skip link, localized loading/error/empty states, content-level language metadata, and active-section announcements in horizontally scrollable portal navigation. Empty traveler, host, partner, and operator queues now explain what happens next instead of rendering blank cards. Every protected page repeats its portal authorization gate before content or data access so parallel rendering cannot attempt a protected read for the wrong role.
 
 Protected account, household, address, assessment, pricing, booking, incident, and audit interfaces now localize their operational labels in English and Turkish. Preview-only profile, address, assessment, and policy fields are explicitly read-only and paired with visible explanations; unavailable buttons no longer imply that a durable write can occur.
+
+Public pages provide localized canonical links, language alternates, social metadata, and table-specific structured event data built only from the approved public projection. Independently shared table pages deliberately clear the site-wide social image because no table-specific public image exists. Protected and form routes send crawler-level `noindex` headers, while `robots.txt` and the public sitemap remain closed unless `SOFRA_ALLOW_INDEXING=true` is paired with a trusted HTTPS app URL. Only messages needed by interactive client components are serialized to the browser.
 
 Public, traveler, host, partner, and operator page components covered by the current contracts read through repository queries rather than importing database clients or fictional fixtures. Anonymous discovery uses the public-safe view when Supabase is configured and retains the fictional public fallback otherwise. Protected repositories use local personas only in demo mode and fail closed when production credentials or an authorized actor are absent. Cross-user operator reads use a dedicated server-only repository that checks the actor role before creating a service-role client and exposes purpose-specific records for applications, table reviews, booking operations, incidents, payouts, and audit events.
 
