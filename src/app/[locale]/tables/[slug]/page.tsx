@@ -28,6 +28,7 @@ import {
 import { Link } from '@/i18n/navigation'
 import { getAppLocale } from '@/i18n/routing'
 import { formatTableDate } from '@/lib/date'
+import { formatTableLanguages } from '@/lib/language'
 import { findPublicTableBySlug } from '@/server/repositories/queries'
 
 type PageProps = { params: Promise<{ locale: string; slug: string }> }
@@ -65,8 +66,9 @@ export default async function TableDetailPage({ params }: PageProps) {
   if (!table) notFound()
   const t = await getTranslations('Table')
   const common = await getTranslations('Common')
+  const appLocale = getAppLocale(locale)
   const isBookable = table.status !== 'roster_locked'
-  const eventJsonLd = createPublicTableEventJsonLd(table, getAppLocale(locale))
+  const eventJsonLd = createPublicTableEventJsonLd(table, appLocale)
 
   return (
     <div>
@@ -76,26 +78,32 @@ export default async function TableDetailPage({ params }: PageProps) {
       />
       <section className="container-shell pt-8 sm:pt-12">
         <Button variant="ghost" className="-ms-4" asChild>
-          <Link href="/tables">← {common('backToTables')}</Link>
+          <Link href="/tables">
+            <span aria-hidden="true">←</span> {common('backToTables')}
+          </Link>
         </Button>
         <div className="mt-5 grid gap-5 lg:grid-cols-[1.25fr_.75fr]">
           <EditorialPhoto
-            label={`${table.householdName} · replaceable household photography`}
+            label={t('householdPhotoLabel', {
+              household: table.householdName,
+            })}
             className="aspect-[16/10] min-h-0 lg:row-span-2"
           />
           <EditorialPhoto
-            label="Replaceable menu photography"
+            label={t('menuPhotoLabel')}
             className="aspect-[16/9] min-h-0"
             tone="sage"
           />
           <div className="grid grid-cols-2 gap-5">
             <EditorialPhoto
-              label="Tea and conversation"
+              label={t('teaPhotoLabel')}
               className="aspect-square min-h-0"
               tone="ink"
             />
             <EditorialPhoto
-              label={table.neighborhood}
+              label={t('neighborhoodPhotoLabel', {
+                neighborhood: table.neighborhood,
+              })}
               className="aspect-square min-h-0"
             />
           </div>
@@ -109,7 +117,7 @@ export default async function TableDetailPage({ params }: PageProps) {
               {table.format === 'shared' ? common('shared') : common('private')}
             </Badge>
             <Badge variant="outline">
-              <ShieldCheck className="size-3" />
+              <ShieldCheck className="size-3" aria-hidden="true" />
               {common('verifiedHost')}
             </Badge>
             {table.guaranteedOperation ? (
@@ -125,19 +133,22 @@ export default async function TableDetailPage({ params }: PageProps) {
           </p>
           <div className="border-border mt-9 grid gap-4 border-y py-6 text-sm sm:grid-cols-2">
             <span className="flex items-center gap-3">
-              <CalendarDays className="text-primary size-4" />
+              <CalendarDays
+                className="text-primary size-4"
+                aria-hidden="true"
+              />
               {formatTableDate(table.startsAt, locale)}
             </span>
             <span className="flex items-center gap-3">
-              <MapPin className="text-primary size-4" />
+              <MapPin className="text-primary size-4" aria-hidden="true" />
               {table.neighborhood}
             </span>
             <span className="flex items-center gap-3">
-              <Languages className="text-primary size-4" />
-              {table.languages.join(' · ')}
+              <Languages className="text-primary size-4" aria-hidden="true" />
+              {formatTableLanguages(table.languages, appLocale).join(' · ')}
             </span>
             <span className="flex items-center gap-3">
-              <Users className="text-primary size-4" />
+              <Users className="text-primary size-4" aria-hidden="true" />
               {common('seatsLeft', { count: table.availableSeats })}
             </span>
           </div>
@@ -154,7 +165,7 @@ export default async function TableDetailPage({ params }: PageProps) {
             </section>
             <section className="bg-secondary/75 rounded-3xl border p-7 sm:p-9">
               <div className="flex items-center gap-3">
-                <Coffee className="text-primary size-5" />
+                <Coffee className="text-primary size-5" aria-hidden="true" />
                 <p className="eyebrow">{t('menu')}</p>
               </div>
               <p className="font-heading mt-5 text-3xl leading-snug">
@@ -189,7 +200,10 @@ export default async function TableDetailPage({ params }: PageProps) {
                       key={summary}
                       className="bg-card flex gap-3 rounded-2xl border p-4 text-sm"
                     >
-                      <Users className="text-primary size-4 shrink-0" />
+                      <Users
+                        className="text-primary size-4 shrink-0"
+                        aria-hidden="true"
+                      />
                       {summary}
                     </li>
                   ))}
@@ -226,15 +240,24 @@ export default async function TableDetailPage({ params }: PageProps) {
           <CardContent className="space-y-5">
             <div className="space-y-3 text-sm">
               <p className="flex gap-3">
-                <Check className="text-primary size-4 shrink-0" />
+                <Check
+                  className="text-primary size-4 shrink-0"
+                  aria-hidden="true"
+                />
                 {t('priceIncludes')}
               </p>
               <p className="flex gap-3">
-                <Clock3 className="text-primary size-4 shrink-0" />
+                <Clock3
+                  className="text-primary size-4 shrink-0"
+                  aria-hidden="true"
+                />
                 {formatTableDate(table.startsAt, locale)}
               </p>
               <p className="flex gap-3">
-                <MapPin className="text-primary size-4 shrink-0" />
+                <MapPin
+                  className="text-primary size-4 shrink-0"
+                  aria-hidden="true"
+                />
                 {t('exactAddress')}
               </p>
             </div>
@@ -251,7 +274,7 @@ export default async function TableDetailPage({ params }: PageProps) {
               {isBookable ? (
                 <Link href={`/tables/${table.slug}/book`}>{t('reserve')}</Link>
               ) : (
-                <span>Roster locked</span>
+                <span>{t('rosterLocked')}</span>
               )}
             </Button>
           </CardContent>

@@ -25,6 +25,7 @@
     "demoMode": "Fictional demo data · no remote services connected",
     "paymentsDisabled": "Payments are not yet enabled",
     "language": "Language",
+    "homeLabel": "Sofra home",
     "productWorkspace": "Product workspace",
     "workspaceNavigation": "{workspace} navigation",
     "phaseOneFoundation": "Phase 1 · Private development foundation",
@@ -52,7 +53,12 @@
     "tables": "Find a table",
     "how": "How Sofra works",
     "host": "Host with Sofra",
-    "menu": "Menu"
+    "menu": "Menu",
+    "menuDescription": "Explore Sofra and switch language.",
+    "closeMenu": "Close menu",
+    "switchLanguage": "Switch language to {language}",
+    "english": "English",
+    "turkish": "Turkish"
   },
   "Home": {
     "eyebrow": "A place at a real table in Istanbul",
@@ -60,6 +66,9 @@
     "intro": "Reserve a seat at a scheduled dinner inside a verified Turkish home. The household chooses the menu, sits with you, and makes time for tea and conversation.",
     "primaryCta": "Find your table",
     "secondaryCta": "See how the evening unfolds",
+    "photoLabel": "A welcoming household dinner table",
+    "teaTitle": "Tea is not the end of dinner.",
+    "teaBody": "It is where the evening opens into conversation.",
     "trustOne": "Verified homes",
     "trustOneText": "Every household and traveler capacity is reviewed by Sofra before publication.",
     "trustTwo": "One complete menu",
@@ -68,9 +77,11 @@
     "trustThreeText": "A verified host joins the dinner or the tea-and-conversation period—always.",
     "nextTitle": "Tables coming up in Istanbul",
     "nextIntro": "Specific homes, specific evenings, and a clear sense of who will be at the table.",
+    "seasonEyebrow": "Istanbul · Demo season",
     "storyEyebrow": "This is how dinner happens in our home.",
     "storyTitle": "Not a performance. Not a restaurant. A household welcoming you in.",
     "storyBody": "Each home has its own rhythm, stories, and idea of a generous table. Sofra protects that difference while setting clear standards for safety, privacy, and hosting.",
+    "rhythmEyebrow": "From welcome to goodbye",
     "rhythmTitle": "The evening has room to breathe",
     "rhythm": [
       "Arrival and welcome",
@@ -86,6 +97,7 @@
     "eyebrow": "A managed marketplace, from invitation to goodbye",
     "title": "What it means to join a Sofra table",
     "intro": "The household creates the evening. Sofra verifies the home, approves the scheduled table, protects private information, and supports both sides.",
+    "photoLabel": "A household welcoming travelers at the door",
     "steps": [
       {
         "title": "Choose a scheduled table",
@@ -136,7 +148,10 @@
     "sharedOption": "Shared",
     "privateOption": "Private",
     "applyFilters": "Apply filters",
+    "filterLegend": "Filter upcoming household tables",
     "demoClusters": "Istanbul demo clusters",
+    "resultsRegion": "Upcoming household tables",
+    "tablePhotoLabel": "Illustration for {title}",
     "emptyTitle": "No tables match those filters",
     "emptyBody": "Try both formats or a wider date window.",
     "clearFilters": "Clear filters"
@@ -157,12 +172,21 @@
     "reserve": "Start your reservation",
     "priceIncludes": "One all-inclusive price. No service fee appears later.",
     "minimumNote": "This shared table needs at least {count} travelers before it is confirmed.",
-    "exactAddress": "Exact arrival details are shared only at the appropriate confirmed-booking stage."
+    "exactAddress": "Exact arrival details are shared only at the appropriate confirmed-booking stage.",
+    "householdPhotoLabel": "Illustration of {household} welcoming travelers",
+    "menuPhotoLabel": "Illustration of a household-selected menu",
+    "teaPhotoLabel": "Illustration of tea and conversation after dinner",
+    "neighborhoodPhotoLabel": "Illustration of {neighborhood}",
+    "mapLabel": "Approximate map of {neighborhood}",
+    "approximateAreaLabel": "Approximate area: {neighborhood}",
+    "configuredMapLabel": "Map integration configured · approximate area only",
+    "rosterLocked": "Guest list locked"
   },
   "HostRecruit": {
     "eyebrow": "Host-created, platform-approved",
     "title": "Share the dinner that already belongs to your home.",
     "intro": "You choose the menu, the story, the dates, and the desired net payout. Sofra verifies the household, certifies capacity, approves every table, and supports safe hosting.",
+    "photoLabel": "A host household preparing to welcome travelers",
     "cta": "Start a host application",
     "controlTitle": "What you shape",
     "control": [
@@ -184,6 +208,22 @@
     ],
     "participationTitle": "Hospitality means joining the table",
     "participationBody": "At least one verified adult host sits with travelers for dinner or the tea-and-conversation period. Hosting is not only cooking and serving."
+  },
+  "HostApplication": {
+    "eyebrow": "Verified email required",
+    "title": "Host application",
+    "intro": "Tell us how dinner happens in your home. This submits for human review; approval is never automatic.",
+    "requiredNote": "All fields are required.",
+    "reviewed": "The local demo validated this application for human review. No durable application, certification, or publication was created.",
+    "unavailable": "No application was submitted. Production applications remain disabled until the protected application-write repository is connected.",
+    "formLabel": "Host application details",
+    "householdName": "Household public name",
+    "neighborhood": "Approximate neighborhood",
+    "story": "Household story",
+    "storyPlaceholder": "This is how dinner happens in our home…",
+    "motivation": "Why would you like to host?",
+    "participation": "Who will participate in dinner or tea?",
+    "submit": "Submit application for review"
   },
   "Auth": {
     "title": "Sign in to Sofra",

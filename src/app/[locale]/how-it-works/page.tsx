@@ -53,7 +53,7 @@ export default async function HowItWorksPage({
           </p>
         </div>
         <EditorialPhoto
-          label="Replaceable welcome-at-the-door photography"
+          label={t('photoLabel')}
           className="aspect-[4/3] min-h-0"
           tone="sage"
         />
@@ -62,7 +62,10 @@ export default async function HowItWorksPage({
         {steps.map((step, index) => (
           <Card key={step.title} className="bg-card/70">
             <CardContent className="p-5">
-              <span className="text-clay font-heading text-3xl">
+              <span
+                className="text-clay font-heading text-3xl"
+                aria-hidden="true"
+              >
                 {String(index + 1).padStart(2, '0')}
               </span>
               <h2 className="mt-8 text-2xl leading-tight font-medium">
@@ -86,7 +89,10 @@ export default async function HowItWorksPage({
                 key={standard}
                 className="bg-card flex gap-3 rounded-2xl border p-4"
               >
-                <CheckCircle2 className="text-primary mt-0.5 size-5 shrink-0" />
+                <CheckCircle2
+                  className="text-primary mt-0.5 size-5 shrink-0"
+                  aria-hidden="true"
+                />
                 <span className="text-sm leading-6">{standard}</span>
               </div>
             ))}

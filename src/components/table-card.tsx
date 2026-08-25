@@ -6,8 +6,10 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import type { PublicHostedTable } from '@/features/hosted-tables/types'
 import { Link } from '@/i18n/navigation'
+import { getAppLocale } from '@/i18n/routing'
 import { formatTableDate } from '@/lib/date'
 import { formatTry } from '@/features/pricing/pricing'
+import { formatTableLanguages } from '@/lib/language'
 
 export async function TableCard({
   table,
@@ -18,12 +20,17 @@ export async function TableCard({
 }) {
   const t = await getTranslations('Common')
   const discovery = await getTranslations('Discovery')
+  const appLocale = getAppLocale(locale)
 
   return (
     <Card className="group overflow-hidden border-0 bg-transparent py-0 shadow-none">
-      <Link href={`/tables/${table.slug}`} className="block">
+      <Link
+        href={`/tables/${table.slug}`}
+        className="block"
+        aria-label={`${t('viewTable')}: ${table.menuTitle}`}
+      >
         <EditorialPhoto
-          label={`${table.neighborhood} · household photography placeholder`}
+          label={discovery('tablePhotoLabel', { title: table.menuTitle })}
           className="aspect-[4/3] min-h-0 transition-transform duration-500 group-hover:scale-[1.015]"
           tone={table.format === 'private' ? 'sage' : 'warm'}
         />
@@ -52,19 +59,19 @@ export async function TableCard({
         </div>
         <div className="text-muted-foreground grid gap-2 text-xs sm:grid-cols-2">
           <span className="flex items-center gap-2">
-            <CalendarDays className="size-3.5" />
+            <CalendarDays className="size-3.5" aria-hidden="true" />
             {formatTableDate(table.startsAt, locale)}
           </span>
           <span className="flex items-center gap-2">
-            <MapPin className="size-3.5" />
+            <MapPin className="size-3.5" aria-hidden="true" />
             {table.neighborhood}
           </span>
           <span className="flex items-center gap-2">
-            <Languages className="size-3.5" />
-            {table.languages.join(' · ')}
+            <Languages className="size-3.5" aria-hidden="true" />
+            {formatTableLanguages(table.languages, appLocale).join(' · ')}
           </span>
           <span className="flex items-center gap-2">
-            <Users className="size-3.5" />
+            <Users className="size-3.5" aria-hidden="true" />
             {t('seatsLeft', { count: table.availableSeats })}
           </span>
         </div>
@@ -80,7 +87,10 @@ export async function TableCard({
               {t('allInclusive')} · {t('perPerson')}
             </p>
           </div>
-          <span className="text-primary text-sm font-semibold">
+          <span
+            className="text-primary text-sm font-semibold"
+            aria-hidden="true"
+          >
             {t('viewTable')} →
           </span>
         </div>

@@ -86,7 +86,7 @@ pnpm test:e2e
 pnpm build
 ```
 
-Playwright starts the app on an isolated test port and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, localized canonical and structured metadata, crawler restrictions, cross-role access rejection, keyboard skip navigation, active portal navigation, English and Turkish protected-form localization, keyboard-readable read-only previews, the guided cross-role journey, roster privacy, post-dinner moderation/privacy boundaries, confidential-report non-echo, payout holds, and partner-owned referral visibility.
+Playwright starts the app on an isolated test port and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, localized canonical and structured metadata, crawler restrictions, cross-role access rejection, keyboard skip navigation, active public and portal navigation, path-preserving language switching, localized mobile navigation, English and Turkish public/protected-form localization, keyboard-readable read-only previews, the guided cross-role journey, roster privacy, post-dinner moderation/privacy boundaries, confidential-report non-echo, payout holds, and partner-owned referral visibility.
 
 ## Architecture
 

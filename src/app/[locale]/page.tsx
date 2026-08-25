@@ -66,7 +66,8 @@ export default async function HomePage({
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Button size="lg" className="h-12 rounded-full px-7" asChild>
               <Link href="/tables">
-                {t('primaryCta')} <ArrowRight className="size-4" />
+                {t('primaryCta')}{' '}
+                <ArrowRight className="size-4" aria-hidden="true" />
               </Link>
             </Button>
             <Button
@@ -80,36 +81,36 @@ export default async function HomePage({
           </div>
           <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-xs font-medium">
             <span className="flex items-center gap-2">
-              <Check className="text-primary size-4" />
+              <Check className="text-primary size-4" aria-hidden="true" />
               {common('verifiedHost')}
             </span>
             <span className="flex items-center gap-2">
-              <Check className="text-primary size-4" />
+              <Check className="text-primary size-4" aria-hidden="true" />
               {common('allInclusive')}
             </span>
             <span className="flex items-center gap-2">
-              <Check className="text-primary size-4" />
+              <Check className="text-primary size-4" aria-hidden="true" />
               {common('approximateArea')}
             </span>
           </div>
         </div>
         <div className="relative pb-12 sm:ps-12">
           <EditorialPhoto
-            label="Replaceable household dinner photography"
+            label={t('photoLabel')}
             className="aspect-[4/5] min-h-[30rem]"
             showLabel={false}
           />
           <Card className="bg-card/95 absolute start-0 bottom-0 max-w-sm shadow-2xl backdrop-blur">
             <CardContent className="flex gap-4 p-5">
               <span className="bg-accent text-accent-foreground flex size-10 shrink-0 items-center justify-center rounded-full">
-                <Coffee className="size-5" />
+                <Coffee className="size-5" aria-hidden="true" />
               </span>
               <div>
                 <p className="font-heading text-xl font-semibold">
-                  Tea is not the end of dinner.
+                  {t('teaTitle')}
                 </p>
                 <p className="text-muted-foreground mt-1 text-xs leading-5">
-                  It is where the evening opens into conversation.
+                  {t('teaBody')}
                 </p>
               </div>
             </CardContent>
@@ -124,7 +125,7 @@ export default async function HomePage({
               key={title}
               className="px-0 py-8 md:px-8 first:md:ps-0 last:md:pe-0"
             >
-              <Icon className="text-primary size-5" />
+              <Icon className="text-primary size-5" aria-hidden="true" />
               <h2 className="mt-4 text-2xl font-medium">{title}</h2>
               <p className="text-muted-foreground mt-2 text-sm leading-6">
                 {body}
@@ -137,7 +138,7 @@ export default async function HomePage({
       <section className="container-shell py-24">
         <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <p className="eyebrow">Istanbul · Demo season</p>
+            <p className="eyebrow">{t('seasonEyebrow')}</p>
             <h2 className="mt-3 text-4xl font-medium tracking-tight sm:text-5xl">
               {t('nextTitle')}
             </h2>
@@ -147,7 +148,7 @@ export default async function HomePage({
           </div>
           <Button variant="outline" className="rounded-full" asChild>
             <Link href="/tables">
-              {common('browseTables')} <ArrowRight />
+              {common('browseTables')} <ArrowRight aria-hidden="true" />
             </Link>
           </Button>
         </div>
@@ -176,7 +177,7 @@ export default async function HomePage({
 
       <section className="container-shell grid gap-12 py-24 lg:grid-cols-[.8fr_1.2fr] lg:items-start">
         <div className="lg:sticky lg:top-32">
-          <p className="eyebrow">From welcome to goodbye</p>
+          <p className="eyebrow">{t('rhythmEyebrow')}</p>
           <h2 className="mt-3 text-4xl font-medium sm:text-5xl">
             {t('rhythmTitle')}
           </h2>
@@ -187,7 +188,10 @@ export default async function HomePage({
               key={step}
               className="border-border grid grid-cols-[3rem_1fr] items-center border-b py-6"
             >
-              <span className="text-clay font-heading text-2xl">
+              <span
+                className="text-clay font-heading text-2xl"
+                aria-hidden="true"
+              >
                 {String(index + 1).padStart(2, '0')}
               </span>
               <span className="text-lg font-medium">{step}</span>

@@ -43,7 +43,7 @@ export default async function LocaleLayout({
           {accessibility('skipToContent')}
         </a>
         <DemoBanner />
-        <SiteHeader locale={locale} />
+        <SiteHeader />
         <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
           {children}
         </main>

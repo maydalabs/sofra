@@ -25,6 +25,7 @@
     "demoMode": "Kurgusal demo verileri · uzaktaki servislere bağlı değil",
     "paymentsDisabled": "Ödemeler henüz etkin değil",
     "language": "Dil",
+    "homeLabel": "Sofra ana sayfası",
     "productWorkspace": "Ürün çalışma alanı",
     "workspaceNavigation": "{workspace} gezinmesi",
     "phaseOneFoundation": "Faz 1 · Özel geliştirme temeli",
@@ -52,7 +53,12 @@
     "tables": "Sofra bul",
     "how": "Sofra nasıl çalışır?",
     "host": "Sofra'da ev sahibi olun",
-    "menu": "Menü"
+    "menu": "Menü",
+    "menuDescription": "Sofra'yı keşfedin ve dili değiştirin.",
+    "closeMenu": "Menüyü kapat",
+    "switchLanguage": "Dili {language} olarak değiştir",
+    "english": "İngilizce",
+    "turkish": "Türkçe"
   },
   "Home": {
     "eyebrow": "İstanbul'da gerçek bir sofrada yeriniz var",
@@ -60,6 +66,9 @@
     "intro": "Doğrulanmış bir Türk evinde planlanmış bir akşam yemeğine yer ayırtın. Menüyü ev halkı seçer, sizinle sofraya oturur; çay ve sohbet için zaman ayırır.",
     "primaryCta": "Sofranızı bulun",
     "secondaryCta": "Akşamın akışını görün",
+    "photoLabel": "Misafirlerini bekleyen sıcak bir ev sofrası",
+    "teaTitle": "Çay, akşam yemeğinin sonu değildir.",
+    "teaBody": "Akşamın sohbete açıldığı yerdir.",
     "trustOne": "Doğrulanmış evler",
     "trustOneText": "Her ev ve misafir kapasitesi yayınlanmadan önce Sofra tarafından incelenir.",
     "trustTwo": "Tek, eksiksiz menü",
@@ -68,9 +77,11 @@
     "trustThreeText": "Doğrulanmış bir ev sahibi akşam yemeğine veya çay ve sohbet bölümüne mutlaka katılır.",
     "nextTitle": "İstanbul'daki yaklaşan sofralar",
     "nextIntro": "Belirli evler, belirli akşamlar ve sofrada kimlerin olacağına dair net bir fikir.",
+    "seasonEyebrow": "İstanbul · Demo sezonu",
     "storyEyebrow": "Bizim evde akşam yemeği böyle yenir.",
     "storyTitle": "Gösteri değil. Restoran değil. Sizi ağırlayan bir ev.",
     "storyBody": "Her evin kendine özgü ritmi, hikâyeleri ve sofra anlayışı vardır. Sofra güvenlik, gizlilik ve ev sahipliği için net standartlar koyarken bu farklılığı korur.",
+    "rhythmEyebrow": "Karşılamadan vedaya",
     "rhythmTitle": "Akşamın aceleye gelmeyen bir akışı var",
     "rhythm": [
       "Karşılama",
@@ -86,6 +97,7 @@
     "eyebrow": "Davet anından vedaya kadar yönetilen bir pazar yeri",
     "title": "Bir Sofra sofrasına katılmak ne demek?",
     "intro": "Akşamı ev halkı oluşturur. Sofra evi doğrular, planlanan sofrayı onaylar, özel bilgileri korur ve her iki tarafı da destekler.",
+    "photoLabel": "Ev halkının misafirlerini kapıda karşılamasını anlatan illüstrasyon",
     "steps": [
       {
         "title": "Planlanmış bir sofra seçin",
@@ -136,7 +148,10 @@
     "sharedOption": "Paylaşımlı",
     "privateOption": "Özel",
     "applyFilters": "Filtreleri uygula",
+    "filterLegend": "Yaklaşan ev sofralarını filtrele",
     "demoClusters": "İstanbul demo bölgeleri",
+    "resultsRegion": "Yaklaşan ev sofraları",
+    "tablePhotoLabel": "{title} için illüstrasyon",
     "emptyTitle": "Bu filtrelere uyan sofra yok",
     "emptyBody": "Her iki sofra türünü veya daha geniş bir tarih aralığını deneyin.",
     "clearFilters": "Filtreleri temizle"
@@ -157,12 +172,21 @@
     "reserve": "Rezervasyonu başlat",
     "priceIncludes": "Her şey dahil tek fiyat. Sonradan hizmet bedeli eklenmez.",
     "minimumNote": "Bu paylaşımlı sofranın kesinleşmesi için en az {count} misafir gerekir.",
-    "exactAddress": "Tam varış bilgileri yalnızca rezervasyonun uygun onay aşamasında paylaşılır."
+    "exactAddress": "Tam varış bilgileri yalnızca rezervasyonun uygun onay aşamasında paylaşılır.",
+    "householdPhotoLabel": "{household} ev halkının misafirlerini karşılamasını anlatan illüstrasyon",
+    "menuPhotoLabel": "Ev halkının seçtiği menüyü anlatan illüstrasyon",
+    "teaPhotoLabel": "Yemek sonrası çay ve sohbeti anlatan illüstrasyon",
+    "neighborhoodPhotoLabel": "{neighborhood} için illüstrasyon",
+    "mapLabel": "{neighborhood} bölgesinin yaklaşık haritası",
+    "approximateAreaLabel": "Yaklaşık bölge: {neighborhood}",
+    "configuredMapLabel": "Harita entegrasyonu hazır · yalnızca yaklaşık bölge",
+    "rosterLocked": "Misafir listesi kilitlendi"
   },
   "HostRecruit": {
     "eyebrow": "Ev sahibi oluşturur, platform onaylar",
     "title": "Zaten evinize ait olan akşam yemeğini paylaşın.",
     "intro": "Menüyü, hikâyeyi, tarihleri ve istediğiniz net kazancı siz seçersiniz. Sofra evi doğrular, kapasiteyi belgelendirir, her sofrayı onaylar ve güvenli ev sahipliğini destekler.",
+    "photoLabel": "Misafirlerini ağırlamaya hazırlanan bir ev halkını anlatan illüstrasyon",
     "cta": "Ev sahibi başvurusunu başlat",
     "controlTitle": "Sizin şekillendirdikleriniz",
     "control": [
@@ -184,6 +208,22 @@
     ],
     "participationTitle": "Ev sahipliği sofraya katılmak demektir",
     "participationBody": "Doğrulanmış en az bir yetişkin ev sahibi, akşam yemeğinde veya çay ve sohbet bölümünde misafirlerle oturur. Ev sahipliği yalnızca pişirmek ve servis yapmak değildir."
+  },
+  "HostApplication": {
+    "eyebrow": "Doğrulanmış e-posta gerekiyor",
+    "title": "Ev sahibi başvurusu",
+    "intro": "Evinizde akşam yemeğinin nasıl yaşandığını anlatın. Başvuru insan incelemesine gönderilir; onay hiçbir zaman otomatik değildir.",
+    "requiredNote": "Tüm alanlar zorunludur.",
+    "reviewed": "Yerel demo bu başvuruyu insan incelemesi için doğruladı. Kalıcı başvuru, belgelendirme veya yayın oluşturulmadı.",
+    "unavailable": "Başvuru gönderilmedi. Korumalı başvuru yazma deposu bağlanana kadar üretim başvuruları devre dışıdır.",
+    "formLabel": "Ev sahibi başvuru bilgileri",
+    "householdName": "Herkese açık ev halkı adı",
+    "neighborhood": "Yaklaşık mahalle",
+    "story": "Ev halkı hikâyesi",
+    "storyPlaceholder": "Akşam yemeği bizim evimizde böyle yaşanır…",
+    "motivation": "Neden ev sahipliği yapmak istiyorsunuz?",
+    "participation": "Akşam yemeğine veya çaya kimler katılacak?",
+    "submit": "Başvuruyu incelemeye gönder"
   },
   "Auth": {
     "title": "Sofra'ya giriş yapın",

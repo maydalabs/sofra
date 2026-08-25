@@ -53,7 +53,7 @@ export default async function HostRecruitmentPage({
           </Button>
         </div>
         <EditorialPhoto
-          label="Replaceable host household photography"
+          label={t('photoLabel')}
           className="aspect-[4/5] min-h-[32rem]"
           tone="sage"
         />
@@ -70,7 +70,10 @@ export default async function HostRecruitmentPage({
               {t('participationBody')}
             </p>
           </div>
-          <HandHeart className="size-16 shrink-0 opacity-75" />
+          <HandHeart
+            className="size-16 shrink-0 opacity-75"
+            aria-hidden="true"
+          />
         </div>
       </section>
     </div>
@@ -90,12 +93,15 @@ function ListCard({
   return (
     <Card className="bg-card/75">
       <CardContent className="p-7 sm:p-9">
-        <Icon className="text-primary size-7" />
+        <Icon className="text-primary size-7" aria-hidden="true" />
         <h2 className="mt-5 text-3xl font-medium">{title}</h2>
         <ul className="mt-6 space-y-3">
           {items.map((item) => (
             <li key={item} className="flex gap-3 text-sm">
-              <Check className="text-primary mt-0.5 size-4 shrink-0" />
+              <Check
+                className="text-primary mt-0.5 size-4 shrink-0"
+                aria-hidden="true"
+              />
               {item}
             </li>
           ))}

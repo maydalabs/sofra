@@ -90,7 +90,10 @@ export default async function TablesPage({
 
       <Card className="bg-card/80 mt-10">
         <CardContent className="p-5">
-          <form className="grid gap-4 md:grid-cols-[1fr_1fr_1fr_auto] md:items-end">
+          <form
+            className="grid gap-4 md:grid-cols-[1fr_1fr_1fr_auto] md:items-end"
+            aria-label={t('filterLegend')}
+          >
             <div className="space-y-2">
               <Label htmlFor="date-filter">{t('date')}</Label>
               <Select name="date" defaultValue={filters.date ?? 'all'}>
@@ -138,31 +141,33 @@ export default async function TablesPage({
         </CardContent>
       </Card>
 
-      <div className="mt-12 flex items-center justify-between border-b pb-4">
-        <h2 className="font-heading text-2xl font-medium">
-          {t('results', { count: tables.length })}
-        </h2>
-        <p className="text-muted-foreground text-xs">{t('demoClusters')}</p>
-      </div>
-      {tables.length ? (
-        <div className="mt-9 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
-          {tables.map((table) => (
-            <TableCard key={table.id} table={table} locale={locale} />
-          ))}
+      <section aria-label={t('resultsRegion')}>
+        <div className="mt-12 flex items-center justify-between border-b pb-4">
+          <h2 className="font-heading text-2xl font-medium">
+            {t('results', { count: tables.length })}
+          </h2>
+          <p className="text-muted-foreground text-xs">{t('demoClusters')}</p>
         </div>
-      ) : (
-        <EmptyState
-          icon={CalendarSearch}
-          title={t('emptyTitle')}
-          description={t('emptyBody')}
-          headingLevel={3}
-          className="bg-card mt-8 rounded-3xl"
-        >
-          <Button variant="outline" asChild>
-            <Link href="/tables">{t('clearFilters')}</Link>
-          </Button>
-        </EmptyState>
-      )}
+        {tables.length ? (
+          <div className="mt-9 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+            {tables.map((table) => (
+              <TableCard key={table.id} table={table} locale={locale} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            icon={CalendarSearch}
+            title={t('emptyTitle')}
+            description={t('emptyBody')}
+            headingLevel={3}
+            className="bg-card mt-8 rounded-3xl"
+          >
+            <Button variant="outline" asChild>
+              <Link href="/tables">{t('clearFilters')}</Link>
+            </Button>
+          </EmptyState>
+        )}
+      </section>
     </div>
   )
 }

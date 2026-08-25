@@ -11,7 +11,7 @@ export async function SiteFooter() {
     <footer className="border-border bg-card mt-20 border-t">
       <div className="container-shell grid gap-10 py-12 md:grid-cols-[1.5fr_1fr_1fr]">
         <div className="max-w-md">
-          <BrandMark />
+          <BrandMark homeLabel={t('homeLabel')} />
           <p className="text-muted-foreground mt-4 text-sm leading-6">
             {t('promise')}
           </p>
@@ -19,8 +19,8 @@ export async function SiteFooter() {
             {t('phaseOneFoundation')}
           </p>
         </div>
-        <div className="flex flex-col gap-3 text-sm">
-          <p className="eyebrow">{t('explore')}</p>
+        <nav className="flex flex-col gap-3 text-sm" aria-label={t('explore')}>
+          <h2 className="eyebrow">{t('explore')}</h2>
           <Link href="/tables" className="hover:text-primary">
             {navigation('tables')}
           </Link>
@@ -30,9 +30,12 @@ export async function SiteFooter() {
           <Link href="/host" className="hover:text-primary">
             {navigation('host')}
           </Link>
-        </div>
-        <div className="flex flex-col gap-3 text-sm">
-          <p className="eyebrow">{t('foundation')}</p>
+        </nav>
+        <nav
+          className="flex flex-col gap-3 text-sm"
+          aria-label={t('foundation')}
+        >
+          <h2 className="eyebrow">{t('foundation')}</h2>
           <Link href="/account" className="hover:text-primary">
             {t('account')}
           </Link>
@@ -42,7 +45,7 @@ export async function SiteFooter() {
           <Link href="/demo" className="hover:text-primary">
             {t('demo')}
           </Link>
-        </div>
+        </nav>
       </div>
     </footer>
   )

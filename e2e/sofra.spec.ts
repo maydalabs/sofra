@@ -369,6 +369,10 @@ test('keyboard users can skip repeated navigation and identify the active portal
   page,
 }) => {
   await page.goto('/en/tables')
+  const publicNavigation = page.getByRole('navigation', { name: 'Menu' })
+  await expect(
+    publicNavigation.getByRole('link', { name: /find a table/i }),
+  ).toHaveAttribute('aria-current', 'page')
   await page.keyboard.press('Tab')
   const skipLink = page.getByRole('link', { name: /skip to main content/i })
   await expect(skipLink).toBeFocused()
@@ -390,7 +394,9 @@ test('keyboard users can skip repeated navigation and identify the active portal
 test('localized shell marks Turkish content and translates shared controls', async ({
   page,
 }) => {
-  await page.goto('/tr/tables')
+  await page.goto('/en/tables')
+  await page.getByRole('link', { name: /switch language to turkish/i }).click()
+  await expect(page).toHaveURL(/\/tr\/tables$/)
   await expect(page.locator('[lang="tr"]')).toBeVisible()
   await expect(
     page.getByRole('button', { name: /filtreleri uygula/i }),
@@ -398,6 +404,47 @@ test('localized shell marks Turkish content and translates shared controls', asy
   await expect(
     page.getByRole('link', { name: /ana içeriğe geç/i }),
   ).toBeAttached()
+})
+
+test('Turkish public details, map context, and host application controls are localized', async ({
+  page,
+}) => {
+  await page.goto('/tr/tables/ayse-levent-sunday-table')
+  await expect(page.getByText('Türkçe · İngilizce')).toBeVisible()
+  await expect(
+    page.getByRole('img', {
+      name: /moda, kadıköy bölgesinin yaklaşık haritası/i,
+    }),
+  ).toBeVisible()
+  await expect(page.getByText(/yaklaşık bölge: moda, kadıköy/i)).toBeVisible()
+  await expect(page.locator('body')).not.toContainText('Replaceable')
+
+  await page.goto('/tr/host/apply')
+  await expect(page).toHaveTitle(/Ev sahibi başvurusu · Sofra/)
+  await expect(page.getByLabel(/herkese açık ev halkı adı/i)).toBeVisible()
+  await expect(page.getByLabel(/neden ev sahipliği yapmak/i)).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: /başvuruyu incelemeye gönder/i }),
+  ).toBeVisible()
+})
+
+test('mobile navigation exposes localized state and language controls', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/tr/tables')
+  await page.getByRole('button', { name: 'Menü', exact: true }).click()
+
+  const navigation = page.getByRole('navigation', { name: 'Menü' })
+  await expect(
+    navigation.getByRole('link', { name: /sofra bul/i }),
+  ).toHaveAttribute('aria-current', 'page')
+  await expect(
+    page.getByRole('button', { name: /menüyü kapat/i }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: /dili İngilizce olarak değiştir/i }),
+  ).toBeVisible()
 })
 
 test('traveler profile preview is honest, labeled, and read-only', async ({
