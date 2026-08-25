@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LockKeyhole, ReceiptText, ShieldAlert } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -21,7 +21,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { formatTry } from '@/features/pricing/pricing'
 
-import { bookingRequestSchema, type BookingRequestInput } from './schemas'
+import { createBookingRequestSchema, type BookingRequestInput } from './schemas'
 
 interface BookingReview {
   partySize: number
@@ -38,6 +38,7 @@ type BookingActionResult =
         | 'party_too_large'
         | 'booking_closed'
         | 'invalid_request'
+        | 'unexpected_error'
     }
   | {
       status: 'payments_disabled'
@@ -71,8 +72,37 @@ export function BookingForm({
   const t = useTranslations('Booking')
   const common = useTranslations('Common')
   const [result, setResult] = useState<BookingActionResult | null>(null)
+  const maximumParty =
+    table.format === 'shared'
+      ? Math.min(table.maximumSharedPartySize, table.availableSeats)
+      : table.availableSeats
+  const validationSchema = useMemo(
+    () =>
+      createBookingRequestSchema({
+        maximumPartySize: maximumParty,
+        messages: {
+          partySizeNumber: t('validation.partySizeNumber'),
+          partySizeInteger: t('validation.partySizeInteger'),
+          partySizeRange: (maximum) =>
+            t('validation.partySizeRange', { maximum }),
+          primaryName: t('validation.primaryName'),
+          primaryNameTooLong: t('validation.primaryNameTooLong'),
+          email: t('validation.email'),
+          additionalGuestsTooLong: t('validation.additionalGuestsTooLong'),
+          dietaryDisclosureTooLong: t('validation.dietaryDisclosureTooLong'),
+          compatibilityAcknowledgment: t(
+            'validation.compatibilityAcknowledgment',
+          ),
+          tablePolicyAcknowledgment: t('validation.tablePolicyAcknowledgment'),
+          additionalGuestNames: (count) =>
+            t('validation.additionalGuestNames', { count }),
+          dietaryDisclosure: t('validation.dietaryDisclosure'),
+        },
+      }),
+    [maximumParty, t],
+  )
   const form = useForm<BookingRequestInput>({
-    resolver: zodResolver(bookingRequestSchema),
+    resolver: zodResolver(validationSchema),
     defaultValues: {
       partySize: 1,
       partyType: 'solo',
@@ -90,40 +120,58 @@ export function BookingForm({
     control: form.control,
     name: 'dietaryNeeds',
   })
-  const maximumParty =
-    table.format === 'shared'
-      ? Math.min(table.maximumSharedPartySize, table.availableSeats)
-      : table.availableSeats
   const errorMessage = result ? getResultErrorMessage(result.status, t) : null
+  const validationErrorCount = Object.keys(form.formState.errors).length
+
+  const submit = form.handleSubmit(async (values) => {
+    setResult(null)
+    try {
+      setResult(await action(table.slug, values))
+    } catch {
+      setResult({ status: 'unexpected_error' })
+    }
+  })
 
   return (
     <form
-      onSubmit={form.handleSubmit(async (values) =>
-        setResult(await action(table.slug, values)),
-      )}
+      aria-label={t('formLabel')}
+      aria-busy={form.formState.isSubmitting}
+      noValidate
+      onSubmit={submit}
       className="space-y-7"
     >
+      {form.formState.submitCount > 0 && validationErrorCount > 0 ? (
+        <Alert variant="destructive">
+          <AlertTitle>{t('validationTitle')}</AlertTitle>
+          <AlertDescription>
+            {t('validationSummary', { count: validationErrorCount })}
+          </AlertDescription>
+        </Alert>
+      ) : null}
       <div className="grid gap-5 sm:grid-cols-2">
         <FormField
+          id="booking-party-size"
           label={t('partySize')}
           error={form.formState.errors.partySize?.message}
         >
-          <Input
-            aria-label={t('partySize')}
-            type="number"
-            min={1}
-            max={maximumParty}
-            {...form.register('partySize', { valueAsNumber: true })}
-          />
+          {(accessibilityProps) => (
+            <Input
+              {...accessibilityProps}
+              type="number"
+              min={1}
+              max={maximumParty}
+              {...form.register('partySize', { valueAsNumber: true })}
+            />
+          )}
         </FormField>
         <div className="space-y-2">
-          <Label>{t('partyType')}</Label>
+          <Label htmlFor="booking-party-type">{t('partyType')}</Label>
           <Controller
             control={form.control}
             name="partyType"
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger aria-label={t('partyType')}>
+                <SelectTrigger id="booking-party-type">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -147,47 +195,58 @@ export function BookingForm({
           />
         </div>
         <FormField
+          id="booking-primary-name"
           label={t('primaryName')}
           error={form.formState.errors.primaryName?.message}
         >
-          <Input
-            aria-label={t('primaryName')}
-            autoComplete="name"
-            {...form.register('primaryName')}
-          />
+          {(accessibilityProps) => (
+            <Input
+              {...accessibilityProps}
+              autoComplete="name"
+              {...form.register('primaryName')}
+            />
+          )}
         </FormField>
         <FormField
+          id="booking-primary-email"
           label={t('email')}
           error={form.formState.errors.primaryEmail?.message}
         >
-          <Input
-            aria-label={t('email')}
-            type="email"
-            autoComplete="email"
-            {...form.register('primaryEmail')}
-          />
+          {(accessibilityProps) => (
+            <Input
+              {...accessibilityProps}
+              type="email"
+              autoComplete="email"
+              {...form.register('primaryEmail')}
+            />
+          )}
         </FormField>
       </div>
       <FormField
+        id="booking-additional-guests"
         label={t('additionalGuests')}
         error={form.formState.errors.additionalGuests?.message}
       >
-        <Textarea
-          aria-label={t('additionalGuests')}
-          rows={3}
-          placeholder={t('additionalGuestsPlaceholder')}
-          {...form.register('additionalGuests')}
-        />
+        {(accessibilityProps) => (
+          <Textarea
+            {...accessibilityProps}
+            rows={3}
+            placeholder={t('additionalGuestsPlaceholder')}
+            {...form.register('additionalGuests')}
+          />
+        )}
       </FormField>
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label>{t('dietaryNeedQuestion')}</Label>
+          <Label htmlFor="booking-dietary-needs">
+            {t('dietaryNeedQuestion')}
+          </Label>
           <Controller
             control={form.control}
             name="dietaryNeeds"
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger aria-label={t('dietaryNeedQuestion')}>
+                <SelectTrigger id="booking-dietary-needs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -202,23 +261,29 @@ export function BookingForm({
         </div>
         {dietaryNeeds === 'review_required' ? (
           <FormField
+            id="booking-dietary-disclosure"
             label={t('dietary')}
             error={form.formState.errors.dietaryDisclosure?.message}
           >
-            <Textarea
-              aria-label={t('dietary')}
-              rows={4}
-              {...form.register('dietaryDisclosure')}
-            />
+            {(accessibilityProps) => (
+              <Textarea
+                {...accessibilityProps}
+                rows={4}
+                {...form.register('dietaryDisclosure')}
+              />
+            )}
           </FormField>
         ) : null}
         <p className="text-muted-foreground flex gap-2 text-xs leading-5">
-          <LockKeyhole className="mt-0.5 size-3.5 shrink-0" />
+          <LockKeyhole
+            aria-hidden="true"
+            className="mt-0.5 size-3.5 shrink-0"
+          />
           {t('dietaryHelp')}
         </p>
       </div>
       <Alert>
-        <ShieldAlert className="size-4" />
+        <ShieldAlert aria-hidden="true" className="size-4" />
         <AlertTitle>{t('menuFixedTitle')}</AlertTitle>
         <AlertDescription>{t('menuFixedBody')}</AlertDescription>
       </Alert>
@@ -227,6 +292,7 @@ export function BookingForm({
         name="compatibilityAcknowledged"
         render={({ field }) => (
           <CheckField
+            id="booking-compatibility-acknowledgment"
             checked={field.value}
             onCheckedChange={(value) => field.onChange(value === true)}
             label={t('compatibility')}
@@ -239,6 +305,7 @@ export function BookingForm({
         name="tablePolicyAcknowledged"
         render={({ field }) => (
           <CheckField
+            id="booking-policy-acknowledgment"
             checked={field.value}
             onCheckedChange={(value) => field.onChange(value === true)}
             label={t('policy')}
@@ -249,7 +316,7 @@ export function BookingForm({
       <div className="bg-secondary rounded-2xl border p-5">
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-2 text-sm font-medium">
-            <ReceiptText className="size-4" />
+            <ReceiptText aria-hidden="true" className="size-4" />
             {t('summary')}
           </span>
           <span className="font-heading text-3xl font-semibold">
@@ -261,7 +328,11 @@ export function BookingForm({
         </div>
         <div className="text-muted-foreground mt-3 flex justify-between text-xs">
           <span>
-            {formatTry(table.guestPriceKurus)} × {partySize}
+            {formatTry(
+              table.guestPriceKurus,
+              locale === 'tr' ? 'tr-TR' : 'en-US',
+            )}{' '}
+            × {partySize}
           </span>
           <span>{common('allInclusive')}</span>
         </div>
@@ -272,7 +343,7 @@ export function BookingForm({
         className="w-full"
         disabled={form.formState.isSubmitting}
       >
-        {t('continue')}
+        {form.formState.isSubmitting ? t('submitting') : t('continue')}
       </Button>
       {result?.status === 'payments_disabled' ? (
         <Alert>
@@ -349,50 +420,78 @@ function getResultErrorMessage(
     booking_closed: t('errors.bookingClosed'),
     invalid_request: t('errors.invalidRequest'),
     simulated_failure: t('errors.simulatedFailure'),
+    unexpected_error: t('errors.unexpected'),
   }
   return errors[status] ?? null
 }
 
 function FormField({
+  id,
   label,
   error,
   children,
 }: {
+  id: string
   label: string
   error?: string
-  children: React.ReactNode
+  children: (props: {
+    id: string
+    'aria-invalid': true | undefined
+    'aria-describedby': string | undefined
+  }) => ReactNode
 }) {
+  const errorId = `${id}-error`
   return (
     <div className="space-y-2">
-      <Label>{label}</Label>
-      {children}
-      {error ? <p className="text-destructive text-sm">{error}</p> : null}
+      <Label htmlFor={id}>{label}</Label>
+      {children({
+        id,
+        'aria-invalid': error ? true : undefined,
+        'aria-describedby': error ? errorId : undefined,
+      })}
+      {error ? (
+        <p id={errorId} role="alert" className="text-destructive text-sm">
+          {error}
+        </p>
+      ) : null}
     </div>
   )
 }
 
 function CheckField({
+  id,
   checked,
   onCheckedChange,
   label,
   error,
 }: {
+  id: string
   checked: boolean
   onCheckedChange: (value: boolean | 'indeterminate') => void
   label: string
   error?: string
 }) {
+  const errorId = `${id}-error`
   return (
     <div>
-      <label className="flex cursor-pointer items-start gap-3 rounded-2xl border p-4">
+      <div className="flex items-start gap-3 rounded-2xl border p-4">
         <Checkbox
+          id={id}
           checked={checked}
           onCheckedChange={onCheckedChange}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
           className="mt-0.5"
         />
-        <span className="text-sm leading-6">{label}</span>
-      </label>
-      {error ? <p className="text-destructive mt-1 text-sm">{error}</p> : null}
+        <Label htmlFor={id} className="cursor-pointer text-sm leading-6">
+          {label}
+        </Label>
+      </div>
+      {error ? (
+        <p id={errorId} role="alert" className="text-destructive mt-1 text-sm">
+          {error}
+        </p>
+      ) : null}
     </div>
   )
 }

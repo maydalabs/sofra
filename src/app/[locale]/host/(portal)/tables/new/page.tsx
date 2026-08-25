@@ -1,4 +1,9 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { NextIntlClientProvider } from 'next-intl'
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from 'next-intl/server'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,7 +26,10 @@ export default async function NewHostedTablePage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
-  const t = await getTranslations('HostPortal')
+  const [t, messages] = await Promise.all([
+    getTranslations('HostPortal'),
+    getMessages(),
+  ])
   const actor = await requireHostPageActor(locale)
   const certification = await findHostCertification(actor.id)
   const certificationIsActive = isHostCertificationActive(
@@ -42,11 +50,15 @@ export default async function NewHostedTablePage({
       </CardHeader>
       <CardContent>
         {certification && certificationIsActive ? (
-          <CreateTableForm
-            certifiedCapacity={certification.certifiedTravelerCapacity}
-            minimumStartsAt={minimumStartsAt}
-            maximumStartsAt={maximumStartsAt}
-          />
+          <NextIntlClientProvider
+            messages={{ CreateTable: messages.CreateTable }}
+          >
+            <CreateTableForm
+              certifiedCapacity={certification.certifiedTravelerCapacity}
+              minimumStartsAt={minimumStartsAt}
+              maximumStartsAt={maximumStartsAt}
+            />
+          </NextIntlClientProvider>
         ) : (
           <Alert>
             <AlertTitle>{t('certificationUnavailableTitle')}</AlertTitle>

@@ -1,10 +1,11 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useTranslations } from 'next-intl'
+import { useMemo, useState, type ReactNode } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -18,7 +19,10 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { developmentPolicy } from '@/features/policy/config'
 
-import { createHostedTableSchema, type CreateHostedTableInput } from './schemas'
+import {
+  createHostedTableValidationSchema,
+  type CreateHostedTableInput,
+} from './schemas'
 
 function minimumDateTime() {
   const date = new Date()
@@ -43,9 +47,56 @@ export function CreateTableForm({
   minimumStartsAt?: string
   maximumStartsAt?: string
 }) {
+  const t = useTranslations('CreateTable')
   const [result, setResult] = useState<string | null>(null)
+  const validationSchema = useMemo(
+    () =>
+      createHostedTableValidationSchema({
+        messages: {
+          menuTitleMin: t('validation.menuTitleMin'),
+          menuTitleMax: t('validation.menuTitleMax'),
+          menuDescriptionMin: t('validation.menuDescriptionMin'),
+          menuDescriptionMax: t('validation.menuDescriptionMax'),
+          startsAtRequired: t('validation.startsAtRequired'),
+          startsAtInvalid: t('validation.startsAtInvalid'),
+          startsAtTooEarly: (minimumLeadDays) =>
+            t('validation.startsAtTooEarly', { minimumLeadDays }),
+          startsAtTooLate: (maximumPublishingHorizonDays) =>
+            t('validation.startsAtTooLate', {
+              maximumPublishingHorizonDays,
+            }),
+          capacityNumber: t('validation.capacityNumber'),
+          capacityInteger: t('validation.capacityInteger'),
+          capacityRange: (maximum) =>
+            t('validation.capacityRange', { maximum }),
+          minimumGuestCountNumber: t('validation.minimumGuestCountNumber'),
+          minimumGuestCountInteger: t('validation.minimumGuestCountInteger'),
+          minimumGuestCountRange: (maximum) =>
+            t('validation.minimumGuestCountRange', { maximum }),
+          minimumExceedsCapacity: t('validation.minimumExceedsCapacity'),
+          payoutNumber: t('validation.payoutNumber'),
+          payoutInteger: t('validation.payoutInteger'),
+          payoutRange: t('validation.payoutRange'),
+          atmosphereMin: t('validation.atmosphereMin'),
+          atmosphereMax: t('validation.atmosphereMax'),
+          participantsMin: t('validation.participantsMin'),
+          participantsMax: t('validation.participantsMax'),
+          practicalMin: t('validation.practicalMin'),
+          practicalMax: t('validation.practicalMax'),
+        },
+        limits: {
+          certifiedCapacity,
+          minimumStartsAt,
+          maximumStartsAt,
+          minimumLeadDays: developmentPolicy.minimumLeadDays,
+          maximumPublishingHorizonDays:
+            developmentPolicy.maximumPublishingHorizonDays,
+        },
+      }),
+    [certifiedCapacity, maximumStartsAt, minimumStartsAt, t],
+  )
   const form = useForm<CreateHostedTableInput>({
-    resolver: zodResolver(createHostedTableSchema),
+    resolver: zodResolver(validationSchema),
     defaultValues: {
       menuTitle: '',
       menuDescription: '',
@@ -59,165 +110,182 @@ export function CreateTableForm({
       practicalInformation: '',
     },
   })
-  const format = useWatch({ control: form.control, name: 'format' })
-
-  const submit = form.handleSubmit((values) => {
-    const proposedDate = new Date(values.startsAt)
-    const earliest = new Date(minimumStartsAt)
-    if (proposedDate < earliest) {
-      form.setError('startsAt', {
-        message: `Choose a time at least ${developmentPolicy.minimumLeadDays} days away`,
-      })
-      return
-    }
-    const latest = new Date(maximumStartsAt)
-    if (proposedDate > latest) {
-      form.setError('startsAt', {
-        message: `Choose a time within ${developmentPolicy.maximumPublishingHorizonDays} days`,
-      })
-      return
-    }
-    if (values.proposedCapacity > certifiedCapacity) {
-      form.setError('proposedCapacity', {
-        message: `Certified maximum is ${certifiedCapacity}`,
-      })
-      return
-    }
-    if (values.minimumGuestCount > values.proposedCapacity) {
-      form.setError('minimumGuestCount', {
-        message: 'Minimum guest count cannot exceed proposed capacity',
-      })
-      return
-    }
-    setResult(
-      'Draft reviewed locally. No durable table was saved; publication still requires Sofra approval.',
-    )
-  })
+  const validationErrorCount = Object.keys(form.formState.errors).length
+  const submit = form.handleSubmit(
+    () => setResult(t('reviewed')),
+    () => setResult(null),
+  )
 
   return (
-    <form onSubmit={submit} className="space-y-7">
+    <form
+      aria-label={t('formLabel')}
+      aria-busy={form.formState.isSubmitting}
+      noValidate
+      onSubmit={submit}
+      className="space-y-7"
+    >
       <Alert>
         <AlertDescription>
-          Current policy: create at least {developmentPolicy.minimumLeadDays}{' '}
-          days ahead, within {developmentPolicy.maximumPublishingHorizonDays}{' '}
-          days, and no more than your certified capacity of {certifiedCapacity}{' '}
-          travelers.
+          {t('currentPolicy', {
+            minimumLeadDays: developmentPolicy.minimumLeadDays,
+            maximumPublishingHorizonDays:
+              developmentPolicy.maximumPublishingHorizonDays,
+            certifiedCapacity,
+          })}
         </AlertDescription>
       </Alert>
+      {form.formState.submitCount > 0 && validationErrorCount > 0 ? (
+        <Alert variant="destructive">
+          <AlertTitle>{t('validationTitle')}</AlertTitle>
+          <AlertDescription>
+            {t('validationSummary', { count: validationErrorCount })}
+          </AlertDescription>
+        </Alert>
+      ) : null}
       <div className="grid gap-5 sm:grid-cols-2">
         <FormField
-          label="Menu title"
+          id="hosted-table-menu-title"
+          label={t('menuTitle')}
           error={form.formState.errors.menuTitle?.message}
         >
-          <Input aria-label="Menu title" {...form.register('menuTitle')} />
+          {(accessibilityProps) => (
+            <Input {...accessibilityProps} {...form.register('menuTitle')} />
+          )}
         </FormField>
         <FormField
-          label="Date and start time"
+          id="hosted-table-starts-at"
+          label={t('startsAt')}
           error={form.formState.errors.startsAt?.message}
         >
-          <Input
-            aria-label="Date and start time"
-            type="datetime-local"
-            min={minimumStartsAt}
-            max={maximumStartsAt}
-            {...form.register('startsAt')}
-          />
+          {(accessibilityProps) => (
+            <Input
+              {...accessibilityProps}
+              type="datetime-local"
+              min={minimumStartsAt}
+              max={maximumStartsAt}
+              {...form.register('startsAt')}
+            />
+          )}
         </FormField>
         <div className="space-y-2">
-          <Label>Table format</Label>
-          <Select
-            value={format}
-            onValueChange={(value) =>
-              form.setValue('format', value as 'shared' | 'private')
-            }
-          >
-            <SelectTrigger aria-label="Table format">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="shared">Shared table</SelectItem>
-              <SelectItem value="private">Private table</SelectItem>
-            </SelectContent>
-          </Select>
+          <Label htmlFor="hosted-table-format">{t('tableFormat')}</Label>
+          <Controller
+            control={form.control}
+            name="format"
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger id="hosted-table-format">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="shared">{t('shared')}</SelectItem>
+                  <SelectItem value="private">{t('private')}</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
         </div>
         <FormField
-          label="Proposed traveler capacity"
+          id="hosted-table-capacity"
+          label={t('proposedCapacity')}
           error={form.formState.errors.proposedCapacity?.message}
         >
-          <Input
-            aria-label="Proposed traveler capacity"
-            type="number"
-            min={1}
-            max={certifiedCapacity}
-            {...form.register('proposedCapacity', { valueAsNumber: true })}
-          />
+          {(accessibilityProps) => (
+            <Input
+              {...accessibilityProps}
+              type="number"
+              min={1}
+              max={certifiedCapacity}
+              {...form.register('proposedCapacity', { valueAsNumber: true })}
+            />
+          )}
         </FormField>
         <FormField
-          label="Minimum guest count"
+          id="hosted-table-minimum-guests"
+          label={t('minimumGuestCount')}
           error={form.formState.errors.minimumGuestCount?.message}
         >
-          <Input
-            aria-label="Minimum guest count"
-            type="number"
-            min={1}
-            max={certifiedCapacity}
-            {...form.register('minimumGuestCount', { valueAsNumber: true })}
-          />
+          {(accessibilityProps) => (
+            <Input
+              {...accessibilityProps}
+              type="number"
+              min={1}
+              max={certifiedCapacity}
+              {...form.register('minimumGuestCount', { valueAsNumber: true })}
+            />
+          )}
         </FormField>
         <FormField
-          label="Desired net payout per traveler (TRY)"
+          id="hosted-table-payout"
+          label={t('payout')}
           error={form.formState.errors.hostNetPayoutTry?.message}
         >
-          <Input
-            aria-label="Desired net payout per traveler (TRY)"
-            type="number"
-            min={100}
-            step={1}
-            {...form.register('hostNetPayoutTry', { valueAsNumber: true })}
-          />
+          {(accessibilityProps) => (
+            <Input
+              {...accessibilityProps}
+              type="number"
+              min={100}
+              step={1}
+              {...form.register('hostNetPayoutTry', { valueAsNumber: true })}
+            />
+          )}
         </FormField>
       </div>
       <FormField
-        label="Complete household-selected menu"
+        id="hosted-table-menu-description"
+        label={t('menuDescription')}
         error={form.formState.errors.menuDescription?.message}
       >
-        <Textarea
-          aria-label="Complete household-selected menu"
-          rows={6}
-          {...form.register('menuDescription')}
-        />
+        {(accessibilityProps) => (
+          <Textarea
+            {...accessibilityProps}
+            rows={6}
+            {...form.register('menuDescription')}
+          />
+        )}
       </FormField>
       <FormField
-        label="Atmosphere"
+        id="hosted-table-atmosphere"
+        label={t('atmosphere')}
         error={form.formState.errors.atmosphere?.message}
       >
-        <Textarea
-          aria-label="Atmosphere"
-          rows={3}
-          {...form.register('atmosphere')}
-        />
+        {(accessibilityProps) => (
+          <Textarea
+            {...accessibilityProps}
+            rows={3}
+            {...form.register('atmosphere')}
+          />
+        )}
       </FormField>
       <FormField
-        label="Expected household participants"
+        id="hosted-table-participants"
+        label={t('participants')}
         error={form.formState.errors.expectedHouseholdParticipants?.message}
       >
-        <Textarea
-          aria-label="Expected household participants"
-          rows={3}
-          {...form.register('expectedHouseholdParticipants')}
-        />
+        {(accessibilityProps) => (
+          <Textarea
+            {...accessibilityProps}
+            rows={3}
+            {...form.register('expectedHouseholdParticipants')}
+          />
+        )}
       </FormField>
       <FormField
-        label="Practical home information"
+        id="hosted-table-practical-information"
+        label={t('practical')}
         error={form.formState.errors.practicalInformation?.message}
       >
-        <Textarea
-          aria-label="Practical home information"
-          rows={3}
-          {...form.register('practicalInformation')}
-        />
+        {(accessibilityProps) => (
+          <Textarea
+            {...accessibilityProps}
+            rows={3}
+            {...form.register('practicalInformation')}
+          />
+        )}
       </FormField>
-      <Button type="submit">Review private draft</Button>
+      <Button type="submit" disabled={form.formState.isSubmitting}>
+        {form.formState.isSubmitting ? t('reviewing') : t('review')}
+      </Button>
       {result ? (
         <p role="status" className="text-primary text-sm font-medium">
           {result}
@@ -228,19 +296,34 @@ export function CreateTableForm({
 }
 
 function FormField({
+  id,
   label,
   error,
   children,
 }: {
+  id: string
   label: string
   error?: string
-  children: React.ReactNode
+  children: (props: {
+    id: string
+    'aria-invalid': true | undefined
+    'aria-describedby': string | undefined
+  }) => ReactNode
 }) {
+  const errorId = `${id}-error`
   return (
     <div className="space-y-2">
-      <Label>{label}</Label>
-      {children}
-      {error ? <p className="text-destructive text-sm">{error}</p> : null}
+      <Label htmlFor={id}>{label}</Label>
+      {children({
+        id,
+        'aria-invalid': error ? true : undefined,
+        'aria-describedby': error ? errorId : undefined,
+      })}
+      {error ? (
+        <p id={errorId} role="alert" className="text-destructive text-sm">
+          {error}
+        </p>
+      ) : null}
     </div>
   )
 }

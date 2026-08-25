@@ -428,6 +428,40 @@ test('Turkish public details, map context, and host application controls are loc
   ).toBeVisible()
 })
 
+test('Turkish booking and host-draft validation is localized and accessible', async ({
+  page,
+}) => {
+  await page.goto('/tr/tables/ayse-levent-sunday-table/book')
+  await page
+    .getByRole('button', { name: /ödeme kullanılabilirliğine devam et/i })
+    .click()
+
+  await expect(page.getByText('İşaretli alanları kontrol edin')).toBeVisible()
+  const travelerName = page.getByLabel('Ana misafirin adı')
+  await expect(travelerName).toHaveAttribute('aria-invalid', 'true')
+  const travelerErrorId = await travelerName.getAttribute('aria-describedby')
+  expect(travelerErrorId).not.toBeNull()
+  await expect(page.locator(`#${travelerErrorId}`)).toHaveText(
+    'Ana misafirin adını girin.',
+  )
+
+  await choosePersona(page, /continue as certified host/i)
+  await page.goto('/tr/host/tables/new')
+  await page.getByRole('button', { name: 'Özel taslağı incele' }).click()
+
+  await expect(page.getByText('İşaretli alanları kontrol edin')).toBeVisible()
+  const menuTitle = page.getByLabel('Menü başlığı')
+  await expect(menuTitle).toHaveAttribute('aria-invalid', 'true')
+  const menuErrorId = await menuTitle.getAttribute('aria-describedby')
+  expect(menuErrorId).not.toBeNull()
+  await expect(page.locator(`#${menuErrorId}`)).toHaveText(
+    'Ev halkı menüsüne açıklayıcı bir başlık verin.',
+  )
+  await expect(page.locator('body')).not.toContainText(
+    'Give the household menu a clear title',
+  )
+})
+
 test('mobile navigation exposes localized state and language controls', async ({
   page,
 }) => {
