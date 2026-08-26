@@ -1,24 +1,24 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
+import { ApplicationDecisionPanel } from '@/components/admin/application-decision-panel'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { findOperatorHostApplicationById } from '@/server/repositories/operator/queries'
 
 import { requireOperatorPageActor } from '../../authorize'
 
 export default async function HostAssessmentPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>
+  searchParams: Promise<{ decision?: string; error?: string }>
 }) {
   const { locale, id } = await params
   setRequestLocale(locale)
   await requireOperatorPageActor(locale)
   const t = await getTranslations('Admin')
+  const { decision, error } = await searchParams
   const application = await findOperatorHostApplicationById(id)
   if (!application) notFound()
   return (
@@ -70,33 +70,14 @@ export default async function HostAssessmentPage({
         <CardHeader>
           <CardTitle className="text-2xl">{t('assessments')}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Alert>
-            <AlertTitle>{t('assessmentUnavailableTitle')}</AlertTitle>
-            <AlertDescription id="assessment-preview-note">
-              {t('assessmentUnavailableBody')}
-            </AlertDescription>
-          </Alert>
-          <form
-            aria-describedby="assessment-preview-note"
-            className="space-y-4"
-          >
-            <div className="space-y-2">
-              <Label htmlFor="notes">{t('privateAssessmentNotes')}</Label>
-              <Textarea
-                id="notes"
-                rows={6}
-                placeholder={t('assessmentPlaceholder')}
-                readOnly
-              />
-            </div>
-            <Button type="button" className="w-full" disabled>
-              {t('saveAssessmentUnavailable')}
-            </Button>
-            <Button type="button" variant="outline" className="w-full" disabled>
-              {t('certifyUnavailable')}
-            </Button>
-          </form>
+        <CardContent>
+          <ApplicationDecisionPanel
+            locale={locale}
+            applicationId={application.id}
+            status={application.status}
+            outcome={decision}
+            error={error}
+          />
         </CardContent>
       </Card>
     </div>

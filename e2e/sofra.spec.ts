@@ -531,18 +531,31 @@ test('Turkish protected previews localize controls and prevent false writes', as
     page.getByRole('button', { name: /politika düzenleme bağlı değil/i }),
   ).toBeDisabled()
   await expect(page.locator('body')).not.toContainText('Take rate')
+})
 
+test('the Turkish operator decision panel offers all three outcomes', async ({
+  page,
+}) => {
+  // The assessment panel used to be a read-only preview. It is now a real
+  // decision: approving certifies the household and grants the host role.
+  await choosePersona(page, /continue as operator/i)
   await page.goto('/tr/admin/host-applications/demo-application')
-  await expect(page.getByLabel(/özel değerlendirme notları/i)).toHaveAttribute(
-    'readonly',
-    '',
-  )
-  await expect(
-    page.getByRole('button', { name: /değerlendirme kaydı bağlı değil/i }),
-  ).toBeDisabled()
-  await expect(
-    page.getByRole('button', { name: /belgelendirme işlemi bağlı değil/i }),
-  ).toBeDisabled()
+
+  await expect(page.getByLabel(/onaylı misafir kapasitesi/i)).toBeVisible()
+  await expect(page.getByLabel(/gerekçe/i)).toBeVisible()
+
+  for (const label of [
+    /onayla ve sertifikalandır/i,
+    /değişiklik iste/i,
+    /reddet/i,
+  ]) {
+    await expect(page.getByRole('button', { name: label })).toBeEnabled()
+  }
+
+  // The capacity bound is the certification limit, not a cosmetic constraint.
+  const capacity = page.getByLabel(/onaylı misafir kapasitesi/i)
+  await expect(capacity).toHaveAttribute('min', '1')
+  await expect(capacity).toHaveAttribute('max', '12')
 })
 
 test('protected workspaces reject the wrong authenticated role', async ({

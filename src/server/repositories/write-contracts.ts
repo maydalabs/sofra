@@ -197,6 +197,7 @@ export interface OperatorIncidentWriteRecord {
 export type OperatorWriteErrorCode =
   | 'NOT_AUTHORIZED'
   | 'APPLICATION_NOT_DECIDABLE'
+  | 'APPLICATION_HAS_NO_HOUSEHOLD'
   | 'TABLE_NOT_REVIEWABLE'
   | 'PAYOUT_NOT_FOUND'
   | 'INCIDENT_NOT_FOUND'

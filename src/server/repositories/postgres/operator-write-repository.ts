@@ -22,6 +22,7 @@ type IncidentRow = Database['public']['Tables']['safety_incidents']['Row']
 const errorCodesBySqlState: Record<string, OperatorWriteErrorCode> = {
   SF003: 'BOOKING_CUTOFF_PASSED',
   SF012: 'NO_ACTIVE_CERTIFICATION',
+  SF017: 'APPLICATION_HAS_NO_HOUSEHOLD',
   SF020: 'NOT_AUTHORIZED',
   SF021: 'APPLICATION_NOT_DECIDABLE',
   SF022: 'TABLE_NOT_REVIEWABLE',

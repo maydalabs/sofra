@@ -1,6 +1,7 @@
 import { CircleDollarSign, ShieldAlert } from 'lucide-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
+import { PayoutControls } from '@/components/admin/payout-controls'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,13 +14,17 @@ import { requireOperatorPageActor } from '../authorize'
 
 export default async function PayoutQueuePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>
+  searchParams: Promise<{ held?: string; released?: string; error?: string }>
 }) {
   const { locale } = await params
+  const { held, released, error } = await searchParams
   setRequestLocale(locale)
   await requireOperatorPageActor(locale)
   const t = await getTranslations('Payouts')
+  const admin = await getTranslations('Admin')
   const payouts = await listOperatorPayouts()
 
   return (
@@ -30,44 +35,69 @@ export default async function PayoutQueuePage({
           <p className="text-muted-foreground text-sm">{t('intro')}</p>
         </CardHeader>
         <CardContent className="space-y-4">
+          {held === '1' ? (
+            <Alert role="status">
+              <AlertDescription>{admin('payoutHeldNotice')}</AlertDescription>
+            </Alert>
+          ) : null}
+          {released === '1' ? (
+            <Alert role="status">
+              <AlertDescription>
+                {admin('payoutReleasedNotice')}
+              </AlertDescription>
+            </Alert>
+          ) : null}
+          {error ? (
+            <Alert variant="destructive" role="alert">
+              <AlertDescription>
+                {error === 'open_incident_blocks_payout'
+                  ? admin('payoutBlockedNotice')
+                  : admin('actionFailed')}
+              </AlertDescription>
+            </Alert>
+          ) : null}
           {payouts.map((payout) => (
-            <div
-              key={payout.id}
-              className="grid gap-5 rounded-2xl border p-5 lg:grid-cols-[1fr_auto] lg:items-center"
-            >
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-heading text-2xl font-semibold">
-                    {payout.tableLabel}
+            <div key={payout.id} className="rounded-2xl border p-5">
+              <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="font-heading text-2xl font-semibold">
+                      {payout.tableLabel}
+                    </p>
+                    <Badge
+                      variant={
+                        payout.status === 'held' ? 'destructive' : 'secondary'
+                      }
+                    >
+                      {t(`statuses.${payout.status}`)}
+                    </Badge>
+                  </div>
+                  <p className="text-muted-foreground mt-1 font-mono text-xs">
+                    {payout.id}
                   </p>
-                  <Badge
-                    variant={
-                      payout.status === 'held' ? 'destructive' : 'secondary'
-                    }
-                  >
-                    {t(`statuses.${payout.status}`)}
-                  </Badge>
+                  {payout.holdReason ? (
+                    <p className="text-muted-foreground mt-3 text-sm">
+                      {payout.holdReason}
+                    </p>
+                  ) : null}
                 </div>
-                <p className="text-muted-foreground mt-1 font-mono text-xs">
-                  {payout.id}
-                </p>
-                {payout.holdReason ? (
-                  <p className="text-muted-foreground mt-3 text-sm">
-                    {payout.holdReason}
+                <div className="lg:text-right">
+                  <p className="font-heading text-3xl font-semibold">
+                    {formatTry(
+                      payout.hostPayoutKurus,
+                      locale === 'tr' ? 'tr-TR' : 'en-US',
+                    )}
                   </p>
-                ) : null}
+                  <p className="text-muted-foreground mt-1 text-xs">
+                    {t('hostNet')}
+                  </p>
+                </div>
               </div>
-              <div className="lg:text-right">
-                <p className="font-heading text-3xl font-semibold">
-                  {formatTry(
-                    payout.hostPayoutKurus,
-                    locale === 'tr' ? 'tr-TR' : 'en-US',
-                  )}
-                </p>
-                <p className="text-muted-foreground mt-1 text-xs">
-                  {t('hostNet')}
-                </p>
-              </div>
+              <PayoutControls
+                locale={locale}
+                payoutId={payout.id}
+                status={payout.status}
+              />
             </div>
           ))}
         </CardContent>

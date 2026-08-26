@@ -1,7 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 
-import { approveTableAction, requestTableChangesAction } from '../../actions'
+import {
+  approveTableAction,
+  publishTableAction,
+  requestTableChangesAction,
+} from '../../actions'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -130,6 +134,23 @@ export default async function AdminTableDetailPage({
             >
               {t('requestChanges')}
             </Button>
+          </form>
+          {/* Publication is separate from approval: approving says the table
+              meets the standard, publishing is what makes it bookable. */}
+          <form action={publishTableAction} className="space-y-2">
+            <input type="hidden" name="tableId" value={table.id} />
+            <input type="hidden" name="locale" value={locale} />
+            <Button
+              variant="secondary"
+              className="w-full"
+              disabled={table.status !== 'approved'}
+              aria-describedby="publish-help"
+            >
+              {t('publish')}
+            </Button>
+            <p id="publish-help" className="text-muted-foreground text-xs">
+              {t('publishHelp')}
+            </p>
           </form>
           <p className="text-muted-foreground text-xs leading-5">
             {t('actionAuditNote')}
