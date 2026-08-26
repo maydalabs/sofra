@@ -8,8 +8,8 @@ export async function NeighborhoodMap({ table }: { table: PublicHostedTable }) {
   const t = await getTranslations('Table')
   const map = getPublicMapModel({
     neighborhood: table.neighborhood,
-    approximateLatitude: table.publicCoordinate.latitude,
-    approximateLongitude: table.publicCoordinate.longitude,
+    approximateLatitude: table.publicCoordinate?.latitude ?? null,
+    approximateLongitude: table.publicCoordinate?.longitude ?? null,
   })
 
   return (

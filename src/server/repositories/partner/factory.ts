@@ -9,17 +9,17 @@ import {
   assertHasAnyRole,
   AuthorizationError,
 } from '@/server/authorization/roles'
-import { createSupabaseServerClient } from '@/server/database/supabase-server'
+import { getDatabase } from '@/server/database/client'
 import { RepositoryUnavailableError } from '@/server/repositories/errors'
 
 import { DemoSofraPartnerReadRepository } from './demo-repository'
-import { SupabasePartnerReadGateway } from './supabase/gateway'
-import { SupabaseSofraPartnerReadRepository } from './supabase/repository'
+import { PostgresPartnerReadGateway } from './postgres/gateway'
+import { PostgresSofraPartnerReadRepository } from './postgres/repository'
 
 interface PartnerRepositoryDependencies {
   getActor?: () => Promise<Actor | null>
   isDemo?: () => boolean
-  createServerClient?: typeof createSupabaseServerClient
+  getSql?: typeof getDatabase
 }
 
 export async function getPartnerSofraReadRepository(
@@ -35,17 +35,15 @@ export async function getPartnerSofraReadRepository(
     return new DemoSofraPartnerReadRepository(actor)
   }
 
-  const client = await (
-    dependencies.createServerClient ?? createSupabaseServerClient
-  )()
-  if (!client) {
+  const sql = (dependencies.getSql ?? getDatabase)()
+  if (!sql) {
     throw new RepositoryUnavailableError(
-      'Partner data access requires configured Supabase credentials',
+      'Partner data access requires a configured DATABASE_URL',
     )
   }
 
-  return new SupabaseSofraPartnerReadRepository(
-    new SupabasePartnerReadGateway(client),
+  return new PostgresSofraPartnerReadRepository(
+    new PostgresPartnerReadGateway(sql, actor.id),
     actor,
   )
 }

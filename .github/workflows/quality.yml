@@ -1,0 +1,86 @@
+name: Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+
+    # Integration tests run against a real PostgreSQL, matching the version Neon
+    # serves. Running them against a mock would defeat their purpose: they exist
+    # to catch what only a real database reveals.
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: sofra
+          POSTGRES_PASSWORD: sofra_local_dev
+          POSTGRES_DB: sofra
+        ports:
+          - 54329:5432
+        options: >-
+          --health-cmd "pg_isready -U sofra"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgres://sofra:sofra_local_dev@127.0.0.1:54329/sofra
+      BETTER_AUTH_SECRET: ci-only-not-a-real-secret
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      SOFRA_DEMO_MODE: 'false'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Apply migrations and fixtures
+        run: |
+          node db/migrate.mjs --reset
+          node db/fixtures.mjs
+
+      - name: Check generated types match the schema
+        run: |
+          node db/generate-types.mjs
+          pnpm exec prettier --write src/server/database/database.types.ts
+          git diff --exit-code src/server/database/database.types.ts \
+            || (echo "::error::database.types.ts is stale. Run 'pnpm db:types' and commit." && exit 1)
+
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm test:integration
+      - run: pnpm build
+
+      - name: Install Playwright
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Browser journeys
+        run: pnpm test:e2e
+        env:
+          SOFRA_DEMO_MODE: 'true'
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

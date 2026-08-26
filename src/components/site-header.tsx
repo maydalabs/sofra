@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 
+import { AccountControl } from '@/components/account-control'
 import { BrandMark } from '@/components/brand-mark'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { MobileNavigation } from '@/components/mobile-navigation'
@@ -17,9 +18,7 @@ export async function SiteHeader() {
         <PublicNavigation className="hidden items-center gap-7 md:flex" />
         <div className="hidden items-center gap-2 md:flex">
           <LocaleSwitcher compact />
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/sign-in">{common('signIn')}</Link>
-          </Button>
+          <AccountControl />
           <Button size="sm" asChild>
             <Link href="/tables">{common('browseTables')}</Link>
           </Button>

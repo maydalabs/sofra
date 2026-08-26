@@ -30,7 +30,8 @@
     "workspaceNavigation": "{workspace} navigation",
     "phaseOneFoundation": "Phase 1 · Private development foundation",
     "explore": "Explore",
-    "foundation": "Foundation"
+    "foundation": "Foundation",
+    "signOut": "Sign out"
   },
   "Accessibility": {
     "skipToContent": "Skip to main content"
@@ -232,7 +233,9 @@
     "submit": "Email me a sign-in link",
     "demoNote": "Remote authentication is not connected in demo mode. Use the demo personas to explore protected foundations.",
     "verifyTitle": "Check your email",
-    "verifyBody": "Open the link we sent to finish signing in. You can close this page after the link opens."
+    "verifyBody": "Open the link we sent to finish signing in. You can close this page after the link opens.",
+    "errorInvalidEmail": "Enter a valid email address.",
+    "errorTooManyRequests": "Too many sign-in links requested. Wait a few minutes and try again."
   },
   "Account": {
     "title": "Your Sofra account",
@@ -573,7 +576,8 @@
       "bookingClosed": "The booking cutoff for this table has passed.",
       "invalidRequest": "Review the party and acknowledgment fields before continuing.",
       "simulatedFailure": "The local payment simulation did not authorize this request.",
-      "unexpected": "Something interrupted the reservation check. Your details were not saved; please try again."
+      "unexpected": "Something interrupted the reservation check. Your details were not saved; please try again.",
+      "seatsUnavailable": "These seats were taken while you were booking. Choose another table or a smaller party."
     },
     "validation": {
       "partySizeNumber": "Enter a party size.",
@@ -595,7 +599,9 @@
     "reviewCompatibility": "Menu compatibility",
     "reviewCompatibilityPending": "Private review required",
     "reviewCompatibilityNotRequired": "No review required",
-    "reviewPayment": "All-inclusive total"
+    "reviewPayment": "All-inclusive total",
+    "reservedTitle": "Your seat is held",
+    "reservedBody": "The seat is reserved under your account and the host can see it. Payment is not enabled yet, so nothing has been charged and no card details were collected. We will contact you before the dinner about how payment will work."
   },
   "CreateTable": {
     "formLabel": "Private household table draft",

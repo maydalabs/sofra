@@ -1,0 +1,189 @@
+import 'server-only'
+
+import type { SofraDatabase } from '@/server/database/client'
+import type { Database, IncidentStatus } from '@/server/database/database.types'
+import {
+  OperatorWriteError,
+  type DecideHostApplicationInput,
+  type OperatorApplicationRecord,
+  type OperatorIncidentWriteRecord,
+  type OperatorPayoutWriteRecord,
+  type OperatorTableWriteRecord,
+  type OperatorWriteErrorCode,
+  type ReviewHostedTableInput,
+  type SofraOperatorWriteRepository,
+} from '../write-contracts'
+
+type ApplicationRow = Database['public']['Tables']['host_applications']['Row']
+type HostedTableRow = Database['public']['Tables']['hosted_tables']['Row']
+type PayoutRow = Database['public']['Tables']['payout_records']['Row']
+type IncidentRow = Database['public']['Tables']['safety_incidents']['Row']
+
+const errorCodesBySqlState: Record<string, OperatorWriteErrorCode> = {
+  SF003: 'BOOKING_CUTOFF_PASSED',
+  SF012: 'NO_ACTIVE_CERTIFICATION',
+  SF020: 'NOT_AUTHORIZED',
+  SF021: 'APPLICATION_NOT_DECIDABLE',
+  SF022: 'TABLE_NOT_REVIEWABLE',
+  SF023: 'PAYOUT_NOT_FOUND',
+  SF024: 'INCIDENT_NOT_FOUND',
+  SF025: 'INVALID_TRANSITION',
+  SF026: 'OPEN_INCIDENT_BLOCKS_PAYOUT',
+}
+
+function toOperatorError(error: unknown): OperatorWriteError {
+  const sqlState =
+    typeof error === 'object' && error !== null && 'code' in error
+      ? String((error as { code: unknown }).code)
+      : ''
+  const code = errorCodesBySqlState[sqlState]
+  if (!code) throw error
+  return new OperatorWriteError(
+    code,
+    error instanceof Error ? error.message : String(error),
+  )
+}
+
+/**
+ * Operator mutations act on records belonging to other people, so the role is
+ * checked twice: once by the repository factory before this class is built, and
+ * again inside every SQL function.
+ */
+export class PostgresSofraOperatorWriteRepository implements SofraOperatorWriteRepository {
+  constructor(
+    private readonly sql: SofraDatabase,
+    private readonly actorId: string,
+  ) {}
+
+  async decideHostApplication(
+    input: DecideHostApplicationInput,
+  ): Promise<OperatorApplicationRecord> {
+    try {
+      const rows = await this.sql<ApplicationRow[]>`
+        select * from public.decide_host_application(
+          ${this.actorId}::uuid,
+          ${input.applicationId}::uuid,
+          ${input.decision}::text,
+          ${input.reason ?? null}::text,
+          ${input.certifiedCapacity ?? null}::integer
+        )
+      `
+      const row = rows[0]
+      return {
+        id: row.id,
+        status: row.status,
+        householdId: row.household_id,
+        decidedAt: row.decided_at,
+      }
+    } catch (error) {
+      throw toOperatorError(error)
+    }
+  }
+
+  async reviewHostedTable(
+    input: ReviewHostedTableInput,
+  ): Promise<OperatorTableWriteRecord> {
+    try {
+      const rows = await this.sql<HostedTableRow[]>`
+        select * from public.review_hosted_table(
+          ${this.actorId}::uuid,
+          ${input.tableId}::uuid,
+          ${input.decision}::text,
+          ${input.reason ?? null}::text
+        )
+      `
+      return toTable(rows[0])
+    } catch (error) {
+      throw toOperatorError(error)
+    }
+  }
+
+  async publishHostedTable(tableId: string): Promise<OperatorTableWriteRecord> {
+    try {
+      const rows = await this.sql<HostedTableRow[]>`
+        select * from public.publish_hosted_table(
+          ${this.actorId}::uuid, ${tableId}::uuid
+        )
+      `
+      return toTable(rows[0])
+    } catch (error) {
+      throw toOperatorError(error)
+    }
+  }
+
+  async triageIncident(
+    incidentId: string,
+    status: IncidentStatus,
+    reason?: string | null,
+  ): Promise<OperatorIncidentWriteRecord> {
+    try {
+      const rows = await this.sql<IncidentRow[]>`
+        select * from public.triage_incident(
+          ${this.actorId}::uuid,
+          ${incidentId}::uuid,
+          ${status}::public.incident_status,
+          ${reason ?? null}::text
+        )
+      `
+      // The confidential report is deliberately not returned.
+      return {
+        id: rows[0].id,
+        status: rows[0].status,
+        severity: rows[0].severity,
+      }
+    } catch (error) {
+      throw toOperatorError(error)
+    }
+  }
+
+  async holdPayout(
+    payoutId: string,
+    holdReason: string,
+  ): Promise<OperatorPayoutWriteRecord> {
+    try {
+      const rows = await this.sql<PayoutRow[]>`
+        select * from public.hold_payout(
+          ${this.actorId}::uuid, ${payoutId}::uuid, ${holdReason}::text
+        )
+      `
+      return toPayout(rows[0])
+    } catch (error) {
+      throw toOperatorError(error)
+    }
+  }
+
+  async releasePayout(
+    payoutId: string,
+    reason?: string | null,
+  ): Promise<OperatorPayoutWriteRecord> {
+    try {
+      const rows = await this.sql<PayoutRow[]>`
+        select * from public.release_payout(
+          ${this.actorId}::uuid, ${payoutId}::uuid, ${reason ?? null}::text
+        )
+      `
+      return toPayout(rows[0])
+    } catch (error) {
+      throw toOperatorError(error)
+    }
+  }
+}
+
+function toTable(row: HostedTableRow): OperatorTableWriteRecord {
+  return {
+    id: row.id,
+    slug: row.slug,
+    status: row.status,
+    publishedAt: row.published_at,
+  }
+}
+
+function toPayout(row: PayoutRow): OperatorPayoutWriteRecord {
+  return {
+    id: row.id,
+    status: row.status,
+    amountKurus: row.amount_kurus,
+    holdReason: row.hold_reason,
+    releasedAt: row.released_at,
+  }
+}

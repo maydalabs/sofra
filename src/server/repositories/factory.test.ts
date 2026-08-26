@@ -19,7 +19,7 @@ describe('repository factory', () => {
     )
   })
 
-  it('fails closed for protected production reads without Supabase', async () => {
+  it('fails closed for protected production reads without a database', async () => {
     vi.stubEnv('NODE_ENV', 'production')
     vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', '')
     vi.stubEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY', '')

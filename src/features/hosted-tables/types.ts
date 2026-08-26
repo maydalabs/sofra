@@ -30,7 +30,8 @@ export interface PrivateHostedTableRecord {
   startsAt: string
   timezone: string
   neighborhood: string
-  publicCoordinate: { latitude: number; longitude: number }
+  /** Absent until the household's address has verified coordinates. */
+  publicCoordinate: { latitude: number; longitude: number } | null
   privateAddressId: string
   exactAddress: string
   preciseCoordinate: { latitude: number; longitude: number }

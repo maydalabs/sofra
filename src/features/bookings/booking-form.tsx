@@ -41,7 +41,21 @@ type BookingActionResult =
         | 'unexpected_error'
     }
   | {
+      status:
+        | 'table_unavailable'
+        | 'party_too_large'
+        | 'booking_closed'
+        | 'seats_unavailable'
+      review: BookingReview
+    }
+  | {
       status: 'payments_disabled'
+      review: BookingReview
+    }
+  | {
+      // The seat is durably held; payment is a separate, unmade decision.
+      status: 'reserved_payment_pending'
+      bookingId: string
       review: BookingReview
     }
   | {
@@ -351,6 +365,12 @@ export function BookingForm({
           <AlertDescription>{t('disabledBody')}</AlertDescription>
         </Alert>
       ) : null}
+      {result?.status === 'reserved_payment_pending' ? (
+        <Alert>
+          <AlertTitle>{t('reservedTitle')}</AlertTitle>
+          <AlertDescription>{t('reservedBody')}</AlertDescription>
+        </Alert>
+      ) : null}
       {result?.status === 'simulated_success' ? (
         <Alert>
           <AlertTitle>{t('localSuccessTitle')}</AlertTitle>
@@ -418,6 +438,7 @@ function getResultErrorMessage(
     table_unavailable: t('errors.tableUnavailable'),
     party_too_large: t('errors.partyTooLarge'),
     booking_closed: t('errors.bookingClosed'),
+    seats_unavailable: t('errors.seatsUnavailable'),
     invalid_request: t('errors.invalidRequest'),
     simulated_failure: t('errors.simulatedFailure'),
     unexpected_error: t('errors.unexpected'),

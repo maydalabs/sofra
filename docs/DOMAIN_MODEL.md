@@ -2,7 +2,7 @@
 
 ## Identity and authorization
 
-`profiles` extend Supabase Auth identities. `roles` define server-controlled capabilities and `role_assignments` support multiple roles per account. Client-editable profile metadata never grants authorization.
+`profiles` are the domain identity and link to the auth provider's user row through `auth_user_id`, so an auth change touches one column. `roles` define server-controlled capabilities and `role_assignments` support multiple roles per account. Client-editable profile metadata never grants authorization.
 
 ## Households and certification
 

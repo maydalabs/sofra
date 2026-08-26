@@ -11,6 +11,11 @@ import {
   findHostCertification,
   findHostTableById,
 } from '@/server/repositories/queries'
+import {
+  canPersistWrites,
+  getSofraHostWriteRepository,
+} from '@/server/repositories/write-factory'
+import { HostWriteError } from '@/server/repositories/write-contracts'
 import { submitHostedTable } from '@/server/services/hosted-tables'
 import { getServerTimeMilliseconds } from '@/server/time/clock'
 
@@ -37,6 +42,19 @@ export async function submitHostedTableAction(formData: FormData) {
     actorSuspended: certification?.status === 'suspended',
     certificationActive,
   })
+  if (canPersistWrites()) {
+    try {
+      const writes = await getSofraHostWriteRepository(actor.id)
+      await writes.submitHostedTable(table.id)
+    } catch (error) {
+      if (error instanceof HostWriteError) {
+        redirect(`/${locale}/host/tables/${table.id}/edit?submission=failed`)
+      }
+      throw error
+    }
+    redirect(`/${locale}/host/tables/${table.id}/edit?submission=submitted`)
+  }
+
   if (!isDemoMode()) {
     redirect(`/${locale}/host/tables/${table.id}/edit?submission=unavailable`)
   }

@@ -14,7 +14,7 @@ export interface Actor {
   email: string
   emailVerified: boolean
   roles: readonly ApplicationRole[]
-  source: 'supabase' | 'demo'
+  source: 'database' | 'demo'
 }
 
 export class AuthorizationError extends Error {

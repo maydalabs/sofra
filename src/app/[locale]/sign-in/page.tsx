@@ -11,12 +11,22 @@ import { isDemoMode } from '@/server/auth/demo-session'
 
 export default async function SignInPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>
+  searchParams: Promise<{ error?: string }>
 }) {
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('Auth')
+
+  const { error } = await searchParams
+  const errorMessage =
+    error === 'invalid_email'
+      ? t('errorInvalidEmail')
+      : error === 'too_many_requests'
+        ? t('errorTooManyRequests')
+        : null
 
   return (
     <div className="container-shell flex min-h-[70vh] items-center justify-center py-16">
@@ -33,6 +43,11 @@ export default async function SignInPage({
           </p>
         </CardHeader>
         <CardContent>
+          {errorMessage ? (
+            <Alert variant="destructive" className="mb-5" role="alert">
+              <AlertDescription>{errorMessage}</AlertDescription>
+            </Alert>
+          ) : null}
           {isDemoMode() ? (
             <Alert className="mb-5">
               <AlertDescription>{t('demoNote')}</AlertDescription>

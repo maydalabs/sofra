@@ -36,37 +36,37 @@ describe('operator repository factory', () => {
   })
 
   it('rejects a non-operator before privileged client creation', async () => {
-    const createAdminClient = vi.fn(() => null)
+    const getSql = vi.fn(() => null)
 
     await expect(
       getOperatorSofraReadRepository({
         getActor: async () => traveler,
         isDemo: () => false,
-        createAdminClient,
+        getSql,
       }),
     ).rejects.toBeInstanceOf(AuthorizationError)
-    expect(createAdminClient).not.toHaveBeenCalled()
+    expect(getSql).not.toHaveBeenCalled()
   })
 
   it('rejects a missing actor before privileged client creation', async () => {
-    const createAdminClient = vi.fn(() => null)
+    const getSql = vi.fn(() => null)
 
     await expect(
       getOperatorSofraReadRepository({
         getActor: async () => null,
         isDemo: () => false,
-        createAdminClient,
+        getSql,
       }),
     ).rejects.toBeInstanceOf(AuthorizationError)
-    expect(createAdminClient).not.toHaveBeenCalled()
+    expect(getSql).not.toHaveBeenCalled()
   })
 
-  it('fails closed without server-only Supabase credentials', async () => {
+  it('fails closed without a configured database', async () => {
     await expect(
       getOperatorSofraReadRepository({
         getActor: async () => operator,
         isDemo: () => false,
-        createAdminClient: () => null,
+        getSql: () => null,
       }),
     ).rejects.toBeInstanceOf(RepositoryUnavailableError)
   })

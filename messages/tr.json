@@ -30,7 +30,8 @@
     "workspaceNavigation": "{workspace} gezinmesi",
     "phaseOneFoundation": "Faz 1 · Özel geliştirme temeli",
     "explore": "Keşfet",
-    "foundation": "Temel"
+    "foundation": "Temel",
+    "signOut": "Çıkış yap"
   },
   "Accessibility": {
     "skipToContent": "Ana içeriğe geç"
@@ -232,7 +233,9 @@
     "submit": "Giriş bağlantısını gönder",
     "demoNote": "Demo modunda uzaktaki kimlik doğrulama bağlı değildir. Korumalı temelleri incelemek için demo profillerini kullanın.",
     "verifyTitle": "E-postanızı kontrol edin",
-    "verifyBody": "Girişi tamamlamak için gönderdiğimiz bağlantıyı açın. Bağlantı açıldığında bu sayfayı kapatabilirsiniz."
+    "verifyBody": "Girişi tamamlamak için gönderdiğimiz bağlantıyı açın. Bağlantı açıldığında bu sayfayı kapatabilirsiniz.",
+    "errorInvalidEmail": "Geçerli bir e-posta adresi girin.",
+    "errorTooManyRequests": "Çok fazla giriş bağlantısı istendi. Birkaç dakika bekleyip tekrar deneyin."
   },
   "Account": {
     "title": "Sofra hesabınız",
@@ -573,7 +576,8 @@
       "bookingClosed": "Bu sofra için rezervasyon son tarihi geçti.",
       "invalidRequest": "Devam etmeden önce grup ve onay alanlarını kontrol edin.",
       "simulatedFailure": "Yerel ödeme simülasyonu bu talebi yetkilendirmedi.",
-      "unexpected": "Rezervasyon kontrolü beklenmedik şekilde kesildi. Bilgileriniz kaydedilmedi; lütfen tekrar deneyin."
+      "unexpected": "Rezervasyon kontrolü beklenmedik şekilde kesildi. Bilgileriniz kaydedilmedi; lütfen tekrar deneyin.",
+      "seatsUnavailable": "Bu yerler siz rezervasyon yaparken doldu. Başka bir sofra seçin veya kişi sayısını azaltın."
     },
     "validation": {
       "partySizeNumber": "Grup büyüklüğünü girin.",
@@ -595,7 +599,9 @@
     "reviewCompatibility": "Menü uyumluluğu",
     "reviewCompatibilityPending": "Özel inceleme gerekiyor",
     "reviewCompatibilityNotRequired": "İnceleme gerekmiyor",
-    "reviewPayment": "Her şey dahil toplam"
+    "reviewPayment": "Her şey dahil toplam",
+    "reservedTitle": "Yeriniz ayrıldı",
+    "reservedBody": "Yer hesabınıza ayrıldı ve ev sahibi görebiliyor. Ödeme henüz etkin değil; hiçbir tahsilat yapılmadı ve kart bilgisi alınmadı. Yemekten önce ödemenin nasıl işleyeceği konusunda sizinle iletişime geçeceğiz."
   },
   "CreateTable": {
     "formLabel": "Özel ev sofrası taslağı",

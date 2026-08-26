@@ -9,7 +9,7 @@ Browser
   → Next.js Server Components / Server Actions
     → authorization + domain services + audit
       → repository boundary
-        → Supabase PostgreSQL / Auth / Storage
+        → PostgreSQL (Neon deployed / local container) + Better Auth
 ```
 
 In demo mode, public reads use fictional in-repository fixtures. Demo mutations execute domain validation and return safe simulated results without claiming durable production state.
@@ -24,9 +24,9 @@ Post-dinner input uses three distinct server-only intents: moderation-pending pu
 - `src/components`: shared visual building blocks and shadcn-owned components.
 - `src/features`: domain types, policies, schemas, projections, demo repositories, and feature components.
 - `src/server`: authentication, authorization, database clients, service boundaries, adapters, and audit.
-- `src/server/repositories`: actor-bound read contracts, explicit row mappers, and demo/Supabase implementations. Page components depend on these contracts rather than database clients.
-- `supabase/migrations`: normalized schema, views, functions, and RLS policies.
-- `supabase/seed.sql`: fictional development data only.
+- `src/server/repositories`: actor-bound read contracts, explicit row mappers, and demo/PostgreSQL implementations. Page components depend on these contracts rather than database clients.
+- `db/migrations`: normalized schema, views, and functions. Authorization is enforced in the server layer, not by row-level security.
+- `db/seed.sql`: reference data. `db/fixtures.sql`: fictional development data, local targets only.
 
 ## Interface resilience
 
@@ -34,7 +34,7 @@ The localized shell provides a main-content skip target and a content-level lang
 
 ## External adapters
 
-- Supabase: browser/server clients and a demo repository fallback.
+- Database: a single server-only `postgres.js` client and a demo repository fallback.
 - Maps: approximate-neighborhood model; exact address is not accepted by the public adapter.
 - Notifications: Resend when configured, console adapter in development.
 - Analytics: typed PostHog events when configured, otherwise no-op; sensitive fields are unrepresentable in the event contract.
@@ -49,11 +49,11 @@ Cross-user operator reads use a separate `SofraOperatorReadRepository`. Its fact
 
 ## Repository selection
 
-- Anonymous listing reads use `published_hosted_tables` through an anonymous Supabase client when public credentials are configured. Without them, the existing fictional public projection remains available.
+- Anonymous listing reads use `published_hosted_tables` when a database is configured. Without them, the existing fictional public projection remains available.
 - Traveler-owned booking summaries use the authenticated `get_my_booking_summaries()` read model. It filters by `auth.uid()` inside a security-definer function with an empty search path and an explicit safe return shape.
 - Host table reads use the authenticated server client and existing household-owner RLS. The repository maps an allowlist that excludes address IDs, exact addresses, precise coordinates, arrival instructions, and guest-selection data.
 - Host certification reads select only status, validity, and certified capacity for actor-owned households. The create-table interface derives its capacity from that record instead of a UI default.
 - Serving-host rosters use the authenticated `get_my_host_roster(table_id)` read model. It verifies household ownership in SQL and returns only confirmed/completed booking identifiers, party size, lifecycle status, and compatibility outcome. Direct serving-host reads of the wider booking row are not granted.
 - Partner referral summaries use the authenticated `get_my_partner_referral_summary()` read model. It scopes rows through the current profile’s partner-organization membership and returns only organization identity, referral code and landing time, booking stage and party size, plus public table context. It excludes traveler identity, referral metadata, exact location, dietary data, money, commissions, and settlement information. The repository requires `partner_user` before querying.
-- Operator queues use fictional protected records in local demo mode. Outside demo mode they fail closed unless an authorized operator has server-only Supabase service-role configuration. Operator records are separate from public, traveler, and host contracts so confidential incident and audit fields cannot drift into those projections.
-- Protected production reads never fall back to a demo actor. Missing authentication or Supabase configuration fails closed.
+- Operator queues use fictional protected records in local demo mode. Outside demo mode they fail closed unless an authorized operator is present and a database is configured. Operator records are separate from public, traveler, and host contracts so confidential incident and audit fields cannot drift into those projections.
+- Protected production reads never fall back to a demo actor. Missing authentication or database configuration fails closed.

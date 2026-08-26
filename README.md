@@ -4,7 +4,7 @@ Sofra is a Türkiye-first managed marketplace where travelers reserve seats at s
 
 > Be welcomed into a Turkish household and join the table.
 
-This repository is the Phase 1 modular monolith. It includes localized public discovery, demo-safe traveler/host/operator/partner workspaces, a normalized Supabase schema with RLS, server-side domain rules, provider adapters, fictional development data, and automated coverage. It does not contain real payments or connected production services.
+This repository is the Phase 1 modular monolith. It includes localized public discovery, demo-safe traveler/host/operator/partner workspaces, a normalized PostgreSQL schema, server-side domain rules, provider adapters, fictional development data, and automated coverage. It does not contain real payments or connected production services.
 
 ## Project
 
@@ -12,7 +12,9 @@ This repository is the Phase 1 modular monolith. It includes localized public di
 - Runtime: current stable Next.js App Router and React, strict TypeScript
 - Package manager: pnpm (lockfile committed)
 - Styling: Tailwind CSS and owned shadcn/ui component source
-- Data/auth/storage target: local or hosted Supabase PostgreSQL/Auth/Storage
+- Data: PostgreSQL 18 — Neon when deployed, a local Docker container in development
+- Data access: `postgres.js` with raw SQL (no ORM)
+- Auth: Better Auth (emailed sign-in links, no passwords stored)
 - Localization: `next-intl` at `/en` and `/tr`
 
 Product decisions are documented in `docs/PRODUCT_CONSTITUTION.md` and `docs/DECISIONS.md`. Read `AGENTS.md` before making product changes.
@@ -21,10 +23,10 @@ Product decisions are documented in `docs/PRODUCT_CONSTITUTION.md` and `docs/DEC
 
 - Node.js 20 or newer (the current development machine uses Node 25)
 - pnpm 11 or newer
-- Optional for the local database: Docker Desktop and Supabase CLI
+- Docker (Docker Desktop, Colima, or equivalent) for the local database
 - Optional for browser tests: Playwright Chromium (`pnpm exec playwright install chromium`)
 
-Docker and Supabase CLI were not installed on the initial development machine, so the checked-in read-only demo repository is the default.
+Without a configured `DATABASE_URL`, anonymous discovery falls back to the checked-in fictional demo data and authenticated access fails closed.
 
 ## Install and run
 
@@ -32,6 +34,7 @@ Docker and Supabase CLI were not installed on the initial development machine, s
 cd /Users/mehmeteminmayda/Projects/sofra
 pnpm install
 cp .env.example .env.local
+pnpm db:up && pnpm db:reset && pnpm db:fixtures
 pnpm dev
 ```
 
@@ -44,35 +47,57 @@ Copy `.env.example` and supply only the services you are using:
 - `NEXT_PUBLIC_APP_URL`
 - `SOFRA_DEMO_MODE`
 - `SOFRA_ALLOW_INDEXING` (safe default: `false`; `true` requires a trusted HTTPS app URL)
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY` (server only)
+- `DATABASE_URL`
+- `DATABASE_URL_UNPOOLED` (migrations only)
+- `BETTER_AUTH_SECRET` (server only)
 - `SOFRA_ENABLE_MOCK_PAYMENTS` (local/test only; rejected in production)
 - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`
 - `RESEND_API_KEY` and `RESEND_FROM_EMAIL`
 - `NEXT_PUBLIC_POSTHOG_KEY` and `NEXT_PUBLIC_POSTHOG_HOST`
 - `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN`
 
-Never commit `.env.local`. The service-role key is never imported from a client module.
+Never commit `.env.local` or `.env.neon`. The database client is server-only and is never imported from a client module.
 
-## Local Supabase
-
-When Docker and Supabase CLI are available:
+## Database
 
 ```bash
-pnpm db:start
-pnpm db:reset
-pnpm db:types
+pnpm db:up          # start the local PostgreSQL 18 container
+pnpm db:migrate     # apply pending migrations
+pnpm db:reset       # drop, re-apply every migration, re-seed reference data
+pnpm db:fixtures    # load fictional development data (refuses non-local targets)
+pnpm db:types       # regenerate database.types.ts from the live schema
+pnpm db:migrate:neon # apply migrations to the deployed database
 ```
 
-- Foundation migration: `supabase/migrations/202608030001_initial_foundation.sql`
-- Authenticated read-model migration: `supabase/migrations/202608240001_repository_read_models.sql`
-- Host operations read-model migration: `supabase/migrations/202608240002_host_operations_read_models.sql`
-- Partner referral read-model migration: `supabase/migrations/202608240003_partner_referral_read_models.sql`
-- Fictional seed: `supabase/seed.sql`
-- Generated-shape fallback types: `src/server/database/database.types.ts`
+Migrations are plain `.sql` files in `db/migrations`, applied in filename order,
+each in its own transaction, tracked in `public.schema_migrations`. The runner is
+`db/migrate.mjs`; there is no vendor CLI to install.
 
-`db:types` regenerates types from the local database. The SQL seed contains no real people or real private addresses. The TypeScript demo fixture materializes the same product states relative to the current date so public and portal pages remain useful without Supabase.
+`.env.local` points at the local container so `pnpm dev` can never reach a
+deployed database. Deployed credentials live in a separate, gitignored
+`.env.neon` read only by `db:migrate:neon`.
+
+- `db/migrations/0001_auth.sql` — Better Auth tables (generated by its CLI)
+- `db/migrations/0002_foundation.sql` — enums, tables, constraints, indexes
+- `db/migrations/0003_functions.sql` — triggers, public projection, read models
+- `db/migrations/0004_bookings_write.sql` — transactional booking and cancellation
+- `db/seed.sql` — reference data (roles, pricing policy); safe for any environment
+- `db/fixtures.sql` — fictional development data; local targets only
+- `src/server/database/database.types.ts` — generated, do not hand-edit
+
+Neither the seed nor the fixtures contain real people or real private addresses.
+
+## Deployment
+
+See `docs/DEPLOYMENT.md`. In short: apply migrations to the deployed database
+_before_ pushing the code that depends on them, then confirm with
+`/api/health`.
+
+```bash
+pnpm db:migrate:neon
+git push origin main
+curl https://YOUR-DOMAIN/api/health
+```
 
 ## Quality commands
 
@@ -81,7 +106,8 @@ pnpm format
 pnpm format:check
 pnpm lint
 pnpm typecheck
-pnpm test
+pnpm test              # unit tests, no database required
+pnpm test:integration  # runs against the local database
 pnpm test:e2e
 pnpm build
 ```
@@ -92,10 +118,10 @@ Playwright starts the app on an isolated test port and covers anonymous discover
 
 - `src/app/[locale]`: localized public and role-specific routes
 - `src/features`: pricing, policy, scheduled tables, bookings, dietary privacy, partner referral projections, and payout rules
-- `src/server`: auth, authorization, Supabase clients, services, payments, maps, notifications, analytics, monitoring, and audit
-- `src/server/repositories`: typed public, traveler, host, partner, and protected operator read contracts with demo and Supabase implementations
+- `src/server`: auth, authorization, the database client, services, payments, maps, notifications, analytics, monitoring, and audit
+- `src/server/repositories`: typed public, traveler, host, partner, and protected operator read contracts with demo and PostgreSQL implementations
 - `messages`: English and Turkish interface messages
-- `supabase`: local configuration, SQL migration, RLS, public-safe view, and fictional seed
+- `db`: SQL migrations, reference seed, development fixtures, migration runner, and type generator
 - `docs`: product constitution, decisions, open questions, architecture, domain, states, privacy, and plan
 
 Status changes run through typed services and illegal transitions return domain errors. Public listings use an explicit allowlist projection and `published_hosted_tables`; exact address, precise coordinates, arrival instructions, dietary details, private guest names, assessment notes, and incident content are excluded.
@@ -112,11 +138,11 @@ Shared launch-readiness components provide a keyboard skip link, localized loadi
 
 Protected account, household, address, assessment, pricing, booking, incident, and audit interfaces now localize their operational labels in English and Turkish. Preview-only profile, address, assessment, and policy fields are explicitly read-only and paired with visible explanations; unavailable buttons no longer imply that a durable write can occur.
 
-Booking and private host-table draft forms use shared typed schema factories for browser and server-facing validation. English and Turkish errors are linked to their fields, summarized after submission, and announced to assistive technology. Host scheduling and certified-capacity limits stay in that shared boundary, while the current review remains non-durable until authenticated Supabase write repositories are connected.
+Booking and private host-table draft forms use shared typed schema factories for browser and server-facing validation. English and Turkish errors are linked to their fields, summarized after submission, and announced to assistive technology. Host scheduling and certified-capacity limits stay in that shared boundary, while the current review remains non-durable until the authenticated write repositories are connected.
 
 Public pages provide localized canonical links, language alternates, social metadata, and table-specific structured event data built only from the approved public projection. Independently shared table pages deliberately clear the site-wide social image because no table-specific public image exists. Protected and form routes send crawler-level `noindex` headers, while `robots.txt` and the public sitemap remain closed unless `SOFRA_ALLOW_INDEXING=true` is paired with a trusted HTTPS app URL. Only messages needed by interactive client components are serialized to the browser.
 
-Public, traveler, host, partner, and operator page components covered by the current contracts read through repository queries rather than importing database clients or fictional fixtures. Anonymous discovery uses the public-safe view when Supabase is configured and retains the fictional public fallback otherwise. Protected repositories use local personas only in demo mode and fail closed when production credentials or an authorized actor are absent. Cross-user operator reads use a dedicated server-only repository that checks the actor role before creating a service-role client and exposes purpose-specific records for applications, table reviews, booking operations, incidents, payouts, and audit events.
+Public, traveler, host, partner, and operator page components covered by the current contracts read through repository queries rather than importing database clients or fictional fixtures. Anonymous discovery uses the public-safe view when a database is configured and retains the fictional public fallback otherwise. Protected repositories use local personas only in demo mode and fail closed when production credentials or an authorized actor are absent. Cross-user operator reads use a dedicated server-only repository that checks the actor role before any cross-user query is possible and exposes purpose-specific records for applications, table reviews, booking operations, incidents, payouts, and audit events.
 
 ## Adapters and local fallbacks
 
@@ -130,6 +156,6 @@ Public, traveler, host, partner, and operator page components covered by the cur
 
 - No real payment provider, payout release, tax logic, phone verification, or production identity verification
 - No live chat, native apps, automated host/safety decisions, or AI recommendation system
-- Demo mutations demonstrate validation, authorization, lifecycle, and audit boundaries; durable remote writes require local/hosted Supabase wiring
+- Demo mutations demonstrate validation, authorization, lifecycle, and audit boundaries; most durable writes are not yet wired to the database
 - Google Maps, Resend, PostHog, and Sentry are adapter-ready but optional
 - Final brand, launch neighborhoods, commercial policy, cancellation policy, verification rubric, partner economics, and legal/compliance decisions remain open in `docs/OPEN_QUESTIONS.md`

@@ -25,12 +25,16 @@ These decisions are frozen for Phase 1 unless the product owner explicitly chang
 ## Technical
 
 - One Next.js App Router application, React, strict TypeScript, pnpm, Tailwind CSS, and shadcn/ui.
-- PostgreSQL/Supabase with SQL migrations, generated TypeScript types, Supabase Auth, and Storage.
+- PostgreSQL (Neon in deployed environments, a local container in development)
+  with plain SQL migrations, generated TypeScript types, and Better Auth.
+  Superseded the original Supabase decision on 2026-08-26; object storage remains
+  unchosen and unused.
 - `next-intl`, Zod, React Hook Form, Vitest, Testing Library, and Playwright.
 - Server Components by default, Node.js runtime by default, Server Actions for authenticated same-origin mutations.
-- Supabase, maps, notifications, analytics, monitoring, and payments sit behind adapters.
-- Demo mode is a read-only product fallback when local Supabase is unavailable.
-- No ORM, GraphQL, microservices, monorepo, vector database, or custom payment infrastructure.
+- Database, maps, notifications, analytics, monitoring, and payments sit behind adapters.
+- Demo mode is a read-only product fallback when no database is configured.
+- No ORM, GraphQL, microservices, monorepo, vector database, or custom payment
+  infrastructure. Data access is raw SQL through postgres.js.
 
 ## Development policy defaults
 

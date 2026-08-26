@@ -36,37 +36,37 @@ describe('partner repository factory', () => {
   })
 
   it('rejects a non-partner before creating a database client', async () => {
-    const createServerClient = vi.fn(async () => null)
+    const getSql = vi.fn(() => null)
 
     await expect(
       getPartnerSofraReadRepository({
         getActor: async () => traveler,
         isDemo: () => false,
-        createServerClient,
+        getSql,
       }),
     ).rejects.toBeInstanceOf(AuthorizationError)
-    expect(createServerClient).not.toHaveBeenCalled()
+    expect(getSql).not.toHaveBeenCalled()
   })
 
   it('rejects a missing actor before creating a database client', async () => {
-    const createServerClient = vi.fn(async () => null)
+    const getSql = vi.fn(() => null)
 
     await expect(
       getPartnerSofraReadRepository({
         getActor: async () => null,
         isDemo: () => false,
-        createServerClient,
+        getSql,
       }),
     ).rejects.toBeInstanceOf(AuthorizationError)
-    expect(createServerClient).not.toHaveBeenCalled()
+    expect(getSql).not.toHaveBeenCalled()
   })
 
-  it('fails closed without Supabase credentials', async () => {
+  it('fails closed without a configured database', async () => {
     await expect(
       getPartnerSofraReadRepository({
         getActor: async () => partner,
         isDemo: () => false,
-        createServerClient: async () => null,
+        getSql: () => null,
       }),
     ).rejects.toBeInstanceOf(RepositoryUnavailableError)
   })

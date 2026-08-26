@@ -18,6 +18,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
+    // Integration tests need a live database; they run via
+    // `pnpm test:integration` with vitest.integration.config.ts.
+    exclude: ['src/**/*.integration.test.ts'],
     coverage: {
       reporter: ['text', 'html'],
     },

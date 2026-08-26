@@ -10,6 +10,11 @@ import {
   assertHasAnyRole,
   assertVerifiedEmail,
 } from '@/server/authorization/roles'
+import {
+  canPersistWrites,
+  getSofraHostWriteRepository,
+} from '@/server/repositories/write-factory'
+import { HostWriteError } from '@/server/repositories/write-contracts'
 
 const hostApplicationSchema = z.object({
   householdName: z.string().trim().min(3).max(100),
@@ -32,6 +37,23 @@ export async function submitHostApplicationAction(formData: FormData) {
     motivation: formData.get('motivation'),
     participation: formData.get('participation'),
   })
+  if (canPersistWrites()) {
+    try {
+      const writes = await getSofraHostWriteRepository(actor.id)
+      await writes.submitHostApplication(input)
+    } catch (error) {
+      if (error instanceof HostWriteError) {
+        redirect(
+          `/${locale}/host/apply?application=${
+            error.code === 'APPLICATION_IN_PROGRESS' ? 'in_progress' : 'failed'
+          }`,
+        )
+      }
+      throw error
+    }
+    redirect(`/${locale}/host/apply?application=submitted`)
+  }
+
   const applicationId = 'demo-host-application'
   if (!isDemoMode()) {
     redirect(`/${locale}/host/apply?application=unavailable`)

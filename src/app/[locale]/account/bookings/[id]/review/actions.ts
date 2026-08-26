@@ -10,6 +10,11 @@ import {
   assertVerifiedEmail,
 } from '@/server/authorization/roles'
 import { getAuthenticatedSofraReadRepository } from '@/server/repositories/factory'
+import { PostDinnerWriteError } from '@/server/repositories/write-contracts'
+import {
+  canPersistWrites,
+  getSofraPostDinnerWriteRepository,
+} from '@/server/repositories/write-factory'
 import {
   preparePostDinnerSafetyReport,
   preparePrivateConstructiveFeedback,
@@ -29,6 +34,19 @@ export async function reviewPublicExperienceAction(formData: FormData) {
     },
     context.bookingStatus,
   )
+  if (canPersistWrites()) {
+    await persist(context, (writes) =>
+      writes.submitPublicReview({
+        bookingId: context.bookingId,
+        rating: intent.rating,
+        title: intent.title,
+        body: intent.body,
+      }),
+    )
+    redirect(
+      `/${context.locale}/account/bookings/${context.bookingId}/review?feedback=public_submitted`,
+    )
+  }
   finishLocalReview(context, intent, 'public_reviewed')
 }
 
@@ -38,6 +56,17 @@ export async function reviewPrivateFeedbackAction(formData: FormData) {
     { body: formData.get('body') },
     context.bookingStatus,
   )
+  if (canPersistWrites()) {
+    await persist(context, (writes) =>
+      writes.submitPrivateFeedback({
+        bookingId: context.bookingId,
+        body: intent.body,
+      }),
+    )
+    redirect(
+      `/${context.locale}/account/bookings/${context.bookingId}/review?feedback=private_submitted`,
+    )
+  }
   finishLocalReview(context, intent, 'private_reviewed')
 }
 
@@ -50,6 +79,20 @@ export async function reviewSafetyReportAction(formData: FormData) {
     },
     context.bookingStatus,
   )
+  if (canPersistWrites()) {
+    await persist(context, (writes) =>
+      writes.reportSafetyIncident({
+        bookingId: context.bookingId,
+        severity: intent.severity,
+        confidentialReport: intent.confidentialReport,
+      }),
+    )
+    // The redirect carries no detail of the report -- not even that one of the
+    // three channels was the safety channel beyond this flag.
+    redirect(
+      `/${context.locale}/account/bookings/${context.bookingId}/review?feedback=safety_submitted`,
+    )
+  }
   finishLocalReview(context, intent, 'safety_reviewed')
 }
 
@@ -100,4 +143,27 @@ function finishLocalReview(
   redirect(
     `/${context.locale}/account/bookings/${context.bookingId}/review?feedback=${result}`,
   )
+}
+
+/**
+ * Runs one durable post-dinner write, mapping domain failures onto the flags the
+ * review page renders. Nothing the traveller wrote reaches the URL.
+ */
+async function persist<T>(
+  context: Awaited<ReturnType<typeof getCompletedBookingContext>>,
+  write: (
+    writes: Awaited<ReturnType<typeof getSofraPostDinnerWriteRepository>>,
+  ) => Promise<T>,
+) {
+  try {
+    const writes = await getSofraPostDinnerWriteRepository(context.actorId)
+    return await write(writes)
+  } catch (error) {
+    if (error instanceof PostDinnerWriteError) {
+      redirect(
+        `/${context.locale}/account/bookings/${context.bookingId}/review?feedback=${error.code.toLowerCase()}`,
+      )
+    }
+    throw error
+  }
 }

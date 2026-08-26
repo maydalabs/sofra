@@ -2,7 +2,7 @@
 
 ## Public-safe boundary
 
-Public page HTML, JSON, metadata, analytics, map inputs, storage metadata, and Supabase views must exclude exact addresses, precise coordinates, arrival instructions, identity documents, private assessment notes, dietary data, guest identities, reports, and internal risk information.
+Public page HTML, JSON, metadata, analytics, map inputs, storage metadata, and database views must exclude exact addresses, precise coordinates, arrival instructions, identity documents, private assessment notes, dietary data, guest identities, reports, and internal risk information.
 
 `public.published_hosted_tables` is the intended anonymous-query boundary. Application projections repeat the allowlist so accidental schema expansion does not expand public output.
 
@@ -34,4 +34,4 @@ The operator read repository checks the server-resolved actor before a service-r
 
 ## Secrets and telemetry
 
-Only publishable Supabase, public map, and public analytics identifiers may use `NEXT_PUBLIC_`. Service-role, Resend, Sentry, and payment credentials remain server-only. Typed analytics events contain identifiers and non-sensitive product state only; dietary text, address data, guest names, incident content, and secrets are excluded by contract.
+Only public map and public analytics identifiers may use `NEXT_PUBLIC_`. The database URL, `BETTER_AUTH_SECRET`, Resend, Sentry, and payment credentials remain server-only. Typed analytics events contain identifiers and non-sensitive product state only; dietary text, address data, guest names, incident content, and secrets are excluded by contract.

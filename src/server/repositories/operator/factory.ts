@@ -9,17 +9,17 @@ import {
   assertHasAnyRole,
   AuthorizationError,
 } from '@/server/authorization/roles'
-import { createSupabaseAdminClient } from '@/server/database/supabase-admin'
+import { getDatabase } from '@/server/database/client'
 import { RepositoryUnavailableError } from '@/server/repositories/errors'
 
 import { DemoSofraOperatorReadRepository } from './demo-repository'
-import { SupabaseOperatorReadGateway } from './supabase/gateway'
-import { SupabaseSofraOperatorReadRepository } from './supabase/repository'
+import { PostgresOperatorReadGateway } from './postgres/gateway'
+import { PostgresSofraOperatorReadRepository } from './postgres/repository'
 
 interface OperatorRepositoryDependencies {
   getActor?: () => Promise<Actor | null>
   isDemo?: () => boolean
-  createAdminClient?: typeof createSupabaseAdminClient
+  getSql?: typeof getDatabase
 }
 
 export async function getOperatorSofraReadRepository(
@@ -29,23 +29,24 @@ export async function getOperatorSofraReadRepository(
   const actor = await (dependencies.getActor ?? getCurrentActor)()
   if (!actor) throw new AuthorizationError('Authentication required')
 
-  // This check must happen before service-role credentials are read or a
-  // privileged client is created.
+  // This check must happen before any cross-user query is possible. Operator
+  // reads are not scoped to the actor's own rows, so the role gate here is the
+  // only thing standing between an actor and other people's records.
   assertHasAnyRole(actor, ['operator', 'administrator'])
 
   if ((dependencies.isDemo ?? isDemoMode)()) {
     return new DemoSofraOperatorReadRepository(actor)
   }
 
-  const client = (dependencies.createAdminClient ?? createSupabaseAdminClient)()
-  if (!client) {
+  const sql = (dependencies.getSql ?? getDatabase)()
+  if (!sql) {
     throw new RepositoryUnavailableError(
-      'Operator data access requires configured server-only Supabase credentials',
+      'Operator data access requires a configured DATABASE_URL',
     )
   }
 
-  return new SupabaseSofraOperatorReadRepository(
-    new SupabaseOperatorReadGateway(client),
+  return new PostgresSofraOperatorReadRepository(
+    new PostgresOperatorReadGateway(sql),
     actor,
   )
 }
