@@ -739,7 +739,15 @@
       "pending": "Pending",
       "accepted": "Accepted",
       "declined": "Declined"
-    }
+    },
+    "cancelledFullTitle": "Booking cancelled — full refund due",
+    "cancelledFullBody": "You cancelled before the booking cutoff, so the full amount of {amount} will be returned once payments are live.",
+    "cancelledHalfTitle": "Booking cancelled — partial refund due",
+    "cancelledHalfBody": "You cancelled after the booking cutoff. {amount} will be returned; the household keeps the rest because the dinner was already being prepared.",
+    "cancelledUnpaidTitle": "Booking cancelled",
+    "cancelledUnpaidBody": "Your seats were released. No payment had been collected, so there is nothing to refund.",
+    "cancellationFailedTitle": "Cancellation not possible",
+    "cancellationFailedBody": "This booking can no longer be cancelled from its current state."
   },
   "BookingJourney": {
     "eyebrow": "Booking journey",

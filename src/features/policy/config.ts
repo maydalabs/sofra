@@ -8,6 +8,9 @@ export interface MarketplacePolicy {
   sharedTableMinimumTravelers: number
   maximumSharedBookingPartySize: number
   takeRateBasisPoints: number
+  refundBeforeCutoffBasisPoints: number
+  refundAfterCutoffBasisPoints: number
+  refundNoShowBasisPoints: number
   currency: CurrencyCode
   newHostActiveTableLimit: number
   newHostWeeklyDinnerLimit: number
@@ -21,6 +24,9 @@ export const developmentPolicy: Readonly<MarketplacePolicy> = {
   sharedTableMinimumTravelers: 2,
   maximumSharedBookingPartySize: 2,
   takeRateBasisPoints: 2_500,
+  refundBeforeCutoffBasisPoints: 10_000,
+  refundAfterCutoffBasisPoints: 5_000,
+  refundNoShowBasisPoints: 0,
   currency: 'TRY',
   newHostActiveTableLimit: 2,
   newHostWeeklyDinnerLimit: 2,

@@ -10,7 +10,7 @@ These are unresolved product or production decisions. Development defaults must 
 - Real payment provider
 - Minimum-table guarantee policy
 - Policy for one-traveler parties
-- Final cancellation and refund policy
+- Refund execution mechanics (how the decided percentages are actually paid back — depends on the payment provider)
 - Final host active-table and frequency limits
 - Guest phone or identity verification
 - Final host certification rubric and renewal cadence

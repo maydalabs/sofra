@@ -32,10 +32,16 @@ export default async function BookingDetailPage({
   searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>
-  searchParams: Promise<{ cancellation?: string }>
+  searchParams: Promise<{ cancellation?: string; refund?: string }>
 }) {
   const { locale, id } = await params
   const query = await searchParams
+  // The refund figure rides in the redirect; a tampered value renders as zero
+  // rather than crashing the page.
+  const refundKurus =
+    Number.isSafeInteger(Number(query.refund)) && Number(query.refund) >= 0
+      ? Number(query.refund)
+      : 0
   setRequestLocale(locale)
   const t = await getTranslations('Account')
   const travelerT = await getTranslations('TravelerBooking')
@@ -75,6 +81,44 @@ export default async function BookingDetailPage({
               <AlertTitle>{travelerT('cancellationReviewedTitle')}</AlertTitle>
               <AlertDescription>
                 {travelerT('cancellationReviewedBody')}
+              </AlertDescription>
+            </Alert>
+          ) : null}
+          {query.cancellation === 'cancelled_full' ||
+          query.cancellation === 'cancelled_half' ||
+          query.cancellation === 'cancelled_unpaid' ? (
+            <Alert role="status">
+              <CheckCircle2 className="size-4" />
+              <AlertTitle>
+                {query.cancellation === 'cancelled_full'
+                  ? travelerT('cancelledFullTitle')
+                  : query.cancellation === 'cancelled_half'
+                    ? travelerT('cancelledHalfTitle')
+                    : travelerT('cancelledUnpaidTitle')}
+              </AlertTitle>
+              <AlertDescription>
+                {query.cancellation === 'cancelled_unpaid'
+                  ? travelerT('cancelledUnpaidBody')
+                  : travelerT(
+                      query.cancellation === 'cancelled_full'
+                        ? 'cancelledFullBody'
+                        : 'cancelledHalfBody',
+                      {
+                        amount: formatTry(
+                          refundKurus,
+                          locale === 'tr' ? 'tr-TR' : 'en-US',
+                        ),
+                      },
+                    )}
+              </AlertDescription>
+            </Alert>
+          ) : null}
+          {query.cancellation === 'failed' ? (
+            <Alert variant="destructive" role="alert">
+              <TriangleAlert className="size-4" />
+              <AlertTitle>{travelerT('cancellationFailedTitle')}</AlertTitle>
+              <AlertDescription>
+                {travelerT('cancellationFailedBody')}
               </AlertDescription>
             </Alert>
           ) : null}

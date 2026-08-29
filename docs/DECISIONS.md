@@ -21,6 +21,17 @@ These decisions are frozen for Phase 1 unless the product owner explicitly chang
 - Money is integer kuruş; pricing uses explicit integer rounding.
 - Partner commission is modeled separately and paid from Sofra's fee.
 - Payment provider remains undecided. Only a development/test mock exists in Phase 1.
+- Cancellation and refund policy (decided 2026-08-29): 100% refund before the
+  booking cutoff, 50% after it, nothing for a no-show. A dinner cancelled by
+  the platform always refunds 100%. Of the retained portion on a partial
+  refund, the host is compensated first up to their net; Sofra keeps only the
+  remainder. Percentages are pricing-policy configuration; the structure is
+  the decision. Refund rounding favours the traveller, as pricing rounding
+  favours the host.
+- Crypto payment rails are not a launch option pending legal verification:
+  Türkiye has prohibited crypto as a means of payment since 2021, and the
+  question is delegated to the payment-provider research. At most a
+  post-launch secondary rail, never rail #1.
 
 ## Technical
 

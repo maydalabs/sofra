@@ -10,6 +10,11 @@ import {
   assertVerifiedEmail,
 } from '@/server/authorization/roles'
 import { getAuthenticatedSofraReadRepository } from '@/server/repositories/factory'
+import { BookingWriteError } from '@/server/repositories/write-contracts'
+import {
+  canPersistWrites,
+  getSofraWriteRepository,
+} from '@/server/repositories/write-factory'
 import { prepareBookingCancellation } from '@/server/services/bookings'
 
 export async function reviewBookingCancellationAction(formData: FormData) {
@@ -23,6 +28,33 @@ export async function reviewBookingCancellationAction(formData: FormData) {
   const repository = await getAuthenticatedSofraReadRepository(actor.id)
   const booking = await repository.findTravelerBookingById(bookingId)
   if (!booking) throw new Error('Booking not found for the current traveler')
+
+  if (canPersistWrites()) {
+    let cancelled
+    try {
+      const writes = await getSofraWriteRepository(actor.id)
+      cancelled = await writes.cancelBooking(
+        booking.id,
+        'Cancelled by the traveller',
+      )
+    } catch (error) {
+      if (error instanceof BookingWriteError) {
+        redirect(`/${locale}/account/bookings/${bookingId}?cancellation=failed`)
+      }
+      throw error
+    }
+    // The refund amount is the traveller's own figure; carrying it in the
+    // redirect keeps the read model untouched.
+    const outcome =
+      cancelled.refundDueKurus === 0
+        ? 'cancelled_unpaid'
+        : cancelled.refundDueKurus >= cancelled.guestTotalKurus
+          ? 'cancelled_full'
+          : 'cancelled_half'
+    redirect(
+      `/${locale}/account/bookings/${bookingId}?cancellation=${outcome}&refund=${cancelled.refundDueKurus}`,
+    )
+  }
 
   if (!isDemoMode()) {
     redirect(

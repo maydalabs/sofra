@@ -215,6 +215,8 @@ export interface Database {
           cancellation_reason: string | null
           created_at: string
           updated_at: string
+          refund_due_kurus: number
+          host_compensation_kurus: number
         }
         Insert: {
           id?: string
@@ -240,6 +242,8 @@ export interface Database {
           cancellation_reason?: string | null
           created_at?: string
           updated_at?: string
+          refund_due_kurus?: number
+          host_compensation_kurus?: number
         }
         Update: {
           id?: string
@@ -265,6 +269,8 @@ export interface Database {
           cancellation_reason?: string | null
           created_at?: string
           updated_at?: string
+          refund_due_kurus?: number
+          host_compensation_kurus?: number
         }
       }
       dietary_compatibility_decisions: {
@@ -847,6 +853,8 @@ export interface Database {
           active_until: string | null
           created_by: string | null
           created_at: string
+          refund_before_cutoff_basis_points: number
+          refund_after_cutoff_basis_points: number
         }
         Insert: {
           id?: string
@@ -865,6 +873,8 @@ export interface Database {
           active_until?: string | null
           created_by?: string | null
           created_at?: string
+          refund_before_cutoff_basis_points?: number
+          refund_after_cutoff_basis_points?: number
         }
         Update: {
           id?: string
@@ -883,6 +893,8 @@ export interface Database {
           active_until?: string | null
           created_by?: string | null
           created_at?: string
+          refund_before_cutoff_basis_points?: number
+          refund_after_cutoff_basis_points?: number
         }
       }
       private_constructive_feedback: {

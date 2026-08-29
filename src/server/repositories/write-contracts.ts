@@ -39,6 +39,10 @@ export interface BookingWriteRecord {
   guestTotalKurus: number
   hostNetPayoutKurus: number
   sofraGrossFeeKurus: number
+  /** What the traveller is owed back; zero until money was collected. */
+  refundDueKurus: number
+  /** The host's share of the retained portion on a partial refund. */
+  hostCompensationKurus: number
   currency: 'TRY'
 }
 

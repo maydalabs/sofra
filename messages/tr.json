@@ -739,7 +739,15 @@
       "pending": "Beklemede",
       "accepted": "Kabul edildi",
       "declined": "Reddedildi"
-    }
+    },
+    "cancelledFullTitle": "Rezervasyon iptal edildi — tam iade yapılacak",
+    "cancelledFullBody": "Rezervasyon kesim saatinden önce iptal ettiniz; ödemeler devreye girdiğinde {amount} tutarının tamamı iade edilecek.",
+    "cancelledHalfTitle": "Rezervasyon iptal edildi — kısmi iade yapılacak",
+    "cancelledHalfBody": "Kesim saatinden sonra iptal ettiniz. {amount} iade edilecek; yemek hazırlanmaya başlandığı için kalan tutar hanede kalır.",
+    "cancelledUnpaidTitle": "Rezervasyon iptal edildi",
+    "cancelledUnpaidBody": "Yerleriniz serbest bırakıldı. Henüz ödeme alınmadığı için iade edilecek bir tutar yok.",
+    "cancellationFailedTitle": "İptal edilemedi",
+    "cancellationFailedBody": "Bu rezervasyon mevcut durumundan artık iptal edilemez."
   },
   "BookingJourney": {
     "eyebrow": "Rezervasyon yolculuğu",

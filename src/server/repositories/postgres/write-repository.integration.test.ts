@@ -293,3 +293,109 @@ describe('cancelBooking', () => {
     expect(audit.new_state.status).toBe('cancelled')
   })
 })
+
+describe('refund policy', () => {
+  /** Marks the booking as if a provider had collected the money. */
+  async function markPaid(bookingId: string) {
+    await sql`
+      update public.bookings set payment_status = 'authorized'
+      where id = ${bookingId}::uuid
+    `
+  }
+
+  it('cancelling before the cutoff owes the full amount back', async () => {
+    const tableId = await createTable(4)
+    const booking = await writes.createBooking({
+      tableId,
+      partySize: 2,
+      partyType: 'couple',
+      primaryGuestName: 'Test Traveller',
+      policySnapshot: POLICY,
+    })
+    await markPaid(booking.id)
+
+    const cancelled = await writes.cancelBooking(booking.id, 'plans changed')
+    expect(cancelled.refundDueKurus).toBe(cancelled.guestTotalKurus)
+    // Nothing retained, so the host is not compensated.
+    expect(cancelled.hostCompensationKurus).toBe(0)
+
+    const [row] = await sql`
+      select refund_status from public.bookings where id = ${booking.id}::uuid
+    `
+    expect(row.refund_status).toBe('requested')
+  })
+
+  it('cancelling after the cutoff owes half, host compensated first', async () => {
+    const tableId = await createTable(4)
+    const booking = await writes.createBooking({
+      tableId,
+      partySize: 2,
+      partyType: 'couple',
+      primaryGuestName: 'Test Traveller',
+      policySnapshot: POLICY,
+    })
+    await markPaid(booking.id)
+    // Push the cutoff into the past: the traveller is now cancelling late.
+    await sql`
+      update public.hosted_tables
+      set booking_cutoff_at = now() - interval '1 hour'
+      where id = ${tableId}::uuid
+    `
+
+    const cancelled = await writes.cancelBooking(booking.id, 'too late')
+    // 2 seats at 600.00 guest / 450.00 host net: refund 600.00, retain 600.00.
+    expect(cancelled.guestTotalKurus).toBe(120_000)
+    expect(cancelled.refundDueKurus).toBe(60_000)
+    // Retained 60_000 < host net 90_000: the host takes all of it.
+    expect(cancelled.hostCompensationKurus).toBe(60_000)
+  })
+
+  it('rounds a partial refund in the traveller’s favour', async () => {
+    const tableId = await createTable(4)
+    // An odd guest total: 3 seats at 600.00 = 1,800.00 -- make it odd by
+    // adjusting the stored total after booking.
+    const booking = await writes.createBooking({
+      tableId,
+      partySize: 1,
+      partyType: 'solo',
+      primaryGuestName: 'Test Traveller',
+      policySnapshot: POLICY,
+    })
+    await markPaid(booking.id)
+    await sql`
+      update public.bookings
+      set guest_total_kurus = 60_001,
+          host_net_payout_kurus = 45_001,
+          sofra_gross_fee_kurus = 15_000
+      where id = ${booking.id}::uuid
+    `
+    await sql`
+      update public.hosted_tables
+      set booking_cutoff_at = now() - interval '1 hour'
+      where id = ${tableId}::uuid
+    `
+    const cancelled = await writes.cancelBooking(booking.id, null)
+    // 50% of 60,001 = 30,000.5 -> the traveller gets 30,001, not 30,000.
+    expect(cancelled.refundDueKurus).toBe(30_001)
+    expect(cancelled.hostCompensationKurus).toBe(30_000)
+  })
+
+  it('owes nothing when nothing was collected', async () => {
+    const tableId = await createTable(4)
+    const booking = await writes.createBooking({
+      tableId,
+      partySize: 1,
+      partyType: 'solo',
+      primaryGuestName: 'Test Traveller',
+      policySnapshot: POLICY,
+    })
+    const cancelled = await writes.cancelBooking(booking.id, null)
+    expect(cancelled.refundDueKurus).toBe(0)
+    expect(cancelled.hostCompensationKurus).toBe(0)
+
+    const [row] = await sql`
+      select refund_status from public.bookings where id = ${booking.id}::uuid
+    `
+    expect(row.refund_status).toBe('not_requested')
+  })
+})

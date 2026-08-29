@@ -89,10 +89,17 @@ question — not which SDK is nicest.
 
 ## Still genuinely open, and coupled to this decision
 
-- **Cancellation and refund policy.** Currently a cancellation returns the seats
-  and records the reason but takes no position on money, because there is no
-  position to take yet. Refund windows and partial refunds depend on what the
-  provider can actually do.
+- ~~Cancellation and refund policy~~ **DECIDED (2026-08-29)** and already
+  enforced in the database: 100% refund before the booking cutoff, 50% after,
+  0% for a no-show, always 100% when the platform cancels. Host is compensated
+  first from the retained half. What remains open is only the _execution_:
+  the provider must support full and partial refunds against a charge that may
+  be days old. Treat partial-refund support as a hard requirement.
+- **Crypto rails:** the owner is interested in Bitcoin as a payment option.
+  Verify: is accepting crypto as payment for services consumed in Türkiye
+  legal today, given the 2021 TCMB payment-use ban? If any structure is viable
+  (foreign PSP settling fiat, foreign travellers only), name it — otherwise
+  say plainly it is not a launch option.
 - Final take rate.
 - Host payout timing and structure.
 - Minimum-table guarantee: a shared dinner can fail to reach its minimum guest

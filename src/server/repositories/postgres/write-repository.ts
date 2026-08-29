@@ -51,6 +51,8 @@ function toRecord(row: BookingRow): BookingWriteRecord {
     guestTotalKurus: row.guest_total_kurus,
     hostNetPayoutKurus: row.host_net_payout_kurus,
     sofraGrossFeeKurus: row.sofra_gross_fee_kurus,
+    refundDueKurus: row.refund_due_kurus,
+    hostCompensationKurus: row.host_compensation_kurus,
     currency: 'TRY',
   }
 }
