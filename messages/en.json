@@ -550,7 +550,12 @@
     "reviewPublish": "Publish",
     "reviewReject": "Reject",
     "reviewModeratedNotice": "Review moderated.",
-    "partyOf": "Party of {count}"
+    "partyOf": "Party of {count}",
+    "cancelDinner": "Cancel this dinner",
+    "cancelDinnerHelp": "For a dinner that will not happen: minimum not reached, host withdrawal, or a safety decision. Every open booking is refunded 100% and unreleased payouts are held. This cannot be undone.",
+    "cancelDinnerReason": "Reason (required, recorded on every cancelled booking)",
+    "dinnerCancelledNotice": "Dinner cancelled. {bookings} booking(s) cancelled, {refund} in full refunds due, {payouts} payout(s) held.",
+    "cancelDinnerErrorState": "This table cannot be platform-cancelled from its current state."
   },
   "Partner": {
     "title": "Partner overview",

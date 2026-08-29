@@ -98,13 +98,11 @@ marketplace, because:
   pricing policy. Development fixtures are fictional people and refuse to apply
   to a non-local database, correctly. Real listings require real hosts applying
   and a real operator approving them.
-- **There is no operator interface.** Application decisions, incident triage,
-  and payout control have tested server actions and no screens. Nobody can
-  approve a host through the UI, so nothing can become bookable.
 - **There is no payment provider.** Bookings persist as `draft` /
-  `payment_not_started` and say so honestly. No money moves.
-- **Cancellation and refund policy is undecided**, so `cancel_booking` returns
-  seats without taking a position on money.
+  `payment_not_started` and say so honestly. No money moves. The refund policy
+  is decided and enforced (100% before cutoff / 50% after / 0% no-show / 100%
+  when the platform cancels), so refund obligations are recorded -- executing
+  them awaits the provider.
 
 These are tracked in `docs/OPEN_QUESTIONS.md`. A deploy now is useful for
 staging, demos, and validating the infrastructure — not for taking real

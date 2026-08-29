@@ -1159,6 +1159,19 @@ export interface Database {
         }
         Returns: unknown
       }
+      cancel_published_table: {
+        Args: {
+          p_operator_id: string
+          p_table_id: string
+          p_reason: string
+        }
+        Returns: {
+          table_id: string | null
+          bookings_cancelled: number | null
+          refund_due_total_kurus: string | null
+          payouts_held: number | null
+        }[]
+      }
       create_booking: {
         Args: {
           p_profile_id: string

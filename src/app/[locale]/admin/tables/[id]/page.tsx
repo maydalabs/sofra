@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 
 import {
   approveTableAction,
+  cancelPublishedTableAction,
   publishTableAction,
   requestTableChangesAction,
 } from '../../actions'
@@ -22,7 +23,15 @@ export default async function AdminTableDetailPage({
   searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>
-  searchParams: Promise<{ approved?: string; changes?: string }>
+  searchParams: Promise<{
+    approved?: string
+    changes?: string
+    dinnerCancelled?: string
+    bookings?: string
+    refund?: string
+    payoutsHeld?: string
+    error?: string
+  }>
 }) {
   const { locale, id } = await params
   const query = await searchParams
@@ -51,6 +60,32 @@ export default async function AdminTableDetailPage({
           </p>
         </CardHeader>
         <CardContent className="space-y-7">
+          {query.dinnerCancelled === '1' ? (
+            <Alert role="status">
+              <AlertDescription>
+                {t('dinnerCancelledNotice', {
+                  bookings: Number(query.bookings ?? '0') || 0,
+                  refund: formatTry(
+                    Number.isSafeInteger(Number(query.refund)) &&
+                      Number(query.refund) >= 0
+                      ? Number(query.refund)
+                      : 0,
+                    locale === 'tr' ? 'tr-TR' : 'en-US',
+                  ),
+                  payouts: Number(query.payoutsHeld ?? '0') || 0,
+                })}
+              </AlertDescription>
+            </Alert>
+          ) : null}
+          {query.error ? (
+            <Alert variant="destructive" role="alert">
+              <AlertDescription>
+                {query.error === 'table_not_cancellable'
+                  ? t('cancelDinnerErrorState')
+                  : t('actionFailed')}
+              </AlertDescription>
+            </Alert>
+          ) : null}
           {query.approved === '1' ? (
             <Alert>
               <AlertDescription>{t('tableApprovedNotice')}</AlertDescription>
@@ -152,6 +187,39 @@ export default async function AdminTableDetailPage({
               {t('publishHelp')}
             </p>
           </form>
+          {[
+            'approved',
+            'published',
+            'minimum_reached',
+            'confirmed',
+            'roster_locked',
+          ].includes(table.status) ? (
+            <form
+              action={cancelPublishedTableAction}
+              className="space-y-3 border-t pt-4"
+            >
+              <input type="hidden" name="tableId" value={table.id} />
+              <input type="hidden" name="locale" value={locale} />
+              <Label htmlFor="dinner-cancel-reason">
+                {t('cancelDinnerReason')}
+              </Label>
+              <Input
+                id="dinner-cancel-reason"
+                name="reason"
+                required
+                aria-describedby="dinner-cancel-help"
+              />
+              <Button variant="destructive" className="w-full">
+                {t('cancelDinner')}
+              </Button>
+              <p
+                id="dinner-cancel-help"
+                className="text-muted-foreground text-xs leading-5"
+              >
+                {t('cancelDinnerHelp')}
+              </p>
+            </form>
+          ) : null}
           <p className="text-muted-foreground text-xs leading-5">
             {t('actionAuditNote')}
           </p>

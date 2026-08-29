@@ -282,3 +282,31 @@ export async function moderateReviewAction(formData: FormData) {
   }
   redirect(`/${locale}/admin/reviews?moderation=done`)
 }
+
+/**
+ * Platform cancellation of a scheduled dinner. Every open booking is refunded
+ * 100% -- the decided rule -- and the outcome figures ride back in the redirect
+ * so the operator sees exactly what their action did.
+ */
+export async function cancelPublishedTableAction(formData: FormData) {
+  const actor = await requireOperator()
+  assertVerifiedEmail(actor)
+  const tableId = String(formData.get('tableId'))
+  const locale = localeOf(formData)
+  const reason = String(formData.get('reason') ?? '').trim()
+
+  if (!canPersistWrites()) {
+    redirect(`/${locale}/admin/tables/${tableId}?dinnerCancel=unavailable`)
+  }
+
+  let outcome
+  try {
+    const writes = await getSofraOperatorWriteRepository(actor)
+    outcome = await writes.cancelPublishedTable(tableId, reason)
+  } catch (error) {
+    redirect(`/${locale}/admin/tables/${tableId}?error=${outcomeOf(error)}`)
+  }
+  redirect(
+    `/${locale}/admin/tables/${tableId}?dinnerCancelled=1&bookings=${outcome.bookingsCancelled}&refund=${outcome.refundDueTotalKurus}&payoutsHeld=${outcome.payoutsHeld}`,
+  )
+}

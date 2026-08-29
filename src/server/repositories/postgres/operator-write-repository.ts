@@ -5,6 +5,7 @@ import type { Database, IncidentStatus } from '@/server/database/database.types'
 import {
   OperatorWriteError,
   type CompatibilityDecisionRecord,
+  type TableCancellationRecord,
   type DecideHostApplicationInput,
   type OperatorApplicationRecord,
   type OperatorIncidentWriteRecord,
@@ -35,6 +36,7 @@ const errorCodesBySqlState: Record<string, OperatorWriteErrorCode> = {
   SF024: 'INCIDENT_NOT_FOUND',
   SF025: 'INVALID_TRANSITION',
   SF026: 'OPEN_INCIDENT_BLOCKS_PAYOUT',
+  SF027: 'TABLE_NOT_CANCELLABLE',
 }
 
 function toOperatorError(error: unknown): OperatorWriteError {
@@ -60,6 +62,39 @@ export class PostgresSofraOperatorWriteRepository implements SofraOperatorWriteR
     private readonly sql: SofraDatabase,
     private readonly actorId: string,
   ) {}
+
+  async cancelPublishedTable(
+    tableId: string,
+    reason: string,
+  ): Promise<TableCancellationRecord> {
+    try {
+      const rows = await this.sql<
+        {
+          table_id: string
+          bookings_cancelled: number
+          refund_due_total_kurus: string
+          payouts_held: number
+        }[]
+      >`
+        select * from public.cancel_published_table(
+          ${this.actorId}::uuid,
+          ${tableId}::uuid,
+          ${reason}::text
+        )
+      `
+      const row = rows[0]
+      return {
+        tableId: row.table_id,
+        bookingsCancelled: row.bookings_cancelled,
+        // bigint arrives as a string to avoid precision loss; refund totals
+        // stay well inside the safe-integer range.
+        refundDueTotalKurus: Number(row.refund_due_total_kurus),
+        payoutsHeld: row.payouts_held,
+      }
+    } catch (error) {
+      throw toOperatorError(error)
+    }
+  }
 
   async decideDietaryCompatibility(
     bookingId: string,

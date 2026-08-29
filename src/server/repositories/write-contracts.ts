@@ -237,6 +237,7 @@ export type OperatorWriteErrorCode =
   | 'NO_ACTIVE_CERTIFICATION'
   | 'BOOKING_CUTOFF_PASSED'
   | 'NOT_FOUND'
+  | 'TABLE_NOT_CANCELLABLE'
 
 export class OperatorWriteError extends Error {
   constructor(
@@ -259,7 +260,19 @@ export interface ReviewModerationRecord {
   rejectedAt: string | null
 }
 
+export interface TableCancellationRecord {
+  tableId: string
+  bookingsCancelled: number
+  refundDueTotalKurus: number
+  payoutsHeld: number
+}
+
 export interface SofraOperatorWriteRepository {
+  /** Platform cancellation: every open booking is refunded 100%, always. */
+  cancelPublishedTable(
+    tableId: string,
+    reason: string,
+  ): Promise<TableCancellationRecord>
   decideDietaryCompatibility(
     bookingId: string,
     decision: 'accepted' | 'declined',

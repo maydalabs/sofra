@@ -550,7 +550,12 @@
     "reviewPublish": "Yayımla",
     "reviewReject": "Reddet",
     "reviewModeratedNotice": "Yorum denetlendi.",
-    "partyOf": "{count} kişilik grup"
+    "partyOf": "{count} kişilik grup",
+    "cancelDinner": "Bu yemeği iptal et",
+    "cancelDinnerHelp": "Gerçekleşmeyecek bir yemek için: asgari sayıya ulaşılamadı, ev sahibi vazgeçti veya bir güvenlik kararı. Tüm açık rezervasyonlara %100 iade yapılır ve serbest bırakılmamış ödemeler bekletilir. Bu işlem geri alınamaz.",
+    "cancelDinnerReason": "Gerekçe (zorunlu; iptal edilen her rezervasyona işlenir)",
+    "dinnerCancelledNotice": "Yemek iptal edildi. {bookings} rezervasyon iptal edildi, {refund} tam iade yapılacak, {payouts} ödeme bekletildi.",
+    "cancelDinnerErrorState": "Bu sofra mevcut durumundan platform tarafından iptal edilemez."
   },
   "Partner": {
     "title": "Partner özeti",
