@@ -149,6 +149,8 @@ export class HostWriteError extends Error {
   }
 }
 
+export type DwellingType = 'apartment_flat' | 'detached_house' | 'other'
+
 export interface HostAddressInput {
   addressLine1: string
   addressLine2?: string | null
@@ -156,12 +158,15 @@ export interface HostAddressInput {
   city: string
   postalCode?: string | null
   arrivalInstructions?: string | null
+  /** Coarse building type; drives launch geography per docs/MARKET_EVIDENCE.md. */
+  dwellingType?: DwellingType | null
 }
 
 export interface HostAddressRecord {
   id: string
   district: string
   city: string
+  dwellingType: DwellingType | null
   /** Cleared on every edit: an unseen address is unverified by definition. */
   verifiedAt: string | null
 }

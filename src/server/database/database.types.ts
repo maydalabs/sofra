@@ -639,6 +639,7 @@ export interface Database {
           verified_by: string | null
           created_at: string
           updated_at: string
+          dwelling_type: string | null
         }
         Insert: {
           id?: string
@@ -656,6 +657,7 @@ export interface Database {
           verified_by?: string | null
           created_at?: string
           updated_at?: string
+          dwelling_type?: string | null
         }
         Update: {
           id?: string
@@ -673,6 +675,7 @@ export interface Database {
           verified_by?: string | null
           created_at?: string
           updated_at?: string
+          dwelling_type?: string | null
         }
       }
       households: {
@@ -1349,6 +1352,7 @@ export interface Database {
           p_city: string
           p_postal_code: string
           p_arrival_instructions: string
+          p_dwelling_type: string
         }
         Returns: unknown
       }

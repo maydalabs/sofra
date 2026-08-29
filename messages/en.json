@@ -342,7 +342,12 @@
     "addressUnavailable": "Address editing needs a connected database. In the demo walkthrough this record is read-only.",
     "postalCode": "Postal code (optional)",
     "addressLine2": "Address line 2 (optional)",
-    "verificationPendingNote": "Saving a new or changed address clears verification: an operator re-verifies it before it is used for a dinner."
+    "verificationPendingNote": "Saving a new or changed address clears verification: an operator re-verifies it before it is used for a dinner.",
+    "dwellingType": "Building type",
+    "dwellingTypeHelp": "Whether the home is a flat in a shared building or a detached house. This affects how Sofra verifies the home.",
+    "dwellingApartment": "Flat in a shared building",
+    "dwellingDetached": "Detached house",
+    "dwellingOther": "Other"
   },
   "HostJourney": {
     "eyebrow": "Table journey",

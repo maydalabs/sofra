@@ -85,6 +85,7 @@ export class PostgresSofraReadRepository implements SofraReadRepository {
     if (!row) return undefined
     return {
       addressLine1: row.address_line_1,
+      dwellingType: row.dwelling_type,
       addressLine2: row.address_line_2,
       district: row.district,
       city: row.city,

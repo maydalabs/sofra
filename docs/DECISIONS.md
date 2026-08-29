@@ -20,7 +20,22 @@ These decisions are frozen for Phase 1 unless the product owner explicitly chang
 - Guest sees one all-inclusive price before checkout.
 - Money is integer kuruş; pricing uses explicit integer rounding.
 - Partner commission is modeled separately and paid from Sofra's fee.
-- Payment provider remains undecided. Only a development/test mock exists in Phase 1.
+- Payments (decided 2026-08-29, full reasoning in `docs/PAYMENT_DECISION.md`):
+  iyzico Pazaryeri sub-merchant split through a Turkish Limited Şirket. The
+  traveller is charged in full at booking (pre-auth is capped at 25 days by BKM
+  rules and cannot span the 35-day horizon); the host's share sits unapproved in
+  the provider's pool until the 3rd business day after the dinner, then the
+  provider pays the host's IBAN directly. Merchant-of-record is the documented
+  fallback only. **Trigger on record:** if a host-approval step is ever added to
+  booking, the charge must move to acceptance (`docs/MARKET_EVIDENCE.md` §5.2).
+- No minimum-table guarantee at launch (decided 2026-08-29): a shared dinner
+  that misses its minimum is decided at the booking cutoff and refunded 100%
+  the same business day — the platform-cancellation tool. Covering a missing
+  seat would cost roughly three times the platform fee per seat.
+- Hosts are never paid before the dinner (decided 2026-08-29): paying before
+  performance forfeits the 6502 md. 48/6(d) refund-liability carve-out and
+  removes the only money lever during a safety incident. A safety hold on a
+  payout carries a hard 14-calendar-day internal decision deadline.
 - Cancellation and refund policy (decided 2026-08-29): 100% refund before the
   booking cutoff, 50% after it, nothing for a no-show. A dinner cancelled by
   the platform always refunds 100%. Of the retained portion on a partial

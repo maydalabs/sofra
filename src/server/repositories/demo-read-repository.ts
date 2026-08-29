@@ -93,6 +93,7 @@ export class DemoSofraReadRepository implements SofraReadRepository {
     // The fictional preview record the demo address page has always shown.
     return {
       addressLine1: 'DEMO ONLY — fictional address record',
+      dwellingType: 'apartment_flat',
       addressLine2: null,
       district: 'Kadıköy',
       city: 'İstanbul',

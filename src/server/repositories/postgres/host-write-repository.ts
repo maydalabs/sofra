@@ -4,6 +4,7 @@ import type { SofraDatabase } from '@/server/database/client'
 import type { Database } from '@/server/database/database.types'
 import {
   HostWriteError,
+  type DwellingType,
   type CreateHostedTableDraftInput,
   type HostAddressInput,
   type HostAddressRecord,
@@ -16,6 +17,17 @@ import {
 
 type AddressRow =
   Database['public']['Tables']['household_private_addresses']['Row']
+
+const dwellingTypes = ['apartment_flat', 'detached_house', 'other'] as const
+
+/** The CHECK constraint guarantees the value; drift means the row is untrusted. */
+function toDwellingType(value: string | null): DwellingType | null {
+  if (value === null) return null
+  if (!(dwellingTypes as readonly string[]).includes(value)) {
+    throw new HostWriteError('ADDRESS_INCOMPLETE', 'unknown dwelling type')
+  }
+  return value as DwellingType
+}
 type ApplicationRow = Database['public']['Tables']['host_applications']['Row']
 type HostedTableRow = Database['public']['Tables']['hosted_tables']['Row']
 
@@ -88,7 +100,8 @@ export class PostgresSofraHostWriteRepository implements SofraHostWriteRepositor
           ${input.district}::text,
           ${input.city}::text,
           ${input.postalCode ?? null}::text,
-          ${input.arrivalInstructions ?? null}::text
+          ${input.arrivalInstructions ?? null}::text,
+          ${input.dwellingType ?? null}::text
         )
       `
       const row = rows[0]
@@ -98,6 +111,7 @@ export class PostgresSofraHostWriteRepository implements SofraHostWriteRepositor
         id: row.id,
         district: row.district,
         city: row.city,
+        dwellingType: toDwellingType(row.dwelling_type),
         verifiedAt: row.verified_at,
       }
     } catch (error) {

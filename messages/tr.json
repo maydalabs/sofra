@@ -342,7 +342,12 @@
     "addressUnavailable": "Adres düzenleme bağlı bir veritabanı gerektirir. Demo turunda bu kayıt salt okunurdur.",
     "postalCode": "Posta kodu (isteğe bağlı)",
     "addressLine2": "Adres satırı 2 (isteğe bağlı)",
-    "verificationPendingNote": "Yeni veya değiştirilmiş bir adresi kaydetmek doğrulamayı sıfırlar: bir operatör, yemekte kullanılmadan önce adresi yeniden doğrular."
+    "verificationPendingNote": "Yeni veya değiştirilmiş bir adresi kaydetmek doğrulamayı sıfırlar: bir operatör, yemekte kullanılmadan önce adresi yeniden doğrular.",
+    "dwellingType": "Bina türü",
+    "dwellingTypeHelp": "Evin ortak bir binadaki daire mi yoksa müstakil bir ev mi olduğu. Bu, Sofra’nın evi nasıl doğrulayacağını etkiler.",
+    "dwellingApartment": "Ortak binada daire",
+    "dwellingDetached": "Müstakil ev",
+    "dwellingOther": "Diğer"
   },
   "HostJourney": {
     "eyebrow": "Sofra yolculuğu",

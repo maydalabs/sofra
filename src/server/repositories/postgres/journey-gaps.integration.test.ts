@@ -190,11 +190,13 @@ describe('host address', () => {
     district: 'Moda',
     city: 'İstanbul',
     arrivalInstructions: 'Ring the middle bell.',
+    dwellingType: 'apartment_flat' as const,
   }
 
   it('saves and prefills through the read repository', async () => {
     const saved = await hostWrites.submitHostAddress(address)
     expect(saved.district).toBe('Moda')
+    expect(saved.dwellingType).toBe('apartment_flat')
     expect(saved.verifiedAt).toBeNull()
 
     const reads = new PostgresSofraReadRepository(
@@ -205,6 +207,7 @@ describe('host address', () => {
     expect(current).toMatchObject({
       addressLine1: 'Cadde 12, Daire 3',
       arrivalInstructions: 'Ring the middle bell.',
+      dwellingType: 'apartment_flat',
     })
   })
 
@@ -223,15 +226,39 @@ describe('host address', () => {
     expect(edited.verifiedAt).toBeNull()
   })
 
-  it('never writes the address text into the audit trail', async () => {
+  it('audits the dwelling type but never the address text', async () => {
     await hostWrites.submitHostAddress(address)
     const audits = await sql`
       select * from public.audit_logs
       where action like 'household_address.%'
     `
     expect(audits.length).toBeGreaterThan(0)
-    expect(JSON.stringify(audits)).not.toContain('Cadde')
-    expect(JSON.stringify(audits)).not.toContain('Ring the middle bell')
+    const serialised = JSON.stringify(audits)
+    // Coarse and deliberately auditable: the launch-geography triage signal.
+    expect(serialised).toContain('apartment_flat')
+    expect(serialised).not.toContain('Cadde')
+    expect(serialised).not.toContain('Ring the middle bell')
+  })
+
+  it('switching to a detached house records the new type and clears verification', async () => {
+    await hostWrites.submitHostAddress(address)
+    const moved = await hostWrites.submitHostAddress({
+      ...address,
+      addressLine1: 'Bağ Evi 3',
+      dwellingType: 'detached_house',
+    })
+    expect(moved.dwellingType).toBe('detached_house')
+    expect(moved.verifiedAt).toBeNull()
+  })
+
+  it('rejects an unknown dwelling type', async () => {
+    await expect(
+      hostWrites.submitHostAddress({
+        ...address,
+        // @ts-expect-error -- proving the database refuses what the type forbids
+        dwellingType: 'houseboat',
+      }),
+    ).rejects.toMatchObject({ code: 'ADDRESS_INCOMPLETE' })
   })
 
   it('rejects an address with the required parts missing', async () => {

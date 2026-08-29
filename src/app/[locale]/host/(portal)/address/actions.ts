@@ -21,6 +21,7 @@ const addressSchema = z.object({
   city: z.string().trim().min(2).max(100),
   postalCode: z.string().trim().max(10).optional(),
   arrivalInstructions: z.string().trim().max(1_000).optional(),
+  dwellingType: z.enum(['apartment_flat', 'detached_house', 'other']),
 })
 
 export async function submitHostAddressAction(formData: FormData) {
@@ -39,6 +40,7 @@ export async function submitHostAddressAction(formData: FormData) {
     city: formData.get('city'),
     postalCode: formData.get('postalCode') || undefined,
     arrivalInstructions: formData.get('arrivalInstructions') || undefined,
+    dwellingType: formData.get('dwellingType'),
   })
   if (!parsed.success) {
     redirect(`/${locale}/host/address?address=incomplete`)

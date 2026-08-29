@@ -55,6 +55,7 @@ export interface HostRosterPartyRecord {
 
 export interface HostOwnAddressRecord {
   addressLine1: string
+  dwellingType: string | null
   addressLine2: string | null
   district: string
   city: string

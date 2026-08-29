@@ -110,6 +110,31 @@ export default async function PrivateAddressPage({
               required={!demo}
             />
           </div>
+          <div className="space-y-2 sm:col-span-2">
+            <Label htmlFor="dwelling-type">{t('dwellingType')}</Label>
+            <select
+              id="dwelling-type"
+              name="dwellingType"
+              defaultValue={current?.dwellingType ?? ''}
+              disabled={demo}
+              required={!demo}
+              aria-describedby="dwelling-type-help"
+              className="border-input bg-background h-9 w-full rounded-md border px-3 text-sm"
+            >
+              <option value="" disabled>
+                —
+              </option>
+              <option value="apartment_flat">{t('dwellingApartment')}</option>
+              <option value="detached_house">{t('dwellingDetached')}</option>
+              <option value="other">{t('dwellingOther')}</option>
+            </select>
+            <p
+              id="dwelling-type-help"
+              className="text-muted-foreground text-xs"
+            >
+              {t('dwellingTypeHelp')}
+            </p>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="postal-code">{t('postalCode')}</Label>
             <Input

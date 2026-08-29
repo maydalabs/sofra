@@ -24,6 +24,7 @@ export type HostOwnAddressRow = Pick<
   Database['public']['Tables']['household_private_addresses']['Row'],
   | 'address_line_1'
   | 'address_line_2'
+  | 'dwelling_type'
   | 'district'
   | 'city'
   | 'postal_code'
@@ -147,8 +148,9 @@ export class PostgresReadGateway implements SofraReadGateway {
     const actorId = this.requireActor('read own address')
     return this.run('read own address', async () => {
       const rows = await this.sql<HostOwnAddressRow[]>`
-        select a.address_line_1, a.address_line_2, a.district, a.city,
-               a.postal_code, a.arrival_instructions, a.verified_at
+        select a.address_line_1, a.address_line_2, a.dwelling_type,
+               a.district, a.city, a.postal_code, a.arrival_instructions,
+               a.verified_at
         from public.household_private_addresses a
         join public.households h on h.id = a.household_id
         where h.owner_profile_id = ${actorId}::uuid
