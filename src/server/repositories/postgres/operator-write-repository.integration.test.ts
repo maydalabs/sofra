@@ -180,15 +180,18 @@ describe('the full loop: application to a bookable table', () => {
       decision: 'approve',
       certifiedCapacity: 6,
     })
+    expect(decided.status).toBe('approved')
 
-    // A certified household still needs a verified address before scheduling.
-    await sql`
-      insert into public.household_private_addresses (household_id, address_line_1, district, city)
-      values (${decided.householdId}::uuid, 'PRIVATE ADDRESS', 'Moda', 'İstanbul')
-    `
-
-    // 3. Host creates and submits a table.
+    // 3. The host enters their address themselves -- previously impossible,
+    // which is why this test used to seed it with raw SQL.
     const host = new PostgresSofraHostWriteRepository(sql, APPLICANT)
+    await host.submitHostAddress({
+      addressLine1: 'PRIVATE ADDRESS 12',
+      district: 'Moda',
+      city: 'İstanbul',
+    })
+
+    // 4. Host creates and submits a table.
     const draft = await host.createHostedTableDraft({
       menuTitle: 'Mevsim sofrası',
       menuDescription: 'A seasonal menu.',
@@ -223,6 +226,7 @@ describe('the full loop: application to a bookable table', () => {
       tableId: draft.id,
       partySize: 2,
       partyType: 'couple',
+      primaryGuestName: 'Test Traveller',
       policySnapshot: { takeRateBasisPoints: 2500 },
     })
     expect(booking.status).toBe('draft')

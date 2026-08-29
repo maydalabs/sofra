@@ -511,7 +511,7 @@ test('Turkish protected previews localize controls and prevent false writes', as
   await page.goto('/tr/host/address')
   await page.waitForLoadState('networkidle')
 
-  const addressLine = page.getByLabel('Adres satırı')
+  const addressLine = page.getByLabel('Adres satırı', { exact: true })
   await expect(addressLine).toHaveAttribute('readonly', '')
   await addressLine.focus()
   await expect(addressLine).toBeFocused()

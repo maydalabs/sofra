@@ -334,7 +334,15 @@
       "completed": "Tamamlandı",
       "cancelled": "İptal edildi",
       "archived": "Arşivlendi"
-    }
+    },
+    "saveAddress": "Adresi kaydet",
+    "addressSaved": "Adres kaydedildi. Gizli kalır ve bir sonraki sofranız yayımlanmadan önce Sofra tarafından doğrulanır.",
+    "addressIncomplete": "Adres satırı, ilçe ve şehir zorunludur.",
+    "addressNoHousehold": "Hane kaydınız bulunamadı. Önce bir ev sahibi başvurusu tamamlayın.",
+    "addressUnavailable": "Adres düzenleme bağlı bir veritabanı gerektirir. Demo turunda bu kayıt salt okunurdur.",
+    "postalCode": "Posta kodu (isteğe bağlı)",
+    "addressLine2": "Adres satırı 2 (isteğe bağlı)",
+    "verificationPendingNote": "Yeni veya değiştirilmiş bir adresi kaydetmek doğrulamayı sıfırlar: bir operatör, yemekte kullanılmadan önce adresi yeniden doğrular."
   },
   "HostJourney": {
     "eyebrow": "Sofra yolculuğu",
@@ -524,7 +532,25 @@
     "payoutReleasedNotice": "Ödeme serbest bırakıldı.",
     "payoutBlockedNotice": "Bu yemekle ilgili açık bir güvenlik kaydı serbest bırakmayı engelliyor.",
     "actionFailed": "Bu işlem tamamlanamadı.",
-    "decisionErrorNoHousehold": "Bu başvuruya bağlı bir hane yok, dolayısıyla sertifikalandırılacak bir şey bulunmuyor. Onaylanamaz."
+    "decisionErrorNoHousehold": "Bu başvuruya bağlı bir hane yok, dolayısıyla sertifikalandırılacak bir şey bulunmuyor. Onaylanamaz.",
+    "compatibility": "Uyum",
+    "compatibilityTitle": "Beslenme uyumu kuyruğu",
+    "compatibilityIntro": "Misafirler bu ihtiyaçları gizli olarak bildirdi. Hane ile platform dışında teyitleşin, sonra kararı kaydedin. Ev sahipleri bu metni asla görmez.",
+    "compatibilityEmptyTitle": "Bekleyen bildirim yok",
+    "compatibilityEmptyBody": "Bir misafir menü uyumu incelemesi istediğinde, bir operatör karar kaydedene kadar burada görünür.",
+    "compatAccept": "Uyumlu — kabul et",
+    "compatDecline": "Uyumlu değil — reddet",
+    "compatPrivateReason": "Özel not (karar kaydında tutulur)",
+    "compatDecidedNotice": "Uyum kararı kaydedildi.",
+    "reviews": "Yorumlar",
+    "reviewsTitle": "Yorum denetimi",
+    "reviewsIntro": "Bir misafirin yazdığı hiçbir şey burada yayımlanmadan halka açık olmaz. Reddedilen yorumlar saklanır, asla yayımlanmaz.",
+    "reviewsEmptyTitle": "Bekleyen yorum yok",
+    "reviewsEmptyBody": "Tamamlanan bir yemekten sonra gelen herkese açık deneyim yorumları, denetlenene kadar burada gizli kalır.",
+    "reviewPublish": "Yayımla",
+    "reviewReject": "Reddet",
+    "reviewModeratedNotice": "Yorum denetlendi.",
+    "partyOf": "{count} kişilik grup"
   },
   "Partner": {
     "title": "Partner özeti",

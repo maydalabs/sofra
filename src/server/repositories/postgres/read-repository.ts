@@ -79,6 +79,21 @@ export class PostgresSofraReadRepository implements SofraReadRepository {
     )
   }
 
+  async findOwnHouseholdAddress() {
+    this.assertActor()
+    const row = await this.gateway.readOwnAddress()
+    if (!row) return undefined
+    return {
+      addressLine1: row.address_line_1,
+      addressLine2: row.address_line_2,
+      district: row.district,
+      city: row.city,
+      postalCode: row.postal_code,
+      arrivalInstructions: row.arrival_instructions,
+      verifiedAt: row.verified_at,
+    }
+  }
+
   async listHostRoster(tableId: string) {
     const table = await this.findHostTableById(tableId)
     if (!table) {

@@ -4,6 +4,16 @@ import { cache } from 'react'
 
 import { getOperatorSofraReadRepository } from './factory'
 
+export const listOperatorCompatibilityQueue = cache(async () => {
+  const repository = await getOperatorSofraReadRepository()
+  return repository.listCompatibilityQueue()
+})
+
+export const listOperatorPendingReviews = cache(async () => {
+  const repository = await getOperatorSofraReadRepository()
+  return repository.listPendingReviews()
+})
+
 export const listOperatorHostApplications = cache(async () => {
   const repository = await getOperatorSofraReadRepository()
   return repository.listHostApplications()

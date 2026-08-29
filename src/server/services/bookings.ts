@@ -28,6 +28,8 @@ export class BookingIntentError extends Error {
 export interface BookingIntent {
   partySize: number
   partyType: string
+  primaryGuestName: string
+  primaryGuestEmail: string | null
   additionalGuestNames: string[]
   privateDietaryDisclosure: string | null
   compatibilityStatus: 'not_required' | 'pending'
@@ -100,6 +102,8 @@ export function prepareBookingIntent(
   return {
     partySize: input.partySize,
     partyType: input.partyType,
+    primaryGuestName: input.primaryName,
+    primaryGuestEmail: input.primaryEmail || null,
     additionalGuestNames: parseAdditionalGuestNames(input.additionalGuests),
     privateDietaryDisclosure:
       input.dietaryNeeds === 'review_required' ? input.dietaryDisclosure : null,

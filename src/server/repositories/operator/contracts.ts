@@ -76,7 +76,28 @@ export interface OperatorAuditRecord {
   occurredAt: string
 }
 
+export interface OperatorCompatibilityQueueRecord {
+  bookingId: string
+  tableLabel: string
+  startsAt: string
+  partySize: number
+  /** The traveller's own words. Restricted to operations; hosts never see it. */
+  disclosure: string
+  disclosedAt: string
+}
+
+export interface OperatorPendingReviewRecord {
+  id: string
+  tableLabel: string
+  rating: number | null
+  title: string | null
+  body: string
+  submittedAt: string
+}
+
 export interface SofraOperatorReadRepository {
+  listCompatibilityQueue(): Promise<OperatorCompatibilityQueueRecord[]>
+  listPendingReviews(): Promise<OperatorPendingReviewRecord[]>
   listHostApplications(): Promise<OperatorHostApplicationRecord[]>
   findHostApplicationById(
     id: string,

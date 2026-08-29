@@ -60,6 +60,7 @@ export type DietaryKind =
   | 'dietary_restriction'
   | 'religious_food_restriction'
   | 'preference'
+  | 'undetermined'
 
 export type HostedTableStatus =
   | 'draft'
@@ -947,6 +948,8 @@ export interface Database {
           created_at: string
           rating: number | null
           title: string | null
+          rejected_at: string | null
+          moderated_by: string | null
         }
         Insert: {
           id?: string
@@ -958,6 +961,8 @@ export interface Database {
           created_at?: string
           rating?: number | null
           title?: string | null
+          rejected_at?: string | null
+          moderated_by?: string | null
         }
         Update: {
           id?: string
@@ -969,6 +974,8 @@ export interface Database {
           created_at?: string
           rating?: number | null
           title?: string | null
+          rejected_at?: string | null
+          moderated_by?: string | null
         }
       }
       referral_attributions: {
@@ -1147,6 +1154,10 @@ export interface Database {
           p_party_size: number
           p_party_type: string
           p_policy_snapshot: Json
+          p_primary_guest_name: string
+          p_primary_guest_email: string
+          p_additional_guest_names: string[]
+          p_dietary_disclosure: string
           p_referral_attribution_id: string
         }
         Returns: unknown
@@ -1165,6 +1176,15 @@ export interface Database {
           p_expected_household_participants: string
           p_practical_information: string
           p_accessibility_information: string
+        }
+        Returns: unknown
+      }
+      decide_dietary_compatibility: {
+        Args: {
+          p_operator_id: string
+          p_booking_id: string
+          p_decision: string
+          p_private_reason: string
         }
         Returns: unknown
       }
@@ -1240,6 +1260,15 @@ export interface Database {
         }
         Returns: unknown
       }
+      moderate_public_review: {
+        Args: {
+          p_operator_id: string
+          p_review_id: string
+          p_decision: string
+          p_reason: string
+        }
+        Returns: unknown
+      }
       profile_has_role: {
         Args: {
           p_profile_id: string
@@ -1285,6 +1314,18 @@ export interface Database {
           p_value: string
         }
         Returns: string
+      }
+      submit_host_address: {
+        Args: {
+          p_profile_id: string
+          p_address_line_1: string
+          p_address_line_2: string
+          p_district: string
+          p_city: string
+          p_postal_code: string
+          p_arrival_instructions: string
+        }
+        Returns: unknown
       }
       submit_host_application: {
         Args: {

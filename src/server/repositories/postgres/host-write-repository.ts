@@ -5,6 +5,8 @@ import type { Database } from '@/server/database/database.types'
 import {
   HostWriteError,
   type CreateHostedTableDraftInput,
+  type HostAddressInput,
+  type HostAddressRecord,
   type HostApplicationRecord,
   type HostWriteErrorCode,
   type HostedTableWriteRecord,
@@ -12,6 +14,8 @@ import {
   type SubmitHostApplicationInput,
 } from '../write-contracts'
 
+type AddressRow =
+  Database['public']['Tables']['household_private_addresses']['Row']
 type ApplicationRow = Database['public']['Tables']['host_applications']['Row']
 type HostedTableRow = Database['public']['Tables']['hosted_tables']['Row']
 
@@ -25,6 +29,7 @@ const errorCodesBySqlState: Record<string, HostWriteErrorCode> = {
   SF002: 'TABLE_NOT_EDITABLE',
   SF006: 'NO_PRICING_POLICY',
   SF010: 'APPLICATION_IN_PROGRESS',
+  SF031: 'ADDRESS_INCOMPLETE',
   SF011: 'NO_CERTIFIED_HOUSEHOLD',
   SF012: 'NO_ACTIVE_CERTIFICATION',
   SF013: 'NO_VERIFIED_ADDRESS',
@@ -72,6 +77,39 @@ export class PostgresSofraHostWriteRepository implements SofraHostWriteRepositor
     private readonly sql: SofraDatabase,
     private readonly actorId: string,
   ) {}
+
+  async submitHostAddress(input: HostAddressInput): Promise<HostAddressRecord> {
+    try {
+      const rows = await this.sql<AddressRow[]>`
+        select * from public.submit_host_address(
+          ${this.actorId}::uuid,
+          ${input.addressLine1}::text,
+          ${input.addressLine2 ?? null}::text,
+          ${input.district}::text,
+          ${input.city}::text,
+          ${input.postalCode ?? null}::text,
+          ${input.arrivalInstructions ?? null}::text
+        )
+      `
+      const row = rows[0]
+      // The full address is never echoed back; the caller confirmed what they
+      // typed and needs only the verification state.
+      return {
+        id: row.id,
+        district: row.district,
+        city: row.city,
+        verifiedAt: row.verified_at,
+      }
+    } catch (error) {
+      const mapped = toHostWriteError(error)
+      // SF011 means "no household" on this path, not "no certified household":
+      // an applicant household is an acceptable target for an address.
+      if (mapped.code === 'NO_CERTIFIED_HOUSEHOLD') {
+        throw new HostWriteError('NO_HOUSEHOLD', mapped.message)
+      }
+      throw mapped
+    }
+  }
 
   async submitHostApplication(input: SubmitHostApplicationInput) {
     try {

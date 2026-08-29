@@ -26,6 +26,32 @@ export class PostgresSofraOperatorReadRepository implements SofraOperatorReadRep
     private readonly actor: Actor,
   ) {}
 
+  async listCompatibilityQueue() {
+    this.assertOperator()
+    const rows = await this.gateway.readCompatibilityQueue()
+    return rows.map((row) => ({
+      bookingId: row.booking_id,
+      tableLabel: `${row.menu_title} · ${row.public_neighborhood}`,
+      startsAt: row.starts_at,
+      partySize: row.party_size,
+      disclosure: row.explanation,
+      disclosedAt: row.disclosed_at,
+    }))
+  }
+
+  async listPendingReviews() {
+    this.assertOperator()
+    const rows = await this.gateway.readPendingReviews()
+    return rows.map((row) => ({
+      id: row.id,
+      tableLabel: `${row.menu_title} · ${row.public_neighborhood}`,
+      rating: row.rating,
+      title: row.title,
+      body: row.body,
+      submittedAt: row.created_at,
+    }))
+  }
+
   async listHostApplications() {
     this.assertOperator()
     const applications = await this.gateway.readHostApplications()

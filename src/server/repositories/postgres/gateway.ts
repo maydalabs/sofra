@@ -20,6 +20,16 @@ export type HostCertificationRow = Pick<
   | 'valid_from'
   | 'valid_until'
 >
+export type HostOwnAddressRow = Pick<
+  Database['public']['Tables']['household_private_addresses']['Row'],
+  | 'address_line_1'
+  | 'address_line_2'
+  | 'district'
+  | 'city'
+  | 'postal_code'
+  | 'arrival_instructions'
+  | 'verified_at'
+>
 export type HostRosterRow =
   Database['public']['Functions']['get_host_roster']['Returns'][number]
 
@@ -33,6 +43,7 @@ export interface SofraReadGateway {
     householdIds: readonly string[],
   ): Promise<HostCertificationRow[]>
   readHostRoster(tableId: string): Promise<HostRosterRow[]>
+  readOwnAddress(): Promise<HostOwnAddressRow | undefined>
 }
 
 /**
@@ -129,6 +140,22 @@ export class PostgresReadGateway implements SofraReadGateway {
         order by created_at desc
       `
       return [...rows]
+    })
+  }
+
+  async readOwnAddress() {
+    const actorId = this.requireActor('read own address')
+    return this.run('read own address', async () => {
+      const rows = await this.sql<HostOwnAddressRow[]>`
+        select a.address_line_1, a.address_line_2, a.district, a.city,
+               a.postal_code, a.arrival_instructions, a.verified_at
+        from public.household_private_addresses a
+        join public.households h on h.id = a.household_id
+        where h.owner_profile_id = ${actorId}::uuid
+        order by h.created_at
+        limit 1
+      `
+      return rows[0]
     })
   }
 

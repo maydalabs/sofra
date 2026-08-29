@@ -4,6 +4,7 @@ import type { SofraDatabase } from '@/server/database/client'
 import type { Database, IncidentStatus } from '@/server/database/database.types'
 import {
   OperatorWriteError,
+  type CompatibilityDecisionRecord,
   type DecideHostApplicationInput,
   type OperatorApplicationRecord,
   type OperatorIncidentWriteRecord,
@@ -11,6 +12,7 @@ import {
   type OperatorTableWriteRecord,
   type OperatorWriteErrorCode,
   type ReviewHostedTableInput,
+  type ReviewModerationRecord,
   type SofraOperatorWriteRepository,
 } from '../write-contracts'
 
@@ -18,8 +20,11 @@ type ApplicationRow = Database['public']['Tables']['host_applications']['Row']
 type HostedTableRow = Database['public']['Tables']['hosted_tables']['Row']
 type PayoutRow = Database['public']['Tables']['payout_records']['Row']
 type IncidentRow = Database['public']['Tables']['safety_incidents']['Row']
+type ReviewRow =
+  Database['public']['Tables']['public_experience_reviews']['Row']
 
 const errorCodesBySqlState: Record<string, OperatorWriteErrorCode> = {
+  SF001: 'NOT_FOUND',
   SF003: 'BOOKING_CUTOFF_PASSED',
   SF012: 'NO_ACTIVE_CERTIFICATION',
   SF017: 'APPLICATION_HAS_NO_HOUSEHOLD',
@@ -55,6 +60,57 @@ export class PostgresSofraOperatorWriteRepository implements SofraOperatorWriteR
     private readonly sql: SofraDatabase,
     private readonly actorId: string,
   ) {}
+
+  async decideDietaryCompatibility(
+    bookingId: string,
+    decision: 'accepted' | 'declined',
+    privateReason?: string | null,
+  ): Promise<CompatibilityDecisionRecord> {
+    try {
+      const rows = await this.sql<
+        Database['public']['Tables']['bookings']['Row'][]
+      >`
+        select * from public.decide_dietary_compatibility(
+          ${this.actorId}::uuid,
+          ${bookingId}::uuid,
+          ${decision}::text,
+          ${privateReason ?? null}::text
+        )
+      `
+      return {
+        bookingId: rows[0].id,
+        compatibilityStatus: rows[0].compatibility_status,
+      }
+    } catch (error) {
+      throw toOperatorError(error)
+    }
+  }
+
+  async moderatePublicReview(
+    reviewId: string,
+    decision: 'publish' | 'reject',
+    reason?: string | null,
+  ): Promise<ReviewModerationRecord> {
+    try {
+      const rows = await this.sql<ReviewRow[]>`
+        select * from public.moderate_public_review(
+          ${this.actorId}::uuid,
+          ${reviewId}::uuid,
+          ${decision}::text,
+          ${reason ?? null}::text
+        )
+      `
+      // The review body is not returned: moderating it does not make it this
+      // caller's content to pass around.
+      return {
+        id: rows[0].id,
+        publishedAt: rows[0].published_at,
+        rejectedAt: rows[0].rejected_at,
+      }
+    } catch (error) {
+      throw toOperatorError(error)
+    }
+  }
 
   async decideHostApplication(
     input: DecideHostApplicationInput,

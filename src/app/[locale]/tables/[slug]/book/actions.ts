@@ -79,6 +79,10 @@ export async function simulateBookingAction(slug: string, rawInput: unknown) {
       tableId: table.id,
       partySize: intent.partySize,
       partyType: intent.partyType,
+      primaryGuestName: intent.primaryGuestName,
+      primaryGuestEmail: intent.primaryGuestEmail,
+      additionalGuestNames: intent.additionalGuestNames,
+      dietaryDisclosure: intent.privateDietaryDisclosure,
       policySnapshot: {
         takeRateBasisPoints: developmentPolicy.takeRateBasisPoints,
         bookingCutoffHours: developmentPolicy.bookingCutoffHours,

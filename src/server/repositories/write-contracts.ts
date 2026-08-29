@@ -1,6 +1,7 @@
 import type {
   ApplicationStatus,
   BookingStatus,
+  CompatibilityStatus,
   HostedTableStatus,
   IncidentStatus,
   PaymentStatus,
@@ -15,6 +16,11 @@ export interface CreateBookingInput {
   partySize: number
   partyType: string
   policySnapshot: PolicySnapshot
+  primaryGuestName: string
+  primaryGuestEmail?: string | null
+  additionalGuestNames?: readonly string[]
+  /** Free text; classified by the reviewer, never at insert time. */
+  dietaryDisclosure?: string | null
   referralAttributionId?: string | null
 }
 
@@ -28,6 +34,7 @@ export interface BookingWriteRecord {
   tableId: string
   partySize: number
   status: BookingStatus
+  compatibilityStatus: CompatibilityStatus
   paymentStatus: PaymentStatus
   guestTotalKurus: number
   hostNetPayoutKurus: number
@@ -116,6 +123,7 @@ export interface HostedTableWriteRecord {
 export type HostWriteErrorCode =
   | 'PROFILE_NOT_FOUND'
   | 'APPLICATION_IN_PROGRESS'
+  | 'NO_HOUSEHOLD'
   | 'NO_CERTIFIED_HOUSEHOLD'
   | 'NO_ACTIVE_CERTIFICATION'
   | 'NO_VERIFIED_ADDRESS'
@@ -125,6 +133,7 @@ export type HostWriteErrorCode =
   | 'ACTIVE_TABLE_LIMIT_REACHED'
   | 'TABLE_NOT_FOUND'
   | 'TABLE_NOT_EDITABLE'
+  | 'ADDRESS_INCOMPLETE'
 
 export class HostWriteError extends Error {
   constructor(
@@ -136,7 +145,25 @@ export class HostWriteError extends Error {
   }
 }
 
+export interface HostAddressInput {
+  addressLine1: string
+  addressLine2?: string | null
+  district: string
+  city: string
+  postalCode?: string | null
+  arrivalInstructions?: string | null
+}
+
+export interface HostAddressRecord {
+  id: string
+  district: string
+  city: string
+  /** Cleared on every edit: an unseen address is unverified by definition. */
+  verifiedAt: string | null
+}
+
 export interface SofraHostWriteRepository {
+  submitHostAddress(input: HostAddressInput): Promise<HostAddressRecord>
   submitHostApplication(
     input: SubmitHostApplicationInput,
   ): Promise<HostApplicationRecord>
@@ -205,6 +232,7 @@ export type OperatorWriteErrorCode =
   | 'OPEN_INCIDENT_BLOCKS_PAYOUT'
   | 'NO_ACTIVE_CERTIFICATION'
   | 'BOOKING_CUTOFF_PASSED'
+  | 'NOT_FOUND'
 
 export class OperatorWriteError extends Error {
   constructor(
@@ -216,7 +244,28 @@ export class OperatorWriteError extends Error {
   }
 }
 
+export interface CompatibilityDecisionRecord {
+  bookingId: string
+  compatibilityStatus: CompatibilityStatus
+}
+
+export interface ReviewModerationRecord {
+  id: string
+  publishedAt: string | null
+  rejectedAt: string | null
+}
+
 export interface SofraOperatorWriteRepository {
+  decideDietaryCompatibility(
+    bookingId: string,
+    decision: 'accepted' | 'declined',
+    privateReason?: string | null,
+  ): Promise<CompatibilityDecisionRecord>
+  moderatePublicReview(
+    reviewId: string,
+    decision: 'publish' | 'reject',
+    reason?: string | null,
+  ): Promise<ReviewModerationRecord>
   decideHostApplication(
     input: DecideHostApplicationInput,
   ): Promise<OperatorApplicationRecord>

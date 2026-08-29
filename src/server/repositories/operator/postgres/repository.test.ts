@@ -102,6 +102,8 @@ function createGateway(
   overrides: Partial<SofraOperatorReadGateway> = {},
 ): SofraOperatorReadGateway {
   return {
+    readCompatibilityQueue: async () => [],
+    readPendingReviews: async () => [],
     readProfiles: async () => [profile],
     readHouseholds: async () => [household],
     readHostApplications: async () => [application],

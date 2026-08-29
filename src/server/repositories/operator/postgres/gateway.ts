@@ -69,7 +69,29 @@ export type OperatorAuditRow = Pick<
   | 'occurred_at'
 >
 
+export interface OperatorCompatibilityQueueRow {
+  booking_id: string
+  menu_title: string
+  public_neighborhood: string
+  starts_at: string
+  party_size: number
+  explanation: string
+  disclosed_at: string
+}
+
+export interface OperatorPendingReviewRow {
+  id: string
+  menu_title: string
+  public_neighborhood: string
+  rating: number | null
+  title: string | null
+  body: string
+  created_at: string
+}
+
 export interface SofraOperatorReadGateway {
+  readCompatibilityQueue(): Promise<OperatorCompatibilityQueueRow[]>
+  readPendingReviews(): Promise<OperatorPendingReviewRow[]>
   readProfiles(ids: readonly string[]): Promise<OperatorProfileRow[]>
   readHouseholds(ids: readonly string[]): Promise<OperatorHouseholdRow[]>
   readHostApplications(): Promise<OperatorHostApplicationRow[]>
@@ -92,6 +114,36 @@ export class PostgresOperatorReadGateway implements SofraOperatorReadGateway {
         error instanceof Error ? error.message : String(error),
       )
     }
+  }
+
+  async readCompatibilityQueue() {
+    return this.run('list compatibility queue', async () => {
+      const rows = await this.sql<OperatorCompatibilityQueueRow[]>`
+        select b.id as booking_id, t.menu_title, t.public_neighborhood,
+               t.starts_at, b.party_size, d.explanation,
+               d.created_at as disclosed_at
+        from public.bookings b
+        join public.hosted_tables t on t.id = b.hosted_table_id
+        join public.dietary_disclosures d on d.booking_id = b.id
+        where b.compatibility_status = 'pending'
+        order by t.starts_at asc
+      `
+      return [...rows]
+    })
+  }
+
+  async readPendingReviews() {
+    return this.run('list pending reviews', async () => {
+      const rows = await this.sql<OperatorPendingReviewRow[]>`
+        select r.id, t.menu_title, t.public_neighborhood, r.rating, r.title,
+               r.body, r.created_at
+        from public.public_experience_reviews r
+        join public.hosted_tables t on t.id = r.hosted_table_id
+        where r.published_at is null and r.rejected_at is null
+        order by r.created_at asc
+      `
+      return [...rows]
+    })
   }
 
   async readProfiles(ids: readonly string[]) {

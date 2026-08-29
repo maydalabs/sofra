@@ -89,6 +89,19 @@ export class DemoSofraReadRepository implements SofraReadRepository {
     return tables.find((table) => table.id === id)
   }
 
+  async findOwnHouseholdAddress() {
+    // The fictional preview record the demo address page has always shown.
+    return {
+      addressLine1: 'DEMO ONLY — fictional address record',
+      addressLine2: null,
+      district: 'Kadıköy',
+      city: 'İstanbul',
+      postalCode: null,
+      arrivalInstructions: null,
+      verifiedAt: null,
+    }
+  }
+
   async findHostCertification() {
     if (this.actorId !== 'demo-host') {
       throw new RepositoryUnavailableError(

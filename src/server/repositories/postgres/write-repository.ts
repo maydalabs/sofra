@@ -46,6 +46,7 @@ function toRecord(row: BookingRow): BookingWriteRecord {
     tableId: row.hosted_table_id,
     partySize: row.party_size,
     status: row.status,
+    compatibilityStatus: row.compatibility_status,
     paymentStatus: row.payment_status,
     guestTotalKurus: row.guest_total_kurus,
     hostNetPayoutKurus: row.host_net_payout_kurus,
@@ -69,6 +70,10 @@ export class PostgresSofraWriteRepository implements SofraWriteRepository {
           ${input.partySize}::integer,
           ${input.partyType}::text,
           ${this.sql.json(input.policySnapshot)}::jsonb,
+          ${input.primaryGuestName}::text,
+          ${input.primaryGuestEmail ?? null}::text,
+          ${this.sql.array([...(input.additionalGuestNames ?? [])])}::text[],
+          ${input.dietaryDisclosure ?? null}::text,
           ${input.referralAttributionId ?? null}::uuid
         )
       `

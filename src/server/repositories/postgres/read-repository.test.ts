@@ -133,6 +133,7 @@ function createGateway(
     readPublishedTableBySlug: async (slug) =>
       slug === publicRow.slug ? publicRow : undefined,
     readTravelerBookings: async () => [bookingRow],
+    readOwnAddress: async () => undefined,
     readOwnedHouseholds: async () => [householdRow],
     readHostedTables: async () => [hostedTableRow],
     readHostCertifications: async () => [certificationRow],

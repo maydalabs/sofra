@@ -334,7 +334,15 @@
       "completed": "Completed",
       "cancelled": "Cancelled",
       "archived": "Archived"
-    }
+    },
+    "saveAddress": "Save address",
+    "addressSaved": "Address saved. It stays private and will be verified by Sofra before your next table is published.",
+    "addressIncomplete": "Address line, district, and city are required.",
+    "addressNoHousehold": "Your household record was not found. Complete a host application first.",
+    "addressUnavailable": "Address editing needs a connected database. In the demo walkthrough this record is read-only.",
+    "postalCode": "Postal code (optional)",
+    "addressLine2": "Address line 2 (optional)",
+    "verificationPendingNote": "Saving a new or changed address clears verification: an operator re-verifies it before it is used for a dinner."
   },
   "HostJourney": {
     "eyebrow": "Table journey",
@@ -524,7 +532,25 @@
     "payoutReleasedNotice": "Payout released.",
     "payoutBlockedNotice": "An open safety incident on this dinner blocks release.",
     "actionFailed": "That action could not be completed.",
-    "decisionErrorNoHousehold": "This application has no household attached, so there is nothing to certify. It cannot be approved."
+    "decisionErrorNoHousehold": "This application has no household attached, so there is nothing to certify. It cannot be approved.",
+    "compatibility": "Compatibility",
+    "compatibilityTitle": "Dietary compatibility queue",
+    "compatibilityIntro": "Travelers disclosed these needs privately. Confirm with the household off-platform, then record the outcome. Hosts never see this text.",
+    "compatibilityEmptyTitle": "No disclosures waiting",
+    "compatibilityEmptyBody": "When a traveler asks for a menu compatibility review, it appears here until an operator records a decision.",
+    "compatAccept": "Compatible — accept",
+    "compatDecline": "Not compatible — decline",
+    "compatPrivateReason": "Private note (kept in the decision record)",
+    "compatDecidedNotice": "Compatibility decision recorded.",
+    "reviews": "Reviews",
+    "reviewsTitle": "Review moderation",
+    "reviewsIntro": "Nothing a traveler writes becomes public until it is published here. Rejected reviews are kept, never published.",
+    "reviewsEmptyTitle": "No reviews waiting",
+    "reviewsEmptyBody": "New public experience reviews arrive here after a completed dinner and stay private until moderated.",
+    "reviewPublish": "Publish",
+    "reviewReject": "Reject",
+    "reviewModeratedNotice": "Review moderated.",
+    "partyOf": "Party of {count}"
   },
   "Partner": {
     "title": "Partner overview",

@@ -230,3 +230,55 @@ export async function releasePayoutAction(formData: FormData) {
   }
   redirect(`/${locale}/admin/payouts?released=1`)
 }
+
+export async function decideCompatibilityAction(formData: FormData) {
+  const actor = await requireOperator()
+  assertVerifiedEmail(actor)
+  const bookingId = String(formData.get('bookingId'))
+  const locale = localeOf(formData)
+  const rawDecision = String(formData.get('decision'))
+  const decision =
+    rawDecision === 'accepted' || rawDecision === 'declined'
+      ? rawDecision
+      : null
+  if (!decision) throw new Error('Unknown compatibility decision')
+  const privateReason = formData.get('privateReason')
+    ? String(formData.get('privateReason'))
+    : null
+
+  if (!canPersistWrites()) {
+    redirect(`/${locale}/admin/compatibility?compat=unavailable`)
+  }
+
+  try {
+    const writes = await getSofraOperatorWriteRepository(actor)
+    await writes.decideDietaryCompatibility(bookingId, decision, privateReason)
+  } catch (error) {
+    redirect(`/${locale}/admin/compatibility?error=${outcomeOf(error)}`)
+  }
+  redirect(`/${locale}/admin/compatibility?compat=decided`)
+}
+
+export async function moderateReviewAction(formData: FormData) {
+  const actor = await requireOperator()
+  assertVerifiedEmail(actor)
+  const reviewId = String(formData.get('reviewId'))
+  const locale = localeOf(formData)
+  const rawDecision = String(formData.get('decision'))
+  const decision =
+    rawDecision === 'publish' || rawDecision === 'reject' ? rawDecision : null
+  if (!decision) throw new Error('Unknown moderation decision')
+  const reason = formData.get('reason') ? String(formData.get('reason')) : null
+
+  if (!canPersistWrites()) {
+    redirect(`/${locale}/admin/reviews?moderation=unavailable`)
+  }
+
+  try {
+    const writes = await getSofraOperatorWriteRepository(actor)
+    await writes.moderatePublicReview(reviewId, decision, reason)
+  } catch (error) {
+    redirect(`/${locale}/admin/reviews?error=${outcomeOf(error)}`)
+  }
+  redirect(`/${locale}/admin/reviews?moderation=done`)
+}

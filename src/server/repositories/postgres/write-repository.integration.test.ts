@@ -93,6 +93,7 @@ describe('createBooking', () => {
       tableId,
       partySize: 2,
       partyType: 'couple',
+      primaryGuestName: 'Test Traveller',
       policySnapshot: POLICY,
     })
 
@@ -113,6 +114,7 @@ describe('createBooking', () => {
       tableId,
       partySize: 2,
       partyType: 'couple',
+      primaryGuestName: 'Test Traveller',
       policySnapshot: POLICY,
     })
     // 2 seats at 600.00 TRY guest / 450.00 TRY host net.
@@ -130,6 +132,7 @@ describe('createBooking', () => {
       tableId,
       partySize: 1,
       partyType: 'solo',
+      primaryGuestName: 'Test Traveller',
       policySnapshot: POLICY,
     })
     expect(booking.status).toBe('draft')
@@ -142,6 +145,7 @@ describe('createBooking', () => {
       tableId,
       partySize: 2,
       partyType: 'couple',
+      primaryGuestName: 'Test Traveller',
       policySnapshot: POLICY,
     })
     const [audit] = await sql`
@@ -162,6 +166,7 @@ describe('createBooking', () => {
         tableId,
         partySize: 3,
         partyType: 'friends',
+        primaryGuestName: 'Test Traveller',
         policySnapshot: POLICY,
       }),
     ).rejects.toMatchObject({ code: 'INSUFFICIENT_SEATS' })
@@ -180,6 +185,7 @@ describe('createBooking', () => {
         tableId,
         partySize: 1,
         partyType: 'solo',
+        primaryGuestName: 'Test Traveller',
         policySnapshot: POLICY,
       }),
     ).rejects.toMatchObject({ code: 'BOOKING_CUTOFF_PASSED' })
@@ -195,6 +201,7 @@ describe('createBooking', () => {
           tableId,
           partySize: 2,
           partyType: 'couple',
+          primaryGuestName: 'Test Traveller',
           policySnapshot: POLICY,
         }),
       ),
@@ -224,6 +231,7 @@ describe('cancelBooking', () => {
       tableId,
       partySize: 2,
       partyType: 'couple',
+      primaryGuestName: 'Test Traveller',
       policySnapshot: POLICY,
     })
     expect(await seatsFor(tableId)).toBe(2)
@@ -239,6 +247,7 @@ describe('cancelBooking', () => {
       tableId,
       partySize: 1,
       partyType: 'solo',
+      primaryGuestName: 'Test Traveller',
       policySnapshot: POLICY,
     })
     const intruder = new PostgresSofraWriteRepository(sql, OTHER)
@@ -254,6 +263,7 @@ describe('cancelBooking', () => {
       tableId,
       partySize: 1,
       partyType: 'solo',
+      primaryGuestName: 'Test Traveller',
       policySnapshot: POLICY,
     })
     await writes.cancelBooking(booking.id, null)
@@ -270,6 +280,7 @@ describe('cancelBooking', () => {
       tableId,
       partySize: 1,
       partyType: 'solo',
+      primaryGuestName: 'Test Traveller',
       policySnapshot: POLICY,
     })
     await writes.cancelBooking(booking.id, 'schedule clash')

@@ -53,6 +53,16 @@ export interface HostRosterPartyRecord {
   compatibilityStatus: CompatibilityStatus
 }
 
+export interface HostOwnAddressRecord {
+  addressLine1: string
+  addressLine2: string | null
+  district: string
+  city: string
+  postalCode: string | null
+  arrivalInstructions: string | null
+  verifiedAt: string | null
+}
+
 export interface SofraReadRepository {
   listPublicTables(): Promise<PublicHostedTable[]>
   findPublicTableBySlug(slug: string): Promise<PublicHostedTable | undefined>
@@ -63,5 +73,7 @@ export interface SofraReadRepository {
   listHostTables(): Promise<HostTableRecord[]>
   findHostTableById(id: string): Promise<HostTableRecord | undefined>
   findHostCertification(): Promise<HostCertificationRecord | undefined>
+  /** The host's own household address. Never anyone else's. */
+  findOwnHouseholdAddress(): Promise<HostOwnAddressRecord | undefined>
   listHostRoster(tableId: string): Promise<HostRosterPartyRecord[]>
 }
