@@ -789,6 +789,7 @@
       "paymentNotStarted": "Ödeme başlamadı.",
       "paymentFailed": "Ödeme yetkilendirilmedi.",
       "paymentRefunded": "Kayıtlı ödeme iade edildi.",
+      "paymentPartiallyRefunded": "Kayıtlı ödemenin bir kısmı iptal politikası kapsamında iade edildi.",
       "paymentHeld": "Ödeme operasyon incelemesi için bekletiliyor.",
       "tableAwaitingPrerequisites": "Sofra onayı ödeme ve gerekli uyumluluk incelemesini bekliyor.",
       "tablePendingMinimum": "Bu paylaşımlı sofra gerekli misafir minimumunu bekliyor.",

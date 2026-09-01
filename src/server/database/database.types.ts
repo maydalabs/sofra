@@ -89,6 +89,8 @@ export type PaymentStatus =
   | 'failed'
   | 'refunded'
   | 'held'
+  | 'released'
+  | 'partially_refunded'
 
 export type PayoutStatus =
   | 'pending'
@@ -442,6 +444,35 @@ export interface Database {
           updated_at?: string
         }
       }
+      host_payees: {
+        Row: {
+          id: string
+          household_id: string
+          provider_code: string
+          payee_reference: string
+          registered_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          household_id: string
+          provider_code: string
+          payee_reference: string
+          registered_by: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          household_id?: string
+          provider_code?: string
+          payee_reference?: string
+          registered_by?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
       hosted_table_translations: {
         Row: {
           id: string
@@ -772,6 +803,8 @@ export interface Database {
           raw_event_reference: string | null
           created_at: string
           updated_at: string
+          provider_item_reference: string | null
+          provider_payment_id: string | null
         }
         Insert: {
           id?: string
@@ -785,6 +818,8 @@ export interface Database {
           raw_event_reference?: string | null
           created_at?: string
           updated_at?: string
+          provider_item_reference?: string | null
+          provider_payment_id?: string | null
         }
         Update: {
           id?: string
@@ -798,6 +833,8 @@ export interface Database {
           raw_event_reference?: string | null
           created_at?: string
           updated_at?: string
+          provider_item_reference?: string | null
+          provider_payment_id?: string | null
         }
       }
       payout_records: {
@@ -1017,6 +1054,41 @@ export interface Database {
           landing_at?: string
           attributed_profile_id?: string | null
           metadata?: Json
+        }
+      }
+      refunds: {
+        Row: {
+          id: string
+          booking_id: string
+          payment_record_id: string | null
+          amount_kurus: number
+          currency: string
+          reason: string
+          provider_reference: string | null
+          created_by: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          booking_id: string
+          payment_record_id?: string | null
+          amount_kurus: number
+          currency?: string
+          reason: string
+          provider_reference?: string | null
+          created_by?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          booking_id?: string
+          payment_record_id?: string | null
+          amount_kurus?: number
+          currency?: string
+          reason?: string
+          provider_reference?: string | null
+          created_by?: string | null
+          created_at?: string
         }
       }
       role_assignments: {
@@ -1308,6 +1380,48 @@ export interface Database {
         Args: {
           p_operator_id: string
           p_table_id: string
+        }
+        Returns: unknown
+      }
+      record_payment_authorized: {
+        Args: {
+          p_profile_id: string
+          p_booking_id: string
+          p_provider_code: string
+          p_provider_reference: string
+          p_provider_payment_id: string
+          p_provider_item_reference: string
+          p_amount_kurus: number
+          p_simulated: boolean
+        }
+        Returns: unknown
+      }
+      record_payment_failed: {
+        Args: {
+          p_profile_id: string
+          p_booking_id: string
+          p_provider_code: string
+          p_provider_reference: string
+          p_simulated: boolean
+        }
+        Returns: unknown
+      }
+      record_payment_refund: {
+        Args: {
+          p_profile_id: string
+          p_booking_id: string
+          p_amount_kurus: number
+          p_reason: string
+          p_provider_reference: string
+        }
+        Returns: unknown
+      }
+      register_host_payee: {
+        Args: {
+          p_operator_id: string
+          p_household_id: string
+          p_provider_code: string
+          p_payee_reference: string
         }
         Returns: unknown
       }

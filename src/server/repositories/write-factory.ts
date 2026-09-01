@@ -8,11 +8,13 @@ import { getDatabase } from '@/server/database/client'
 import { RepositoryUnavailableError } from './errors'
 import { PostgresSofraHostWriteRepository } from './postgres/host-write-repository'
 import { PostgresSofraOperatorWriteRepository } from './postgres/operator-write-repository'
+import { PostgresSofraPaymentWriteRepository } from './postgres/payment-write-repository'
 import { PostgresSofraPostDinnerWriteRepository } from './postgres/post-dinner-write-repository'
 import { PostgresSofraWriteRepository } from './postgres/write-repository'
 import type {
   SofraHostWriteRepository,
   SofraOperatorWriteRepository,
+  SofraPaymentWriteRepository,
   SofraPostDinnerWriteRepository,
   SofraWriteRepository,
 } from './write-contracts'
@@ -118,4 +120,29 @@ export async function getSofraPostDinnerWriteRepository(
   }
 
   return new PostgresSofraPostDinnerWriteRepository(sql, actorId)
+}
+
+/**
+ * The payment ledger. Payee registration is operator-gated inside SQL
+ * (assert_operator); the recording functions are callable by the traveller's
+ * own flow and by system jobs, and every one re-checks the booking's money
+ * against what the database computed at booking time.
+ */
+export async function getSofraPaymentWriteRepository(
+  actorId: string,
+): Promise<SofraPaymentWriteRepository> {
+  if (isDemoMode()) {
+    throw new WritesUnavailableError(
+      'Durable writes are disabled in demo mode. The walkthrough uses non-durable review paths.',
+    )
+  }
+
+  const sql = getDatabase()
+  if (!sql) {
+    throw new WritesUnavailableError(
+      'Durable writes require a configured DATABASE_URL',
+    )
+  }
+
+  return new PostgresSofraPaymentWriteRepository(sql, actorId)
 }

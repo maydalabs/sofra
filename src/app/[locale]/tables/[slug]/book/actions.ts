@@ -10,6 +10,7 @@ import { CheckoutPayloadError } from '@/server/payments/iyzico/payloads'
 import { getPublicSofraReadRepository } from '@/server/repositories/factory'
 import {
   canPersistWrites,
+  getSofraPaymentWriteRepository,
   getSofraWriteRepository,
 } from '@/server/repositories/write-factory'
 import { BookingWriteError } from '@/server/repositories/write-contracts'
@@ -145,6 +146,31 @@ export async function simulateBookingAction(slug: string, rawInput: unknown) {
       }
     }
     throw error
+  }
+
+  // The mock settles synchronously; the real adapter returns 'created' plus a
+  // hosted payment page, and its settlement lands via the callback/webhook
+  // instead. Only a terminal status is recorded here.
+  if (payment.status === 'authorized') {
+    const settled = await paymentProvider.getCheckoutStatus(payment.reference)
+    const ledger = await getSofraPaymentWriteRepository(actor.id)
+    await ledger.recordPaymentAuthorized({
+      bookingId: booking.id,
+      providerCode: 'mock',
+      providerReference: payment.reference,
+      providerPaymentId: settled.providerPaymentId,
+      providerItemReference: settled.providerItemReference,
+      amountKurus: booking.guestTotalKurus,
+      simulated: true,
+    })
+  } else if (payment.status === 'failed') {
+    const ledger = await getSofraPaymentWriteRepository(actor.id)
+    await ledger.recordPaymentFailed({
+      bookingId: booking.id,
+      providerCode: 'mock',
+      providerReference: payment.reference,
+      simulated: true,
+    })
   }
 
   return {

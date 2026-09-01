@@ -375,3 +375,81 @@ export interface SofraPostDinnerWriteRepository {
     confidentialReport: string
   }): Promise<SafetyReportRecord>
 }
+
+export interface RecordPaymentAuthorizedInput {
+  bookingId: string
+  providerCode: string
+  providerReference: string
+  providerPaymentId?: string | null
+  providerItemReference?: string | null
+  amountKurus: number
+  simulated?: boolean
+}
+
+export interface RecordPaymentFailedInput {
+  bookingId: string
+  providerCode: string
+  providerReference: string
+  simulated?: boolean
+}
+
+export interface RecordPaymentRefundInput {
+  bookingId: string
+  amountKurus: number
+  reason: string
+  providerReference?: string | null
+}
+
+export interface HostPayeeRecord {
+  id: string
+  householdId: string
+  providerCode: string
+  payeeReference: string
+}
+
+export type PaymentWriteErrorCode =
+  | 'BOOKING_NOT_FOUND'
+  | 'AMOUNT_MISMATCH'
+  | 'NOT_PAYABLE'
+  | 'REFUND_EXCEEDS_PAYMENT'
+  | 'NO_REFUNDABLE_PAYMENT'
+  | 'HOUSEHOLD_NOT_FOUND'
+  | 'NOT_OPERATOR'
+
+export class PaymentWriteError extends Error {
+  constructor(
+    readonly code: PaymentWriteErrorCode,
+    message: string,
+  ) {
+    super(message)
+    this.name = 'PaymentWriteError'
+  }
+}
+
+/**
+ * The ledger side of the payment flow. The provider adapter talks to iyzico
+ * (or a fallback); this repository records what actually happened, in the
+ * same transaction discipline as every other write: the SQL function checks
+ * the amount against what the database computed at booking time and writes
+ * the audit row itself.
+ */
+export interface SofraPaymentWriteRepository {
+  recordPaymentAuthorized(
+    input: RecordPaymentAuthorizedInput,
+  ): Promise<BookingWriteRecord>
+  recordPaymentFailed(
+    input: RecordPaymentFailedInput,
+  ): Promise<BookingWriteRecord>
+  recordPaymentRefund(
+    input: RecordPaymentRefundInput,
+  ): Promise<BookingWriteRecord>
+  registerHostPayee(input: {
+    householdId: string
+    providerCode: string
+    payeeReference: string
+  }): Promise<HostPayeeRecord>
+  findHostPayee(
+    householdId: string,
+    providerCode: string,
+  ): Promise<HostPayeeRecord | null>
+}

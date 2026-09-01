@@ -18,6 +18,7 @@ export type BookingJourneyMessage =
   | 'paymentNotStarted'
   | 'paymentFailed'
   | 'paymentRefunded'
+  | 'paymentPartiallyRefunded'
   | 'paymentHeld'
   | 'tableAwaitingPrerequisites'
   | 'tablePendingMinimum'
@@ -79,7 +80,14 @@ function paymentStep(status: PaymentStatus): BookingJourneyStep {
     not_started: { state: 'upcoming', message: 'paymentNotStarted' },
     failed: { state: 'attention', message: 'paymentFailed' },
     refunded: { state: 'complete', message: 'paymentRefunded' },
+    partially_refunded: {
+      state: 'complete',
+      message: 'paymentPartiallyRefunded',
+    },
     held: { state: 'attention', message: 'paymentHeld' },
+    // The host's share was approved for payout after the dinner; from the
+    // traveller's point of view the payment is simply complete.
+    released: { state: 'complete', message: 'paymentAuthorized' },
   }
   return { id: 'payment', ...variants[status] }
 }

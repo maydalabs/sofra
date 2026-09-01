@@ -789,6 +789,7 @@
       "paymentNotStarted": "Payment has not started.",
       "paymentFailed": "Payment was not authorized.",
       "paymentRefunded": "The recorded payment was refunded.",
+      "paymentPartiallyRefunded": "Part of the recorded payment was refunded under the cancellation policy.",
       "paymentHeld": "The payment is held for operational review.",
       "tableAwaitingPrerequisites": "Table confirmation waits for payment and any required compatibility review.",
       "tablePendingMinimum": "This shared table is waiting for its required traveler minimum.",
