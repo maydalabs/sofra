@@ -39,7 +39,7 @@ export function PortalShell({
         </Badge>
       </div>
       <div className="grid gap-8 lg:grid-cols-[14rem_1fr]">
-        <aside>
+        <aside className="min-w-0">
           <PortalNavigation items={items} label={navigationLabel} />
         </aside>
         <div className="min-w-0">{children}</div>

@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { NativeSelect } from '@/components/ui/native-select'
 import { Textarea } from '@/components/ui/textarea'
 import { Link } from '@/i18n/navigation'
 import { findTravelerBookingById } from '@/server/repositories/queries'
@@ -193,18 +194,17 @@ export default async function BookingReviewPage({
             <BookingFields bookingId={booking.id} locale={locale} />
             <div className="space-y-2">
               <Label htmlFor="safety-severity">{t('severity')}</Label>
-              <select
+              <NativeSelect
                 id="safety-severity"
                 name="severity"
                 defaultValue="medium"
-                className="border-input bg-background h-9 w-full rounded-md border px-3 text-sm"
                 required
               >
                 <option value="low">{t('severities.low')}</option>
                 <option value="medium">{t('severities.medium')}</option>
                 <option value="high">{t('severities.high')}</option>
                 <option value="critical">{t('severities.critical')}</option>
-              </select>
+              </NativeSelect>
             </div>
             <div className="space-y-2">
               <Label htmlFor="confidential-report">

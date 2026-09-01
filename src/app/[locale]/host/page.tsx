@@ -54,7 +54,7 @@ export default async function HostRecruitmentPage({
         </div>
         <EditorialPhoto
           label={t('photoLabel')}
-          className="aspect-[4/5] min-h-[32rem]"
+          className="aspect-[4/5] min-h-0 sm:min-h-[32rem]"
           tone="sage"
         />
       </section>

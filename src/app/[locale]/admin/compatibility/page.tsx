@@ -96,7 +96,7 @@ export default async function CompatibilityQueuePage({
                   <Input
                     id={`compat-reason-${entry.bookingId}`}
                     name="privateReason"
-                    placeholder={t('reasonPlaceholder')}
+                    placeholder={t('optionalNotePlaceholder')}
                   />
                 </div>
                 <Button

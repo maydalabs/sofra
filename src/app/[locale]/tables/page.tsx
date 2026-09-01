@@ -9,13 +9,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { createPublicPageMetadata } from '@/features/seo/metadata'
 import { getAppLocale } from '@/i18n/routing'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { NativeSelect } from '@/components/ui/native-select'
 import { Link } from '@/i18n/navigation'
 import { listPublicTables } from '@/server/repositories/queries'
 import { getServerTimeMilliseconds } from '@/server/time/clock'
@@ -96,42 +90,39 @@ export default async function TablesPage({
           >
             <div className="space-y-2">
               <Label htmlFor="date-filter">{t('date')}</Label>
-              <Select name="date" defaultValue={filters.date ?? 'all'}>
-                <SelectTrigger id="date-filter" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('allDates')}</SelectItem>
-                  <SelectItem value="soon">{t('next14Days')}</SelectItem>
-                  <SelectItem value="later">{t('laterMonth')}</SelectItem>
-                </SelectContent>
-              </Select>
+              <NativeSelect
+                name="date"
+                id="date-filter"
+                defaultValue={filters.date ?? 'all'}
+              >
+                <option value="all">{t('allDates')}</option>
+                <option value="soon">{t('next14Days')}</option>
+                <option value="later">{t('laterMonth')}</option>
+              </NativeSelect>
             </div>
             <div className="space-y-2">
               <Label htmlFor="format-filter">{t('format')}</Label>
-              <Select name="format" defaultValue={filters.format ?? 'all'}>
-                <SelectTrigger id="format-filter" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('allFormats')}</SelectItem>
-                  <SelectItem value="shared">{t('sharedOption')}</SelectItem>
-                  <SelectItem value="private">{t('privateOption')}</SelectItem>
-                </SelectContent>
-              </Select>
+              <NativeSelect
+                name="format"
+                id="format-filter"
+                defaultValue={filters.format ?? 'all'}
+              >
+                <option value="all">{t('allFormats')}</option>
+                <option value="shared">{t('sharedOption')}</option>
+                <option value="private">{t('privateOption')}</option>
+              </NativeSelect>
             </div>
             <div className="space-y-2">
               <Label htmlFor="area-filter">{t('neighborhood')}</Label>
-              <Select name="area" defaultValue={filters.area ?? 'all'}>
-                <SelectTrigger id="area-filter" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('allAreas')}</SelectItem>
-                  <SelectItem value="anatolian">Kadıköy · Üsküdar</SelectItem>
-                  <SelectItem value="european">Beşiktaş · Şişli</SelectItem>
-                </SelectContent>
-              </Select>
+              <NativeSelect
+                name="area"
+                id="area-filter"
+                defaultValue={filters.area ?? 'all'}
+              >
+                <option value="all">{t('allAreas')}</option>
+                <option value="anatolian">Kadıköy · Üsküdar</option>
+                <option value="european">Beşiktaş · Şişli</option>
+              </NativeSelect>
             </div>
             <Button type="submit">
               <Filter className="size-4" aria-hidden="true" />

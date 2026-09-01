@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server'
 import { triageIncidentAction } from '@/app/[locale]/admin/actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { NativeSelect } from '@/components/ui/native-select'
 import { Label } from '@/components/ui/label'
 import type { IncidentStatus } from '@/server/database/database.types'
 
@@ -50,18 +51,13 @@ export async function IncidentTriageForm({
         <Label htmlFor={selectId} className="text-xs">
           {t('triageStatus')}
         </Label>
-        <select
-          id={selectId}
-          name="status"
-          defaultValue={status}
-          className="border-input bg-background h-9 rounded-md border px-3 text-sm"
-        >
+        <NativeSelect id={selectId} name="status" defaultValue={status}>
           {statuses.map((value) => (
             <option key={value} value={value}>
               {t(`incidentStatuses.${value}`)}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
 
       <div className="min-w-48 flex-1 space-y-1">
@@ -71,7 +67,7 @@ export async function IncidentTriageForm({
         <Input
           id={reasonId}
           name="reason"
-          placeholder={t('reasonPlaceholder')}
+          placeholder={t('optionalNotePlaceholder')}
         />
       </div>
 

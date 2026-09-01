@@ -91,10 +91,10 @@ export default async function TableDetailPage({ params }: PageProps) {
           />
           <EditorialPhoto
             label={t('menuPhotoLabel')}
-            className="aspect-[16/9] min-h-0"
+            className="hidden aspect-[16/9] min-h-0 lg:block"
             tone="sage"
           />
-          <div className="grid grid-cols-2 gap-5">
+          <div className="hidden grid-cols-2 gap-5 lg:grid">
             <EditorialPhoto
               label={t('teaPhotoLabel')}
               className="aspect-square min-h-0"

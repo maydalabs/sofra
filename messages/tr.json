@@ -299,7 +299,7 @@
     "demoHouseholdStory": "Bu evde pazar akşamı yemeği çaya uzanır. Akşam yemeği bizim evimizde böyle yaşanır.",
     "profileEditingUnavailable": "Ev halkı profili düzenleme bağlı değil",
     "privateRecordTitle": "Özel operasyon kaydı",
-    "privateRecordBody": "Bu kayıt kamusal mahalle bilgisinden ayrıdır. Liste HTML'ine, kamusal harita girdilerine, analitiğe, üst verilere veya kamusal veritabanı görünümlerine asla girmemelidir. Korumalı adres yazımları bağlı değildir; bu salt okunur alanlar tam adresi kaydetmez veya geri göstermez.",
+    "privateRecordBody": "Bu kayıt, herkese açık semt bilgisinden ayrıdır. İlan HTML’ine, herkese açık harita girdilerine, analizlere, meta verilere veya herkese açık veritabanı görünümlerine asla girmemelidir.",
     "addressLine": "Adres satırı",
     "addressPlaceholder": "Demo verilerinde doldurulmadı",
     "district": "İlçe",
@@ -347,7 +347,8 @@
     "dwellingTypeHelp": "Evin ortak bir binadaki daire mi yoksa müstakil bir ev mi olduğu. Bu, Sofra’nın evi nasıl doğrulayacağını etkiler.",
     "dwellingApartment": "Ortak binada daire",
     "dwellingDetached": "Müstakil ev",
-    "dwellingOther": "Diğer"
+    "dwellingOther": "Diğer",
+    "privateRecordDemoNote": "Demo turunda bu alanlar salt okunurdur ve hiçbir şey kaydedilmez."
   },
   "HostJourney": {
     "eyebrow": "Sofra yolculuğu",
@@ -560,7 +561,8 @@
     "cancelDinnerHelp": "Gerçekleşmeyecek bir yemek için: asgari sayıya ulaşılamadı, ev sahibi vazgeçti veya bir güvenlik kararı. Tüm açık rezervasyonlara %100 iade yapılır ve serbest bırakılmamış ödemeler bekletilir. Bu işlem geri alınamaz.",
     "cancelDinnerReason": "Gerekçe (zorunlu; iptal edilen her rezervasyona işlenir)",
     "dinnerCancelledNotice": "Yemek iptal edildi. {bookings} rezervasyon iptal edildi, {refund} tam iade yapılacak, {payouts} ödeme bekletildi.",
-    "cancelDinnerErrorState": "Bu sofra mevcut durumundan platform tarafından iptal edilemez."
+    "cancelDinnerErrorState": "Bu sofra mevcut durumundan platform tarafından iptal edilemez.",
+    "optionalNotePlaceholder": "İsteğe bağlı — kayıtta tutulur"
   },
   "Partner": {
     "title": "Partner özeti",
@@ -1033,7 +1035,7 @@
     "retry": "Yeniden dene",
     "unavailableEyebrow": "Kullanılamıyor",
     "unauthorizedTitle": "Bu alan farklı bir hesap rolü gerektiriyor",
-    "unauthorizedBody": "Yerelde uygun demo profilini seçin veya Supabase bağlandığında yetkili Sofra hesabıyla giriş yapın.",
+    "unauthorizedBody": "Yerelde uygun demo profilini seçin veya gerekli role sahip bir hesapla giriş yapın.",
     "notFoundTitle": "Bu sofra artık uygun değil",
     "notFoundBody": "Dolmuş, rezervasyon süresi geçmiş veya yeniden incelemeye alınmış olabilir.",
     "errorTitle": "Şu anda sofrayı hazırlayamadık",

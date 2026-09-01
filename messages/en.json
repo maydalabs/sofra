@@ -299,7 +299,7 @@
     "demoHouseholdStory": "Sunday dinner stretches into tea in this home. This is how dinner happens in our home.",
     "profileEditingUnavailable": "Household profile editing not connected",
     "privateRecordTitle": "Private operational record",
-    "privateRecordBody": "This record is separate from the public neighborhood. It must never enter listing HTML, public map inputs, analytics, metadata, or public database views. Protected address writes are not connected, so these read-only fields do not save or echo an exact address.",
+    "privateRecordBody": "This record is separate from the public neighborhood. It must never enter listing HTML, public map inputs, analytics, metadata, or public database views.",
     "addressLine": "Address line",
     "addressPlaceholder": "Not populated in demo data",
     "district": "District",
@@ -347,7 +347,8 @@
     "dwellingTypeHelp": "Whether the home is a flat in a shared building or a detached house. This affects how Sofra verifies the home.",
     "dwellingApartment": "Flat in a shared building",
     "dwellingDetached": "Detached house",
-    "dwellingOther": "Other"
+    "dwellingOther": "Other",
+    "privateRecordDemoNote": "In the demo walkthrough these fields are read-only and nothing is saved."
   },
   "HostJourney": {
     "eyebrow": "Table journey",
@@ -560,7 +561,8 @@
     "cancelDinnerHelp": "For a dinner that will not happen: minimum not reached, host withdrawal, or a safety decision. Every open booking is refunded 100% and unreleased payouts are held. This cannot be undone.",
     "cancelDinnerReason": "Reason (required, recorded on every cancelled booking)",
     "dinnerCancelledNotice": "Dinner cancelled. {bookings} booking(s) cancelled, {refund} in full refunds due, {payouts} payout(s) held.",
-    "cancelDinnerErrorState": "This table cannot be platform-cancelled from its current state."
+    "cancelDinnerErrorState": "This table cannot be platform-cancelled from its current state.",
+    "optionalNotePlaceholder": "Optional — kept in the record"
   },
   "Partner": {
     "title": "Partner overview",
@@ -1033,7 +1035,7 @@
     "retry": "Try again",
     "unavailableEyebrow": "Unavailable",
     "unauthorizedTitle": "This area needs a different account role",
-    "unauthorizedBody": "Choose an appropriate demo persona locally, or sign in with an authorized Sofra account when Supabase is connected.",
+    "unauthorizedBody": "Choose an appropriate demo persona locally, or sign in with an account that has the required role.",
     "notFoundTitle": "That table is no longer available",
     "notFoundBody": "It may have filled, passed its booking cutoff, or returned to review.",
     "errorTitle": "We couldn’t set the table just now",

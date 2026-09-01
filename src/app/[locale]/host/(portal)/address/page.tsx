@@ -5,6 +5,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { NativeSelect } from '@/components/ui/native-select'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { isDemoMode } from '@/server/auth/demo-session'
@@ -53,7 +54,8 @@ export default async function PrivateAddressPage({
           <LockKeyhole className="size-4" />
           <AlertTitle>{t('privateRecordTitle')}</AlertTitle>
           <AlertDescription id="private-address-note">
-            {t('privateRecordBody')} {t('verificationPendingNote')}
+            {t('privateRecordBody')} {t('verificationPendingNote')}{' '}
+            {demo ? t('privateRecordDemoNote') : null}
           </AlertDescription>
         </Alert>
         {notice ? (
@@ -112,14 +114,13 @@ export default async function PrivateAddressPage({
           </div>
           <div className="space-y-2 sm:col-span-2">
             <Label htmlFor="dwelling-type">{t('dwellingType')}</Label>
-            <select
+            <NativeSelect
               id="dwelling-type"
               name="dwellingType"
               defaultValue={current?.dwellingType ?? ''}
               disabled={demo}
               required={!demo}
               aria-describedby="dwelling-type-help"
-              className="border-input bg-background h-9 w-full rounded-md border px-3 text-sm"
             >
               <option value="" disabled>
                 —
@@ -127,7 +128,7 @@ export default async function PrivateAddressPage({
               <option value="apartment_flat">{t('dwellingApartment')}</option>
               <option value="detached_house">{t('dwellingDetached')}</option>
               <option value="other">{t('dwellingOther')}</option>
-            </select>
+            </NativeSelect>
             <p
               id="dwelling-type-help"
               className="text-muted-foreground text-xs"

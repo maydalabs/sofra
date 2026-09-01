@@ -94,7 +94,7 @@ export default async function ReviewModerationPage({
                   <Input
                     id={`review-reason-${review.id}`}
                     name="reason"
-                    placeholder={t('reasonPlaceholder')}
+                    placeholder={t('optionalNotePlaceholder')}
                   />
                 </div>
                 <Button type="submit" name="decision" value="publish" size="sm">

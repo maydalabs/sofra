@@ -97,7 +97,7 @@ export default async function HomePage({
         <div className="relative pb-12 sm:ps-12">
           <EditorialPhoto
             label={t('photoLabel')}
-            className="aspect-[4/5] min-h-[30rem]"
+            className="aspect-[4/5] min-h-0 sm:min-h-[30rem]"
             showLabel={false}
           />
           <Card className="bg-card/95 absolute start-0 bottom-0 max-w-sm shadow-2xl backdrop-blur">

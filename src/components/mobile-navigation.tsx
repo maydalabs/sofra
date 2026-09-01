@@ -13,19 +13,27 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { Link } from '@/i18n/navigation'
+import { Link, useRouter } from '@/i18n/navigation'
 import { usePathname } from '@/i18n/navigation'
+import { authClient, useSession } from '@/lib/auth-client'
 import { isNavigationPathActive } from '@/lib/navigation'
 
 export function MobileNavigation() {
   const t = useTranslations('Navigation')
   const common = useTranslations('Common')
   const pathname = usePathname()
+  const router = useRouter()
+  // The header's account controls are desktop-only, so the sheet must carry
+  // the session state too -- previously a signed-in phone user had no way to
+  // reach their account or sign out.
+  const { data: session } = useSession()
   const links = [
     { href: '/tables' as const, label: t('tables') },
     { href: '/how-it-works' as const, label: t('how') },
     { href: '/host' as const, label: t('host') },
-    { href: '/sign-in' as const, label: common('signIn') },
+    ...(session?.user
+      ? [{ href: '/account' as const, label: common('account') }]
+      : [{ href: '/sign-in' as const, label: common('signIn') }]),
     { href: '/demo' as const, label: common('demo') },
   ]
 
@@ -66,6 +74,21 @@ export function MobileNavigation() {
             )
           })}
         </nav>
+        {session?.user ? (
+          <SheetClose asChild>
+            <Button
+              variant="outline"
+              className="mt-6 w-full"
+              onClick={async () => {
+                await authClient.signOut()
+                router.push('/')
+                router.refresh()
+              }}
+            >
+              {common('signOut')}
+            </Button>
+          </SheetClose>
+        ) : null}
         <LocaleSwitcher className="mt-auto w-full" />
       </SheetContent>
     </Sheet>

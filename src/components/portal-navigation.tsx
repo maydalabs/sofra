@@ -1,5 +1,7 @@
 'use client'
 
+import * as React from 'react'
+
 import { Link, usePathname } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 
@@ -13,6 +15,15 @@ export function PortalNavigation({
   label: string
 }) {
   const pathname = usePathname()
+  const navRef = React.useRef<HTMLElement>(null)
+
+  // On mobile the nav scrolls horizontally, and a deep link can land with the
+  // active section off-screen -- which reads as being on the wrong page.
+  React.useEffect(() => {
+    navRef.current
+      ?.querySelector('[aria-current="page"]')
+      ?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+  }, [pathname])
   const activeHref = [...items]
     .filter(
       (item) => pathname === item.href || pathname.startsWith(`${item.href}/`),
@@ -21,6 +32,7 @@ export function PortalNavigation({
 
   return (
     <nav
+      ref={navRef}
       className="flex snap-x gap-2 overflow-x-auto pb-2 lg:sticky lg:top-28 lg:flex-col"
       aria-label={label}
     >
