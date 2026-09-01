@@ -5,7 +5,8 @@ import { ZodError } from 'zod'
 import { developmentPolicy } from '@/features/policy/config'
 import { getCurrentActor } from '@/server/auth/current-actor'
 import { assertVerifiedEmail } from '@/server/authorization/roles'
-import { getPaymentProvider } from '@/server/payments/mock-payment-provider'
+import { getPaymentProvider } from '@/server/payments/provider-factory'
+import { CheckoutPayloadError } from '@/server/payments/iyzico/payloads'
 import { getPublicSofraReadRepository } from '@/server/repositories/factory'
 import {
   canPersistWrites,
@@ -109,12 +110,42 @@ export async function simulateBookingAction(slug: string, rawInput: unknown) {
     }
   }
 
-  const payment = await paymentProvider.createCheckout({
-    bookingId: booking.id,
-    amountKurus: booking.guestTotalKurus,
-    currency: booking.currency,
-    deterministicOutcome: 'success',
-  })
+  // The primary guest name is what we have; the provider needs name/surname.
+  const nameParts = intent.primaryGuestName.trim().split(/\s+/)
+  const surname = nameParts.length > 1 ? (nameParts.pop() as string) : '—'
+
+  let payment
+  try {
+    payment = await paymentProvider.createCheckout({
+      bookingId: booking.id,
+      amountKurus: booking.guestTotalKurus,
+      hostNetPayoutKurus: booking.hostNetPayoutKurus,
+      // Host payee onboarding is not built yet, so a real marketplace charge
+      // cannot exist; the mock tolerates null, the iyzico adapter refuses it.
+      hostPayeeReference: null,
+      currency: booking.currency,
+      buyer: {
+        id: actor.id,
+        name: nameParts.join(' ') || intent.primaryGuestName,
+        surname,
+        email: intent.primaryGuestEmail ?? actor.email,
+        ip: '127.0.0.1',
+      },
+      callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ''}/api/payments/callback`,
+      deterministicOutcome: 'success',
+    })
+  } catch (error) {
+    // A charge that cannot be constructed leaves the seat genuinely held and
+    // the booking honestly unpaid — the same state as having no provider.
+    if (error instanceof CheckoutPayloadError) {
+      return {
+        status: 'reserved_payment_pending' as const,
+        bookingId: booking.id,
+        review,
+      }
+    }
+    throw error
+  }
 
   return {
     status:

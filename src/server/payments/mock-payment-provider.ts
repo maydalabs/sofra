@@ -1,6 +1,7 @@
 import 'server-only'
 
 import type {
+  CheckoutStatusResult,
   CreateCheckoutInput,
   CreateCheckoutResult,
   PaymentProvider,
@@ -11,6 +12,10 @@ import type {
   RegisterHostPayeeResult,
   ReleaseHostPayoutInput,
   ReleaseHostPayoutResult,
+  RevokeHostPayoutInput,
+  RevokeHostPayoutResult,
+  UpdateHostShareInput,
+  UpdateHostShareResult,
   VerifiedPaymentEvent,
   VerifyWebhookInput,
 } from './types'
@@ -19,10 +24,16 @@ interface MockPaymentRecord {
   reference: string
   bookingId: string
   amountKurus: number
+  hostNetPayoutKurus: number
   status: PaymentStatus
   createdAt: string
 }
 
+/**
+ * In-memory stand-in for local development. Unlike the real adapter it
+ * settles synchronously: createCheckout returns a terminal status directly
+ * instead of a hosted payment page, so the demo flow needs no redirect.
+ */
 export class MockPaymentProvider implements PaymentProvider {
   private readonly records = new Map<string, MockPaymentRecord>()
 
@@ -45,28 +56,43 @@ export class MockPaymentProvider implements PaymentProvider {
       reference,
       bookingId: input.bookingId,
       amountKurus: input.amountKurus,
+      hostNetPayoutKurus: input.hostNetPayoutKurus,
       status,
       createdAt: new Date().toISOString(),
     })
-    return { reference, status, auditId: `audit-${reference}` }
+    return {
+      reference,
+      checkoutUrl: null,
+      status,
+      auditId: `audit-${reference}`,
+    }
   }
 
-  async getPaymentStatus(reference: string) {
+  async getCheckoutStatus(reference: string): Promise<CheckoutStatusResult> {
     const record = this.records.get(reference)
     if (!record) throw new Error('Unknown mock payment reference')
-    return record.status
+    return {
+      status: record.status,
+      providerPaymentId: `mock-payment-${record.bookingId}`,
+      providerItemReference: `mock-item-${record.reference}`,
+      paidAmountKurus: record.amountKurus,
+      hostPayoutAmountKurus: record.hostNetPayoutKurus,
+    }
   }
 
   async refundPayment(input: RefundPaymentInput): Promise<RefundPaymentResult> {
-    const record = this.records.get(input.reference)
-    if (!record) throw new Error('Unknown mock payment reference')
+    const record = [...this.records.values()].find(
+      (candidate) =>
+        `mock-item-${candidate.reference}` === input.providerItemReference,
+    )
+    if (!record) throw new Error('Unknown mock payment item reference')
     if (input.amountKurus > record.amountKurus)
       throw new Error('Refund exceeds original payment')
     record.status = 'refunded'
     return {
-      reference: input.reference,
+      reference: input.providerItemReference,
       status: 'refunded',
-      auditId: `audit-refund-${input.reference}`,
+      auditId: `audit-refund-${input.providerItemReference}`,
     }
   }
 
@@ -89,6 +115,25 @@ export class MockPaymentProvider implements PaymentProvider {
     }
   }
 
+  async revokeHostPayout(
+    input: RevokeHostPayoutInput,
+  ): Promise<RevokeHostPayoutResult> {
+    return {
+      payoutId: input.payoutId,
+      status: 'revoked',
+      auditId: `audit-payout-revoked-${input.payoutId}`,
+    }
+  }
+
+  async updateHostShare(
+    input: UpdateHostShareInput,
+  ): Promise<UpdateHostShareResult> {
+    return {
+      providerItemReference: input.providerItemReference,
+      status: 'updated',
+    }
+  }
+
   async verifyWebhook(
     input: VerifyWebhookInput,
   ): Promise<VerifiedPaymentEvent> {
@@ -100,12 +145,11 @@ export class MockPaymentProvider implements PaymentProvider {
     }
     if (!event.reference || !event.status)
       throw new Error('Malformed mock webhook')
-    return { reference: event.reference, status: event.status }
+    return {
+      reference: event.reference,
+      providerPaymentId: `mock-payment-${event.reference}`,
+      eventType: 'MOCK',
+      status: event.status,
+    }
   }
-}
-
-export function getPaymentProvider(): PaymentProvider | null {
-  if (process.env.NODE_ENV === 'production') return null
-  if (process.env.SOFRA_ENABLE_MOCK_PAYMENTS !== 'true') return null
-  return new MockPaymentProvider()
 }
