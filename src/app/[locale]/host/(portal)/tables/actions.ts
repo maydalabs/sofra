@@ -70,3 +70,54 @@ export async function submitHostedTableAction(formData: FormData) {
   console.info('[Sofra demo audit]', audit)
   redirect(`/${locale}/host/tables/${table.id}/edit?submission=reviewed`)
 }
+
+const checkInOutcomeByCode = {
+  DINNER_NOT_STARTED: 'not_started',
+  ROSTER_MISMATCH: 'roster_changed',
+  UNRESOLVED_BOOKINGS: 'unresolved',
+  TABLE_NOT_EDITABLE: 'already_completed',
+} as const
+
+export async function completeDinnerAction(formData: FormData) {
+  const actor = await getCurrentActor()
+  if (!actor) throw new Error('Authentication required')
+  assertHasAnyRole(actor, ['certified_host'])
+  const tableId = String(formData.get('tableId'))
+  const locale = formData.get('locale') === 'tr' ? 'tr' : 'en'
+  const rosterPath = `/${locale}/host/tables/${tableId}/roster`
+
+  // One radio group per booking: attendance-<bookingId> = attended | no_show.
+  const attended: string[] = []
+  const noShow: string[] = []
+  for (const [key, value] of formData.entries()) {
+    if (!key.startsWith('attendance-')) continue
+    const bookingId = key.slice('attendance-'.length)
+    if (value === 'attended') attended.push(bookingId)
+    else if (value === 'no_show') noShow.push(bookingId)
+  }
+
+  if (!canPersistWrites()) {
+    redirect(`${rosterPath}?checkin=unavailable`)
+  }
+
+  try {
+    const writes = await getSofraHostWriteRepository(actor.id)
+    await writes.completeDinner({
+      tableId,
+      attendedBookingIds: attended,
+      noShowBookingIds: noShow,
+    })
+  } catch (error) {
+    if (error instanceof HostWriteError) {
+      const outcome =
+        error.code in checkInOutcomeByCode
+          ? checkInOutcomeByCode[
+              error.code as keyof typeof checkInOutcomeByCode
+            ]
+          : 'failed'
+      redirect(`${rosterPath}?checkin=${outcome}`)
+    }
+    throw error
+  }
+  redirect(`${rosterPath}?checkin=completed`)
+}

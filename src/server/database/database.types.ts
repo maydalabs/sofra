@@ -166,6 +166,32 @@ export interface Database {
           occurred_at?: string
         }
       }
+      booking_check_ins: {
+        Row: {
+          id: string
+          booking_id: string
+          hosted_table_id: string
+          attended: boolean
+          confirmed_by: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          booking_id: string
+          hosted_table_id: string
+          attended: boolean
+          confirmed_by: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          booking_id?: string
+          hosted_table_id?: string
+          attended?: boolean
+          confirmed_by?: string
+          created_at?: string
+        }
+      }
       booking_guests: {
         Row: {
           id: string
@@ -219,6 +245,7 @@ export interface Database {
           updated_at: string
           refund_due_kurus: number
           host_compensation_kurus: number
+          completed_at: string | null
         }
         Insert: {
           id?: string
@@ -246,6 +273,7 @@ export interface Database {
           updated_at?: string
           refund_due_kurus?: number
           host_compensation_kurus?: number
+          completed_at?: string | null
         }
         Update: {
           id?: string
@@ -273,6 +301,7 @@ export interface Database {
           updated_at?: string
           refund_due_kurus?: number
           host_compensation_kurus?: number
+          completed_at?: string | null
         }
       }
       dietary_compatibility_decisions: {
@@ -1245,6 +1274,20 @@ export interface Database {
           bookings_cancelled: number | null
           refund_due_total_kurus: string | null
           payouts_held: number | null
+        }[]
+      }
+      complete_dinner: {
+        Args: {
+          p_host_id: string
+          p_table_id: string
+          p_attended_booking_ids: string[]
+          p_no_show_booking_ids: string[]
+        }
+        Returns: {
+          attended_count: number | null
+          no_show_count: number | null
+          payout_amount_kurus: number | null
+          payout_id: string | null
         }[]
       }
       create_booking: {

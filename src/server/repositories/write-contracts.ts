@@ -138,6 +138,9 @@ export type HostWriteErrorCode =
   | 'TABLE_NOT_FOUND'
   | 'TABLE_NOT_EDITABLE'
   | 'ADDRESS_INCOMPLETE'
+  | 'DINNER_NOT_STARTED'
+  | 'ROSTER_MISMATCH'
+  | 'UNRESOLVED_BOOKINGS'
 
 export class HostWriteError extends Error {
   constructor(
@@ -171,6 +174,23 @@ export interface HostAddressRecord {
   verifiedAt: string | null
 }
 
+export interface CompleteDinnerInput {
+  tableId: string
+  attendedBookingIds: readonly string[]
+  noShowBookingIds: readonly string[]
+}
+
+/**
+ * What completing a dinner produced: the attendance split (the chargeback
+ * evidence) and the payout row the release machinery now owns.
+ */
+export interface DinnerCompletionRecord {
+  attendedCount: number
+  noShowCount: number
+  payoutAmountKurus: number
+  payoutId: string | null
+}
+
 export interface SofraHostWriteRepository {
   submitHostAddress(input: HostAddressInput): Promise<HostAddressRecord>
   submitHostApplication(
@@ -180,6 +200,7 @@ export interface SofraHostWriteRepository {
     input: CreateHostedTableDraftInput,
   ): Promise<HostedTableWriteRecord>
   submitHostedTable(tableId: string): Promise<HostedTableWriteRecord>
+  completeDinner(input: CompleteDinnerInput): Promise<DinnerCompletionRecord>
 }
 
 // ---------------------------------------------------------------------------

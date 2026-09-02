@@ -4,6 +4,8 @@ import type { SofraDatabase } from '@/server/database/client'
 import type { Database } from '@/server/database/database.types'
 import {
   HostWriteError,
+  type CompleteDinnerInput,
+  type DinnerCompletionRecord,
   type DwellingType,
   type CreateHostedTableDraftInput,
   type HostAddressInput,
@@ -48,6 +50,9 @@ const errorCodesBySqlState: Record<string, HostWriteErrorCode> = {
   SF014: 'CAPACITY_EXCEEDS_CERTIFICATION',
   SF015: 'SCHEDULE_OUT_OF_WINDOW',
   SF016: 'ACTIVE_TABLE_LIMIT_REACHED',
+  SF038: 'DINNER_NOT_STARTED',
+  SF039: 'ROSTER_MISMATCH',
+  SF040: 'UNRESOLVED_BOOKINGS',
 }
 
 function toHostWriteError(error: unknown): HostWriteError {
@@ -181,6 +186,37 @@ export class PostgresSofraHostWriteRepository implements SofraHostWriteRepositor
         )
       `
       return toTable(rows[0])
+    } catch (error) {
+      throw toHostWriteError(error)
+    }
+  }
+
+  async completeDinner(
+    input: CompleteDinnerInput,
+  ): Promise<DinnerCompletionRecord> {
+    try {
+      const rows = await this.sql<
+        {
+          attended_count: number
+          no_show_count: number
+          payout_amount_kurus: number
+          payout_id: string | null
+        }[]
+      >`
+        select * from public.complete_dinner(
+          ${this.actorId}::uuid,
+          ${input.tableId}::uuid,
+          ${this.sql.array([...input.attendedBookingIds])}::uuid[],
+          ${this.sql.array([...input.noShowBookingIds])}::uuid[]
+        )
+      `
+      const row = rows[0]
+      return {
+        attendedCount: row.attended_count,
+        noShowCount: row.no_show_count,
+        payoutAmountKurus: row.payout_amount_kurus,
+        payoutId: row.payout_id,
+      }
     } catch (error) {
       throw toHostWriteError(error)
     }
