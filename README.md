@@ -1,108 +1,117 @@
-# Sofra — Phase 1 product foundation
+# Sofra
 
-Sofra is a Türkiye-first managed marketplace where travelers reserve seats at scheduled dinners inside verified Turkish households.
+**A Türkiye-first managed marketplace where travellers reserve a seat at a scheduled dinner inside a verified Turkish household.**
 
 > Be welcomed into a Turkish household and join the table.
 
-This repository is the Phase 1 modular monolith. It includes localized public discovery, demo-safe traveler/host/operator/partner workspaces, a normalized PostgreSQL schema, server-side domain rules, provider adapters, fictional development data, and automated coverage. It does not contain real payments or connected production services.
+This repository is the Phase 1 modular monolith: localized public discovery,
+traveller, host, partner, and operator workspaces, a normalized PostgreSQL
+schema, server-side domain rules, provider adapters, fictional development
+data, and automated coverage.
 
-## Project
+It is a working foundation, not a launched business. There is no real payment
+provider, no production identity verification, and most durable writes are not
+yet connected. The code says so everywhere it matters, and that is deliberate.
 
-- Absolute path: `/Users/mehmeteminmayda/Projects/sofra`
-- Runtime: current stable Next.js App Router and React, strict TypeScript
-- Package manager: pnpm (lockfile committed)
-- Styling: Tailwind CSS and owned shadcn/ui component source
-- Data: PostgreSQL 18 — Neon when deployed, a local Docker container in development
-- Data access: `postgres.js` with raw SQL (no ORM)
-- Auth: Better Auth (emailed sign-in links, no passwords stored)
-- Localization: `next-intl` at `/en` and `/tr`
+| | |
+| --- | --- |
+| Unit and integration tests | 220 |
+| End-to-end scenarios | 27 |
+| SQL migrations | 16 |
+| Languages | English, Turkish |
+| Stack | Next.js App Router, React, strict TypeScript, PostgreSQL 18, Tailwind |
 
-Product decisions are documented in `docs/PRODUCT_CONSTITUTION.md` and `docs/DECISIONS.md`. Read `AGENTS.md` before making product changes.
+## The two ideas worth reading the code for
+
+**Privacy is a schema decision, not a UI decision.** Public listings are built
+from an explicit allowlist projection. Exact address, precise coordinates,
+arrival instructions, dietary details, private guest names, assessment notes,
+and incident content cannot reach a public surface because the projection never
+selects them. Host rosters go through a narrow authenticated SQL function that
+returns no guest names, no dietary text, no exact location, and no payment
+detail. Confidential safety reports never appear in a result, a URL, an audit
+entry, or an analytics event.
+
+**Unfinished things fail honestly.** Without a payment provider, checkout says
+payments are not enabled and never marks a booking paid. The demo persona
+mechanism is rejected in production. The fixture loader refuses a non-local
+target. Protected repositories fail closed when credentials or an authorized
+actor are absent. Nothing pretends to have succeeded.
+
+## Where to look in this codebase
+
+| Path | Why it is worth opening |
+| --- | --- |
+| `db/migrations/0003_functions.sql` | Triggers, the public projection, and the read models. The privacy boundary lives here rather than in a component. |
+| `db/migrations/0004_bookings_write.sql` | Transactional booking and cancellation. |
+| `src/server/repositories/` | Typed public, traveller, host, partner, and operator read contracts, each with a demo and a PostgreSQL implementation. |
+| `src/server/authorization/` | The role checks every protected page repeats before content or data access, so parallel rendering cannot read for the wrong role. |
+| `src/server/payments/` | A server-only provider interface whose mock is opt-in, deterministic, card-free, and impossible to construct in production. |
+| `src/features/` | Pricing, policy, scheduled tables, bookings, dietary privacy, partner referral projections, and payout rules. |
+| `e2e/sofra.spec.ts` | 27 scenarios including public address privacy, cross-role access rejection, confidential-report non-echo, roster privacy, and payout holds. |
+| `db/migrate.mjs` | The migration runner. Plain `.sql` files in filename order, each in its own transaction, tracked in `public.schema_migrations`. No vendor CLI. |
+
+## Stack
+
+- Next.js App Router and React, strict TypeScript
+- PostgreSQL 18: Neon when deployed, a local Docker container in development
+- `postgres.js` with raw SQL, no ORM
+- Better Auth with emailed sign-in links; no passwords stored
+- `next-intl` at `/en` and `/tr`
+- Tailwind CSS with owned shadcn/ui component source
+- pnpm, lockfile committed
+
+Product decisions are documented in `docs/PRODUCT_CONSTITUTION.md` and
+`docs/DECISIONS.md`. Architecture detail is in `docs/ARCHITECTURE.md`, and the
+privacy model in `docs/SECURITY_AND_PRIVACY.md`.
 
 ## Prerequisites
 
-- Node.js 20 or newer (the current development machine uses Node 25)
+- Node.js 20 or newer
 - pnpm 11 or newer
-- Docker (Docker Desktop, Colima, or equivalent) for the local database
-- Optional for browser tests: Playwright Chromium (`pnpm exec playwright install chromium`)
+- Docker for the local database
+- Optional for browser tests: `pnpm exec playwright install chromium`
 
-Without a configured `DATABASE_URL`, anonymous discovery falls back to the checked-in fictional demo data and authenticated access fails closed.
+Without a configured `DATABASE_URL`, anonymous discovery falls back to the
+checked-in fictional demo data and authenticated access fails closed.
 
 ## Install and run
 
 ```bash
-cd /Users/mehmeteminmayda/Projects/sofra
 pnpm install
 cp .env.example .env.local
 pnpm db:up && pnpm db:reset && pnpm db:fixtures
 pnpm dev
 ```
 
-Open `http://localhost:3000/en`. With `SOFRA_DEMO_MODE=true`, `/en/demo` sets a local-only HTTP-only persona cookie for traveler, certified-host, partner, or operator walkthroughs. `/en/demo/journey` connects qualification, publication, booking, hosting, feedback, safety intervention, payout holds, and audit into one guided read-only walkthrough. The persona mechanism is rejected in production.
-
-## Environment
-
-Copy `.env.example` and supply only the services you are using:
-
-- `NEXT_PUBLIC_APP_URL`
-- `SOFRA_DEMO_MODE`
-- `SOFRA_ALLOW_INDEXING` (safe default: `false`; `true` requires a trusted HTTPS app URL)
-- `DATABASE_URL`
-- `DATABASE_URL_UNPOOLED` (migrations only)
-- `BETTER_AUTH_SECRET` (server only)
-- `SOFRA_ENABLE_MOCK_PAYMENTS` (local/test only; rejected in production)
-- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`
-- `RESEND_API_KEY` and `RESEND_FROM_EMAIL`
-- `NEXT_PUBLIC_POSTHOG_KEY` and `NEXT_PUBLIC_POSTHOG_HOST`
-- `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN`
-
-Never commit `.env.local` or `.env.neon`. The database client is server-only and is never imported from a client module.
+Open `http://localhost:3000/en`. With `SOFRA_DEMO_MODE=true`, `/en/demo` sets a
+local-only HTTP-only persona cookie for traveller, certified-host, partner, or
+operator walkthroughs, and `/en/demo/journey` connects qualification,
+publication, booking, hosting, feedback, safety intervention, payout holds, and
+audit into one guided read-only walkthrough.
 
 ## Database
 
 ```bash
-pnpm db:up          # start the local PostgreSQL 18 container
-pnpm db:migrate     # apply pending migrations
-pnpm db:reset       # drop, re-apply every migration, re-seed reference data
-pnpm db:fixtures    # load fictional development data (refuses non-local targets)
-pnpm db:types       # regenerate database.types.ts from the live schema
+pnpm db:up           # start the local PostgreSQL 18 container
+pnpm db:migrate      # apply pending migrations
+pnpm db:reset        # drop, re-apply every migration, re-seed reference data
+pnpm db:fixtures     # load fictional development data (refuses non-local targets)
+pnpm db:types        # regenerate database.types.ts from the live schema
 pnpm db:migrate:neon # apply migrations to the deployed database
 ```
-
-Migrations are plain `.sql` files in `db/migrations`, applied in filename order,
-each in its own transaction, tracked in `public.schema_migrations`. The runner is
-`db/migrate.mjs`; there is no vendor CLI to install.
 
 `.env.local` points at the local container so `pnpm dev` can never reach a
 deployed database. Deployed credentials live in a separate, gitignored
 `.env.neon` read only by `db:migrate:neon`.
 
-- `db/migrations/0001_auth.sql` — Better Auth tables (generated by its CLI)
-- `db/migrations/0002_foundation.sql` — enums, tables, constraints, indexes
-- `db/migrations/0003_functions.sql` — triggers, public projection, read models
-- `db/migrations/0004_bookings_write.sql` — transactional booking and cancellation
-- `db/seed.sql` — reference data (roles, pricing policy); safe for any environment
-- `db/fixtures.sql` — fictional development data; local targets only
-- `src/server/database/database.types.ts` — generated, do not hand-edit
-
-Neither the seed nor the fixtures contain real people or real private addresses.
-
-## Deployment
-
-See `docs/DEPLOYMENT.md`. In short: apply migrations to the deployed database
-_before_ pushing the code that depends on them, then confirm with
-`/api/health`.
-
-```bash
-pnpm db:migrate:neon
-git push origin main
-curl https://YOUR-DOMAIN/api/health
-```
+Neither the reference seed nor the fixtures contain real people or real private
+addresses. Fixture accounts use the reserved `.invalid` domain so they can never
+resolve or receive mail.
 
 ## Quality commands
 
 ```bash
-pnpm format
 pnpm format:check
 pnpm lint
 pnpm typecheck
@@ -112,50 +121,70 @@ pnpm test:e2e
 pnpm build
 ```
 
-Playwright starts the app on an isolated test port and covers anonymous discovery, table detail, honest payment-disabled checkout and its safe review, traveler booking progress and cancellation review, host draft rules/submission, operator approval, public address privacy, localized canonical and structured metadata, crawler restrictions, cross-role access rejection, keyboard skip navigation, active public and portal navigation, path-preserving language switching, localized mobile navigation, English and Turkish public/protected-form localization and accessible validation, keyboard-readable read-only previews, the guided cross-role journey, roster privacy, post-dinner moderation/privacy boundaries, confidential-report non-echo, payout holds, and partner-owned referral visibility.
-
 ## Architecture
 
-- `src/app/[locale]`: localized public and role-specific routes
-- `src/features`: pricing, policy, scheduled tables, bookings, dietary privacy, partner referral projections, and payout rules
-- `src/server`: auth, authorization, the database client, services, payments, maps, notifications, analytics, monitoring, and audit
-- `src/server/repositories`: typed public, traveler, host, partner, and protected operator read contracts with demo and PostgreSQL implementations
-- `messages`: English and Turkish interface messages
-- `db`: SQL migrations, reference seed, development fixtures, migration runner, and type generator
-- `docs`: product constitution, decisions, open questions, architecture, domain, states, privacy, and plan
+- `src/app/[locale]` localized public and role-specific routes
+- `src/features` pricing, policy, scheduled tables, bookings, dietary privacy, partner referral projections, payout rules
+- `src/server` auth, authorization, database client, services, payments, maps, notifications, analytics, monitoring, audit
+- `src/server/repositories` typed read contracts with demo and PostgreSQL implementations
+- `messages` English and Turkish interface messages
+- `db` migrations, reference seed, development fixtures, migration runner, type generator
+- `docs` product constitution, decisions, open questions, architecture, domain, states, privacy, plan
 
-Status changes run through typed services and illegal transitions return domain errors. Public listings use an explicit allowlist projection and `published_hosted_tables`; exact address, precise coordinates, arrival instructions, dietary details, private guest names, assessment notes, and incident content are excluded.
+Status changes run through typed services, and illegal transitions return
+domain errors rather than corrupting state.
 
-The traveler booking service validates availability, cutoff, configurable shared-party limits, exact additional-guest counts, compatibility requirements, and integer totals. A separate safe review omits guest names and dietary text. Booking details visualize compatibility, payment, table confirmation, and dinner as distinct states. Local cancellation review validates the lifecycle transition without changing durable data or deciding the still-open refund policy.
+The traveller booking service validates availability, cutoff, configurable
+shared-party limits, exact additional-guest counts, compatibility requirements,
+and integer totals. A separate safe review omits guest names and dietary text.
+Booking detail treats compatibility, payment, table confirmation, and dinner as
+distinct states.
 
-Completed bookings expose three separate post-dinner channels: a moderation-pending public review, operations-only constructive feedback, and a restricted safety report. The server reloads the traveler-owned completed booking before validating any channel. Private and safety text never appears in the result, URL, demo audit, or analytics; an open safety intent requires the linked payout state to be held. Local review is deliberately non-durable, and production fails honestly until the transactional write boundary is connected.
+Completed bookings expose three separate post-dinner channels: a
+moderation-pending public review, operations-only constructive feedback, and a
+restricted safety report. The server reloads the traveller-owned booking before
+validating any channel, and an open safety intent requires the linked payout
+state to be held.
 
-The host workspace derives certified capacity from the actor-owned certification record, visualizes the table journey from private draft through dinner, and calculates confirmed-party and projected host-net summaries from the delivery roster. Local submission review reloads the host-owned table and active certification before validating the transition, but does not claim a durable write. Host rosters use a narrow authenticated SQL function and never expose guest names, dietary text, exact location, payment detail, or appearance-selection data.
+The host workspace derives certified capacity from the actor-owned
+certification record and calculates confirmed-party and projected host-net
+summaries from the delivery roster. The partner workspace replaces hard-coded
+referral metrics with an actor-owned conversion projection returning only
+organization identity, referral stage, party count, and public table context.
 
-The partner workspace replaces hard-coded referral metrics with an actor-owned conversion projection: landing recorded, booking attributed, dinner completed, or booking closed. Its authenticated SQL function returns only organization identity, referral stage, party count, and public table context. Traveler identity, attribution metadata, private location, dietary data, payment details, commissions, and settlement data are excluded. The final attribution window, economics, and settlement remain open product decisions.
+Public pages provide localized canonical links, language alternates, social
+metadata, and table-specific structured event data built only from the approved
+public projection. Protected and form routes send crawler-level `noindex`
+headers, and `robots.txt` and the public sitemap stay closed unless
+`SOFRA_ALLOW_INDEXING=true` is paired with a trusted HTTPS app URL.
 
-Shared launch-readiness components provide a keyboard skip link, localized loading/error/empty states, content-level language metadata, and active-section announcements in horizontally scrollable portal navigation. Empty traveler, host, partner, and operator queues now explain what happens next instead of rendering blank cards. Every protected page repeats its portal authorization gate before content or data access so parallel rendering cannot attempt a protected read for the wrong role.
-
-Protected account, household, address, assessment, pricing, booking, incident, and audit interfaces now localize their operational labels in English and Turkish. Preview-only profile, address, assessment, and policy fields are explicitly read-only and paired with visible explanations; unavailable buttons no longer imply that a durable write can occur.
-
-Booking and private host-table draft forms use shared typed schema factories for browser and server-facing validation. English and Turkish errors are linked to their fields, summarized after submission, and announced to assistive technology. Host scheduling and certified-capacity limits stay in that shared boundary, while the current review remains non-durable until the authenticated write repositories are connected.
-
-Public pages provide localized canonical links, language alternates, social metadata, and table-specific structured event data built only from the approved public projection. Independently shared table pages deliberately clear the site-wide social image because no table-specific public image exists. Protected and form routes send crawler-level `noindex` headers, while `robots.txt` and the public sitemap remain closed unless `SOFRA_ALLOW_INDEXING=true` is paired with a trusted HTTPS app URL. Only messages needed by interactive client components are serialized to the browser.
-
-Public, traveler, host, partner, and operator page components covered by the current contracts read through repository queries rather than importing database clients or fictional fixtures. Anonymous discovery uses the public-safe view when a database is configured and retains the fictional public fallback otherwise. Protected repositories use local personas only in demo mode and fail closed when production credentials or an authorized actor are absent. Cross-user operator reads use a dedicated server-only repository that checks the actor role before any cross-user query is possible and exposes purpose-specific records for applications, table reviews, booking operations, incidents, payouts, and audit events.
+Accessibility is treated as part of the contract: a keyboard skip link,
+localized loading, error, and empty states, field-linked validation errors
+summarized after submission and announced to assistive technology, and
+active-section announcements in horizontally scrollable portal navigation.
 
 ## Adapters and local fallbacks
 
-- Maps: approximate-neighborhood fallback unless a public key is configured; exact addresses are not accepted by the public model.
-- Notifications: Resend when configured, development console adapter otherwise.
-- Analytics: typed non-sensitive events and no-op behavior without PostHog.
-- Monitoring: disabled cleanly without Sentry DSN.
-- Payments: server-only provider interface. The mock is opt-in, deterministic, auditable, card-free, and impossible to construct in production. Without a real provider, checkout says payments are not enabled and never marks a booking paid.
+- **Maps** approximate-neighbourhood fallback unless a public key is configured; exact addresses are not accepted by the public model
+- **Notifications** Resend when configured, a development console adapter otherwise
+- **Analytics** typed non-sensitive events, no-op without PostHog
+- **Monitoring** disabled cleanly without a Sentry DSN
+- **Payments** server-only provider interface; the mock is opt-in, deterministic, auditable, card-free, and impossible to construct in production
 
 ## Intentional Phase 1 limits
 
 - No real payment provider, payout release, tax logic, phone verification, or production identity verification
-- No live chat, native apps, automated host/safety decisions, or AI recommendation system
+- No live chat, native apps, automated host or safety decisions, or recommendation system
 - Demo mutations demonstrate validation, authorization, lifecycle, and audit boundaries; most durable writes are not yet wired to the database
 - Google Maps, Resend, PostHog, and Sentry are adapter-ready but optional
-- Final brand, launch neighborhoods, commercial policy, cancellation policy, verification rubric, partner economics, and legal/compliance decisions remain open in `docs/OPEN_QUESTIONS.md`
+- Brand, launch neighbourhoods, commercial policy, cancellation policy, verification rubric, partner economics, and legal decisions remain open in `docs/OPEN_QUESTIONS.md`
+
+## About
+
+Built by [Mehmet E. Mayda](https://maydalabs.com/profile) at
+[MaydaLabs](https://maydalabs.com).
+[Read the work-in-progress case study](https://maydalabs.com/case-studies/sofra).
+
+## License
+
+Released under the [MIT License](LICENSE).
