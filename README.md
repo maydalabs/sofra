@@ -13,13 +13,13 @@ It is a working foundation, not a launched business. There is no real payment
 provider, no production identity verification, and most durable writes are not
 yet connected. The code says so everywhere it matters, and that is deliberate.
 
-| | |
-| --- | --- |
-| Unit and integration tests | 220 |
-| End-to-end scenarios | 27 |
-| SQL migrations | 16 |
-| Languages | English, Turkish |
-| Stack | Next.js App Router, React, strict TypeScript, PostgreSQL 18, Tailwind |
+|                            |                                                                       |
+| -------------------------- | --------------------------------------------------------------------- |
+| Unit and integration tests | 220                                                                   |
+| End-to-end scenarios       | 27                                                                    |
+| SQL migrations             | 16                                                                    |
+| Languages                  | English, Turkish                                                      |
+| Stack                      | Next.js App Router, React, strict TypeScript, PostgreSQL 18, Tailwind |
 
 ## What it looks like
 
@@ -63,16 +63,16 @@ actor are absent. Nothing pretends to have succeeded.
 
 ## Where to look in this codebase
 
-| Path | Why it is worth opening |
-| --- | --- |
-| `db/migrations/0003_functions.sql` | Triggers, the public projection, and the read models. The privacy boundary lives here rather than in a component. |
-| `db/migrations/0004_bookings_write.sql` | Transactional booking and cancellation. |
-| `src/server/repositories/` | Typed public, traveller, host, partner, and operator read contracts, each with a demo and a PostgreSQL implementation. |
-| `src/server/authorization/` | The role checks every protected page repeats before content or data access, so parallel rendering cannot read for the wrong role. |
-| `src/server/payments/` | A server-only provider interface whose mock is opt-in, deterministic, card-free, and impossible to construct in production. |
-| `src/features/` | Pricing, policy, scheduled tables, bookings, dietary privacy, partner referral projections, and payout rules. |
-| `e2e/sofra.spec.ts` | 27 scenarios including public address privacy, cross-role access rejection, confidential-report non-echo, roster privacy, and payout holds. |
-| `db/migrate.mjs` | The migration runner. Plain `.sql` files in filename order, each in its own transaction, tracked in `public.schema_migrations`. No vendor CLI. |
+| Path                                    | Why it is worth opening                                                                                                                        |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `db/migrations/0003_functions.sql`      | Triggers, the public projection, and the read models. The privacy boundary lives here rather than in a component.                              |
+| `db/migrations/0004_bookings_write.sql` | Transactional booking and cancellation.                                                                                                        |
+| `src/server/repositories/`              | Typed public, traveller, host, partner, and operator read contracts, each with a demo and a PostgreSQL implementation.                         |
+| `src/server/authorization/`             | The role checks every protected page repeats before content or data access, so parallel rendering cannot read for the wrong role.              |
+| `src/server/payments/`                  | A server-only provider interface whose mock is opt-in, deterministic, card-free, and impossible to construct in production.                    |
+| `src/features/`                         | Pricing, policy, scheduled tables, bookings, dietary privacy, partner referral projections, and payout rules.                                  |
+| `e2e/sofra.spec.ts`                     | 27 scenarios including public address privacy, cross-role access rejection, confidential-report non-echo, roster privacy, and payout holds.    |
+| `db/migrate.mjs`                        | The migration runner. Plain `.sql` files in filename order, each in its own transaction, tracked in `public.schema_migrations`. No vendor CLI. |
 
 ## Stack
 
