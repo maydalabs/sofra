@@ -21,6 +21,29 @@ yet connected. The code says so everywhere it matters, and that is deliberate.
 | Languages | English, Turkish |
 | Stack | Next.js App Router, React, strict TypeScript, PostgreSQL 18, Tailwind |
 
+## What it looks like
+
+![Sofra home, running on fictional development data](docs/screens/home.png)
+
+Every screenshot here is the real application on fictional development data. The
+banner across the top is part of the product, not part of the screenshot: demo
+mode announces itself on every page and is rejected outright in production.
+
+![Discovery: scheduled tables with date, format, and neighbourhood filters](docs/screens/find-a-table.png)
+
+Discovery lists dinners rather than hosts. A listing is a particular evening
+with its own menu, format, seat count, and price, so a traveller books a table
+and not a person.
+
+![A table detail page, showing the privacy boundary in practice](docs/screens/table-detail.png)
+
+This page is the privacy model made visible. The neighbourhood is there, the
+street is not. Arrival detail is described as something released after the
+booking is confirmed, because the public projection genuinely cannot select it.
+One all-inclusive price is shown because no service fee is added later.
+
+<img src="docs/screens/home-mobile.png" alt="Sofra on a narrow viewport" width="320" />
+
 ## The two ideas worth reading the code for
 
 **Privacy is a schema decision, not a UI decision.** Public listings are built
