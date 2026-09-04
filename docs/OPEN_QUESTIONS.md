@@ -2,8 +2,8 @@
 
 These are unresolved product or production decisions. Development defaults must not be mistaken for final answers.
 
-Questions for a Turkish lawyer, raised by `docs/MARKET_EVIDENCE.md` and
-`docs/PAYMENT_DECISION.md` — these gate launch geography and the safety hold:
+Questions for a Turkish lawyer, raised by the payment and market research that
+is held privately — these gate launch geography and the safety hold:
 
 - Does the KMK md. 24 unanimous-consent requirement attach to a recurring paid
   home dinner, or only to a permanent conversion of the flat — and do müstakil

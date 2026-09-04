@@ -20,14 +20,15 @@ These decisions are frozen for Phase 1 unless the product owner explicitly chang
 - Guest sees one all-inclusive price before checkout.
 - Money is integer kuruş; pricing uses explicit integer rounding.
 - Partner commission is modeled separately and paid from Sofra's fee.
-- Payments (decided 2026-08-29, full reasoning in `docs/PAYMENT_DECISION.md`):
+- Payments (decided 2026-08-29; the provider comparison behind it is held
+  privately):
   iyzico Pazaryeri sub-merchant split through a Turkish Limited Şirket. The
   traveller is charged in full at booking (pre-auth is capped at 25 days by BKM
   rules and cannot span the 35-day horizon); the host's share sits unapproved in
   the provider's pool until the 3rd business day after the dinner, then the
   provider pays the host's IBAN directly. Merchant-of-record is the documented
   fallback only. **Trigger on record:** if a host-approval step is ever added to
-  booking, the charge must move to acceptance (`docs/MARKET_EVIDENCE.md` §5.2).
+  booking, the charge must move to acceptance.
 - No minimum-table guarantee at launch (decided 2026-08-29): a shared dinner
   that misses its minimum is decided at the booking cutoff and refunded 100%
   the same business day — the platform-cancellation tool. Covering a missing
